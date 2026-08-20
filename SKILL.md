@@ -5,6 +5,8 @@ description: Use when an agent is asked to own a complex multi-stage software pr
 
 # Delivery Harness
 
+> **English readers:** This file's Chinese rule text is authoritative. Start with the [English routing index](references/index.en.md), then read only the linked Chinese reference required for the current task. Do not load both language paths for the same project.
+
 Delivery Harness 的核心目标是在授权、决策和证据边界内减少不必要的人工干预，把一个已接受的项目持续推进到可验证完成。设计、调研、测试、排错和部署仍由对应的专业 Skill 完成；Harness 让它们共享同一份项目状态、一个活动节点、清楚的授权边界和可核验的阶段门。
 
 按任务读取对应参考文件：
