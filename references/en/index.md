@@ -5,6 +5,7 @@ Chinese rule files are normative. This English tree is an operational equivalent
 | Task | Read |
 |---|---|
 | Execute the current lifecycle node | [execution.md](execution.md) |
+| Initialize a project or merge an existing `.delivery/` | [project-initialization.md](project-initialization.md) |
 | Change state, install, deploy, or enter a phase | [gates.md](gates.md) |
 | Bootstrap a session or handle node failure | [principles.md](principles.md) |
 | Diagnose, recover, or retry | [debugging.md](debugging.md) |

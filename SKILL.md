@@ -23,6 +23,7 @@ description: Use when an agent is asked to own a complex multi-stage software pr
 ## 按任务路由
 
 - 节点执行细节：[execution.md](references/execution.md)
+- 项目首次接入或合并已有 `.delivery/`：[project-initialization.md](references/project-initialization.md)
 - 状态转换、授权、发布和证据门：[gates.md](references/gates.md)
 - 启动或节点失败：[principles.md](references/principles.md)
 - 诊断、恢复或重试：[debugging.md](references/debugging.md)

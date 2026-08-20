@@ -2,6 +2,8 @@
 
 Copy the sibling `delivery-skeleton/.delivery/` directory into the governed project root. If `.delivery/` already exists, merge file by file without overwriting current state or evidence.
 
+For existing-directory checks, parent-ignore handling, the merge matrix, and verification, read [Project Initialization and Safe Merge](../../references/en/project-initialization.md).
+
 The skeleton contains:
 
 - [`state.md`](delivery-skeleton/.delivery/state.md): a project-tracked active-state placeholder to fill and maintain;

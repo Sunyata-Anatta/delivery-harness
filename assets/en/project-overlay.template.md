@@ -12,15 +12,15 @@ Store project facts only. This overlay may tighten Delivery Harness but cannot o
 - Repository rules: {{REPOSITORY_INSTRUCTIONS}}
 - Accepted specification: {{ACCEPTED_SPEC}}
 - Execution plan: {{EXECUTION_PLAN}}
-- Status page: {{STATUS_PAGE}}
+- Active state: `.delivery/state.md` (single source of truth)
 
 ## Storage
 Root: `.delivery/`
-- `state.md`: active node, authority, evidence; version controlled; use [harness-state.template.md](harness-state.template.md)
+- `.delivery/state.md`: active node, session authority, passed evidence gates, and pending decisions; version controlled
 - `uploads/`: immutable user inputs
 - `artifacts/`: generated and evidence artifacts
 - `debug/`: essential reproduction/debug files
-On first setup, copy the [complete `.delivery` skeleton](delivery-skeleton.template.md); do not create empty directories that Git cannot record.
+On first setup, follow the installed Skill's project-initialization reference and copy the complete `.delivery` skeleton; do not create empty directories that Git cannot record.
 Deviations: {{STORAGE_DEVIATIONS}}
 
 ## Project rules
@@ -57,10 +57,10 @@ Deviations: {{STORAGE_DEVIATIONS}}
 
 Never store tokens, passwords, private keys, or reusable authentication here.
 
-## Real-evidence gates
-| Phase | Evidence | Sample/environment | Pass criteria | Status | Unblock condition |
-|---|---|---|---|---|---|
-| {{PHASE}} | {{EVIDENCE}} | {{SAMPLE_OR_ENVIRONMENT}} | {{PASS_CRITERIA}} | {{STATUS}} | {{UNBLOCK_CONDITION}} |
+## Real-evidence gate definitions
+| Phase | Evidence | Sample/environment | Pass criteria | Unblock condition |
+|---|---|---|---|---|
+| {{PHASE}} | {{EVIDENCE}} | {{SAMPLE_OR_ENVIRONMENT}} | {{PASS_CRITERIA}} | {{UNBLOCK_CONDITION}} |
 
 ## Evidence artifacts
 | Artifact | Location/access | Processing | Conclusion/limits | Reviewed on |

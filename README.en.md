@@ -40,7 +40,7 @@ Downstream projects use `.delivery/` by default:
 - `.delivery/uploads/`, `artifacts/`, and `debug/` are ignored by default and are not distributed.
 - Stable rules, commands, Resolver routes, and evidence-based lessons live in the project overlay created from the [English project overlay template](assets/en/project-overlay.template.md).
 
-For first-time setup, copy the [complete `.delivery` skeleton](assets/en/delivery-skeleton.template.md). Its `state.md` is a project-tracked placeholder that is filled and maintained with the project; the skeleton also includes ignore rules and trackable placeholders for all three empty directories.
+For first-time setup, follow [Project Initialization and Safe Merge](references/en/project-initialization.md) and copy the [complete `.delivery` skeleton](assets/en/delivery-skeleton.template.md). Its `state.md` is a project-tracked placeholder that is filled and maintained with the project; the skeleton also includes ignore rules and trackable placeholders for all three empty directories.
 
 This Skill source repository is a public delivery surface. Its own `.delivery/` contains development tests, state, reviews, and the companion case study, so a project-specific exception keeps it local and outside published history. That exception does not change the downstream default for version-controlled `state.md`.
 
@@ -69,6 +69,8 @@ Language control is `language=auto|zh|en`. `auto` selects once per project using
 - Claude Code: invoke `/delivery-harness`.
 - For automatic loading in a new project session, add the complete marked block from the [AGENTS template](assets/en/AGENTS.block.template.md) or [CLAUDE template](assets/en/CLAUDE.block.template.md) to the project's effective `AGENTS.md` or `CLAUDE.md` file.
 - For a restricted or other runtime, use the [generic entry template](assets/en/restricted-runtime-entry.block.template.md) only in an instruction surface that runtime actually reads.
+
+For the exact role of `agents/openai.yaml`, the three entry blocks, the `.delivery` skeleton, the state template, and the project overlay, read [Template responsibilities and use](references/en/agent-config.md#template-responsibilities-and-use).
 
 The same Skill name may be available from more than one location. Do not assume the runtime merges sources or selects the newest copy. Record the selected path and validate again in a new session after updating.
 

@@ -13,16 +13,16 @@
 - 仓库规则：{{REPOSITORY_INSTRUCTIONS}}
 - 已接受规格：{{ACCEPTED_SPEC}}
 - 执行计划：{{EXECUTION_PLAN}}
-- 状态页：{{STATUS_PAGE}}
+- 活动状态：`.delivery/state.md`（唯一事实源）
 
 ## 目录约定
 
 存放根：`.delivery/`（默认名，改名后在此写明）
-- `state.md`：活动节点、授权、证据门登记，进版本控制（模板见 [harness-state.template.md](harness-state.template.md)）
+- `.delivery/state.md`：活动节点、当次授权、已过证据门和待决断，进版本控制
 - `uploads/`：用户上传的材料，只入不改
 - `artifacts/`：临时生成与证据产物
 - `debug/`：排查纠错的关键文件（错误输出、复现脚本）
-首次接入直接复制 [完整 `.delivery` 骨架](delivery-skeleton.template.md)，不要只创建无法被 Git 记录的空目录。
+首次接入按已安装 Skill 的项目初始化参考复制完整 `.delivery` 骨架，不要只创建无法被 Git 记录的空目录。
 偏离默认的存放位置写在这里并说明原因：{{STORAGE_DEVIATIONS}}
 
 ## 项目独有规则
@@ -86,11 +86,11 @@ Resolver 把已验证经验变成条件路由。只在条件、能力、选择�
 
 不得在本文件保存令牌、密码、私钥或可复用认证信息。
 
-## 真实证据门
+## 真实证据门定义
 
-| 阶段 | 必需证据 | 样本或环境 | 通过标准 | 状态 | 解除条件 |
-|---|---|---|---|---|---|
-| {{PHASE}} | {{EVIDENCE}} | {{SAMPLE_OR_ENVIRONMENT}} | {{PASS_CRITERIA}} | {{STATUS}} | {{UNBLOCK_CONDITION}} |
+| 阶段 | 必需证据 | 样本或环境 | 通过标准 | 解除条件 |
+|---|---|---|---|---|
+| {{PHASE}} | {{EVIDENCE}} | {{SAMPLE_OR_ENVIRONMENT}} | {{PASS_CRITERIA}} | {{UNBLOCK_CONDITION}} |
 
 ## 证据产物登记
 

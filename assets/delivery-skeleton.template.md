@@ -2,6 +2,8 @@
 
 将同目录的 `delivery-skeleton/.delivery/` 整体复制到被治理项目根目录。若项目已有 `.delivery/`，逐文件合并，不覆盖现有状态或证据。
 
+完整的既有目录判定、父级忽略处理、合并矩阵和复验见 [项目初始化与安全合并](../references/project-initialization.md)。
+
 骨架包含：
 
 - [`state.md`](delivery-skeleton/.delivery/state.md)：随项目提交并持续填写的活动状态占位；

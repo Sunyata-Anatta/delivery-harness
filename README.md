@@ -40,7 +40,7 @@ references/    按任务读取的规则与运行时契约
 - `.delivery/uploads/`、`artifacts/`、`debug/` 默认忽略，不随交付分发。
 - 稳定规则、命令、Resolver 和经验写入 [项目覆盖层模板](assets/project-overlay.template.md) 生成的项目覆盖层。
 
-首次接入时复制 [`.delivery` 完整骨架](assets/delivery-skeleton.template.md)。其中 `state.md` 是随项目提交、随后持续填写的占位；骨架还包含忽略规则和三个空目录的可追踪占位。
+首次接入时按 [项目初始化与安全合并](references/project-initialization.md) 复制 [`.delivery` 完整骨架](assets/delivery-skeleton.template.md)。其中 `state.md` 是随项目提交、随后持续填写的占位；骨架还包含忽略规则和三个空目录的可追踪占位。
 
 本 Skill 源仓库是公开交付面：它自身的 `.delivery/` 只含开发测试、状态、评审和 case study，因此按项目特例留在本机、不进入发布历史。该特例不改变下游项目对 `state.md` 的默认版本控制规则。
 
@@ -69,6 +69,8 @@ references/    按任务读取的规则与运行时契约
 - Claude Code：显式输入 `/delivery-harness`。
 - 项目希望在新会话自动载入时，将与项目锁定语言一致的 [AGENTS 模板](assets/AGENTS.block.template.md) 或 [CLAUDE 模板](assets/CLAUDE.block.template.md) 的完整标记块写入实际生效的 `AGENTS.md` 或 `CLAUDE.md`；英文项目使用 `assets/en/` 中的同名模板。
 - 受限或其他运行时使用 [通用入口模板](assets/restricted-runtime-entry.block.template.md)，并只写入该运行时确认会读取的指令面。
+
+各 Agent 如何使用 `agents/openai.yaml`、三个自动载入块、`.delivery` 骨架、状态模板和项目覆盖层，见 [模板职责与使用](references/agent-config.md#模板职责与使用)。
 
 同名 Skill 可能来自多个位置。不要推测运行时会合并它们或优先选择最新副本；记录实际选择的路径，并在更新后新开会话验证。
 
