@@ -1,0 +1,6 @@
+interface:
+  display_name: "Delivery Harness"
+  short_description: "从当前事实持续推进到真实证据验收"
+  default_prompt: "Use $delivery-harness to audit the current project and continue until the accepted evidence gate passes."
+policy:
+  allow_implicit_invocation: true
