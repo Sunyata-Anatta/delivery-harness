@@ -1,10 +1,12 @@
 # Delivery Harness
 
+[中文](README.md) | [English](README.en.md)
+
 `delivery-harness` 是一个面向复杂软件交付的 Agent Skill。它让 Agent 在已有授权内持续推进工作，并用项目状态、证据门和明确的停止条件约束每一次阶段转换。
 
 它不是项目模板、任务管理系统或部署脚本。它不保存具体项目的业务事实、凭据、运行日志或开发记录。
 
-中文说明；English guide: [README.en.md](README.en.md)。英文读者使用 Skill 时，应从 [英文路由索引](references/en/index.md) 进入。
+英文读者使用 Skill 时，从 [英文路由索引](references/en/index.md) 进入。
 
 ## 适用场景
 
@@ -15,9 +17,11 @@
 - 协调多个 Agent、工具、外部服务或运行时，并保持权限边界；
 - 对失败节点进行诊断、恢复、复验和记录，而不是仅报告失败。
 
-## 发布内容
+## 仓库与运行时载荷
 
-仓库根目录本身就是可安装的 Skill。发布包只包含以下四项：
+repo 保留两份仓库说明文件：`README.md`（中文）和 `README.en.md`（English）。它们属于仓库发布面，必须随远端保留，但不是 Agent 执行 Skill 所需的运行时文件。
+
+运行时 Skill 载荷由以下四项构成：
 
 ```text
 SKILL.md       执行规范和入口
@@ -26,7 +30,7 @@ assets/        项目覆盖层、状态骨架和自动载入块模板
 references/    按任务读取的规则与运行时契约
 ```
 
-不要把 `.git/`、项目状态实例、测试输出、评审材料、聊天记录或机器配置加入发布包。项目特有事实不写回此通用 Skill。
+因此 repo 顶层是两份 README 加四项 Skill 载荷；安装到 Agent 时复制四项载荷即可。不要把 `.git/`、项目状态实例、测试输出、评审材料、聊天记录或机器配置加入 repo 或运行时载荷。项目特有事实不写回此通用 Skill。
 
 ## 项目状态契约
 

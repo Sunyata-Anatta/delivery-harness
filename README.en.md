@@ -1,10 +1,12 @@
 # Delivery Harness
 
+[中文](README.md) | [English](README.en.md)
+
 `delivery-harness` is an Agent Skill for complex software delivery. It keeps work moving within accepted authority while using project state, evidence gates, and explicit stop conditions to control stage changes.
 
 It is not a project template, task tracker, or deployment script. It does not contain project-specific business facts, credentials, runtime logs, or development records.
 
-English guide; 中文说明：[README.md](README.md). English readers start with the [English routing index](references/en/index.md).
+English readers start with the [English routing index](references/en/index.md).
 
 ## When to use it
 
@@ -15,9 +17,11 @@ Use the Skill when an agent owns a multi-stage project and must keep analysis, d
 - coordinating agents, tools, external services, or runtimes without exceeding authority; and
 - diagnosing, recovering, retesting, and recording a failed node instead of only reporting failure.
 
-## Published contents
+## Repository and runtime payload
 
-The repository root is the installable Skill. The release contains only these four items:
+The repo retains two repository guide files: `README.md` (Chinese) and `README.en.md` (English). They are required parts of the published repository, but agents do not need them to execute the Skill.
+
+The runtime Skill payload consists of these four items:
 
 ```text
 SKILL.md       execution contract and entry point
@@ -26,7 +30,7 @@ assets/        project overlay, state skeleton, and auto-load block templates
 references/    task-routed rules and runtime contracts
 ```
 
-Do not ship `.git/`, project-state instances, test output, review material, transcripts, or machine-specific configuration. Do not write project-specific facts back into this general Skill.
+The repo root therefore contains two READMEs plus the four-part runtime payload; install only the four payload items into an Agent. Do not add `.git/`, project-state instances, test output, review material, transcripts, or machine-specific configuration to either surface. Do not write project-specific facts back into this general Skill.
 
 ## Project state contract
 
