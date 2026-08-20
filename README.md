@@ -4,7 +4,7 @@
 
 它不是项目模板、任务管理系统或部署脚本。它不保存具体项目的业务事实、凭据、运行日志或开发记录。
 
-中文说明；English guide: [README.en.md](README.en.md)。英文读者使用 Skill 时，应从 [英文路由索引](references/index.en.md) 进入。
+中文说明；English guide: [README.en.md](README.en.md)。英文读者使用 Skill 时，应从 [英文路由索引](references/en/index.md) 进入。
 
 ## 适用场景
 
@@ -22,11 +22,23 @@
 ```text
 SKILL.md       执行规范和入口
 agents/        Codex 界面元数据
-assets/        项目覆盖层和自动载入块模板
+assets/        项目覆盖层、状态骨架和自动载入块模板
 references/    按任务读取的规则与运行时契约
 ```
 
-不要把 `.git/`、项目状态、测试输出、评审材料、聊天记录或机器配置加入发布包。项目特有事实应放在被项目忽略的本地状态目录，而不是写回此通用 Skill。
+不要把 `.git/`、项目状态实例、测试输出、评审材料、聊天记录或机器配置加入发布包。项目特有事实不写回此通用 Skill。
+
+## 项目状态契约
+
+下游项目默认使用 `.delivery/`：
+
+- `.delivery/state.md` 是活动状态唯一事实源，进入版本控制；记录活动节点、当次授权、已过证据门和待决断。
+- `.delivery/uploads/`、`artifacts/`、`debug/` 默认忽略，不随交付分发。
+- 稳定规则、命令、Resolver 和经验写入 [项目覆盖层模板](assets/project-overlay.template.md) 生成的项目覆盖层。
+
+首次接入时复制 [`.delivery` 完整骨架](assets/delivery-skeleton.template.md)。其中 `state.md` 是随项目提交、随后持续填写的占位；骨架还包含忽略规则和三个空目录的可追踪占位。
+
+本 Skill 源仓库是公开交付面：它自身的 `.delivery/` 只含开发测试、状态、评审和 case study，因此按项目特例留在本机、不进入发布历史。该特例不改变下游项目对 `state.md` 的默认版本控制规则。
 
 ## 安装
 
@@ -47,9 +59,11 @@ references/    按任务读取的规则与运行时契约
 
 安装只让运行时能够发现技能；它不保证每个项目自动载入。
 
+语言控制使用 `language=auto|zh|en`。`auto` 首次按用户明确要求、项目会话锁定、用户消息主要语言、界面语言的顺序选择，并同时约束回复、参考文件和自动载入模板；代码、路径、命令、日志和引文不触发切换。
+
 - Codex：显式输入 `$delivery-harness`。
 - Claude Code：显式输入 `/delivery-harness`。
-- 项目希望在新会话自动载入时，将 [AGENTS 模板](assets/AGENTS.block.template.md) 或 [CLAUDE 模板](assets/CLAUDE.block.template.md) 的完整标记块写入实际生效的 `AGENTS.md` 或 `CLAUDE.md`。
+- 项目希望在新会话自动载入时，将与项目锁定语言一致的 [AGENTS 模板](assets/AGENTS.block.template.md) 或 [CLAUDE 模板](assets/CLAUDE.block.template.md) 的完整标记块写入实际生效的 `AGENTS.md` 或 `CLAUDE.md`；英文项目使用 `assets/en/` 中的同名模板。
 - 受限或其他运行时使用 [通用入口模板](assets/restricted-runtime-entry.block.template.md)，并只写入该运行时确认会读取的指令面。
 
 同名 Skill 可能来自多个位置。不要推测运行时会合并它们或优先选择最新副本；记录实际选择的路径，并在更新后新开会话验证。
@@ -66,6 +80,6 @@ references/    按任务读取的规则与运行时契约
 
 ## 使用边界
 
-Skill 规则的权威入口是 [SKILL.md](SKILL.md)。按任务渐进读取 `references/`，不要把所有参考文件无差别载入上下文。项目级状态和持久化边界使用 [项目覆盖层模板](assets/project-overlay.template.md)；阶段门、诊断、能力路由和外部集成由入口链接到相应参考文件。
+Skill 规则的权威入口是 [SKILL.md](SKILL.md)。按任务渐进读取 `references/`，不要把所有参考文件无差别载入上下文。节点执行细节见 [节点执行参考](references/execution.md)；阶段门、诊断、能力路由和外部集成由入口链接到相应参考文件。
 
 不要把个人信息、主机名、令牌、私有地址或原始诊断值写入通用 Skill 或归档材料。诊断默认不落盘；需要归档时先脱敏。

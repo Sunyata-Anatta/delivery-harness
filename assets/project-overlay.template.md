@@ -7,8 +7,6 @@
 - 目标：{{ACCEPTED_OUTCOME}}
 - 非目标：{{NON_GOALS}}
 - 主要用户：{{USERS}}
-- 当前阶段：{{CURRENT_PHASE}}
-- 活动节点：{{ACTIVE_NODE}}
 
 ## 事实源
 
@@ -24,6 +22,7 @@
 - `uploads/`：用户上传的材料，只入不改
 - `artifacts/`：临时生成与证据产物
 - `debug/`：排查纠错的关键文件（错误输出、复现脚本）
+首次接入直接复制 [完整 `.delivery` 骨架](delivery-skeleton.template.md)，不要只创建无法被 Git 记录的空目录。
 偏离默认的存放位置写在这里并说明原因：{{STORAGE_DEVIATIONS}}
 
 ## 项目独有规则

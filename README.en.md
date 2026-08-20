@@ -4,7 +4,7 @@
 
 It is not a project template, task tracker, or deployment script. It does not contain project-specific business facts, credentials, runtime logs, or development records.
 
-English guide; 中文说明：[README.md](README.md). When using the Skill, English readers should start with the [English routing index](references/index.en.md).
+English guide; 中文说明：[README.md](README.md). English readers start with the [English routing index](references/en/index.md).
 
 ## When to use it
 
@@ -22,11 +22,23 @@ The repository root is the installable Skill. The release contains only these fo
 ```text
 SKILL.md       execution contract and entry point
 agents/        Codex interface metadata
-assets/        project-overlay and auto-load block templates
+assets/        project overlay, state skeleton, and auto-load block templates
 references/    task-routed rules and runtime contracts
 ```
 
-Do not ship `.git/`, project state, test output, review material, transcripts, or machine-specific configuration. Keep project facts in the project's ignored local state location, not in this general Skill.
+Do not ship `.git/`, project-state instances, test output, review material, transcripts, or machine-specific configuration. Do not write project-specific facts back into this general Skill.
+
+## Project state contract
+
+Downstream projects use `.delivery/` by default:
+
+- `.delivery/state.md` is the single source for active state and stays in version control; it records the active node, session authority, passed evidence gates, and pending decisions.
+- `.delivery/uploads/`, `artifacts/`, and `debug/` are ignored by default and are not distributed.
+- Stable rules, commands, Resolver routes, and evidence-based lessons live in the project overlay created from the [English project overlay template](assets/en/project-overlay.template.md).
+
+For first-time setup, copy the [complete `.delivery` skeleton](assets/en/delivery-skeleton.template.md). Its `state.md` is a project-tracked placeholder that is filled and maintained with the project; the skeleton also includes ignore rules and trackable placeholders for all three empty directories.
+
+This Skill source repository is a public delivery surface. Its own `.delivery/` contains development tests, state, reviews, and the companion case study, so a project-specific exception keeps it local and outside published history. That exception does not change the downstream default for version-controlled `state.md`.
 
 ## Install
 
@@ -41,16 +53,18 @@ Common user-level locations:
 | OpenClaw | Use its Git or local-directory installation flow |
 | Hermes Agent | `$HOME/.hermes/skills/delivery-harness` |
 
-For runtime-specific discovery, updating, removal, and verification, read [Runtime installation and arrival verification (Chinese)](references/runtime-installation.md) and follow its runtime link.
+For runtime-specific discovery, updating, removal, and verification, read [Runtime installation and arrival verification](references/en/runtime-installation.md) and follow its runtime link.
 
 ## Invoke and auto-load
 
 Installation makes a Skill discoverable; it does not make every project load it automatically.
 
+Language control is `language=auto|zh|en`. `auto` selects once per project using explicit user choice, locked project-session language, dominant user-message language, then interface language. The selection binds replies, references, and auto-load templates; code, paths, commands, logs, and quotations do not trigger switching.
+
 - Codex: invoke `$delivery-harness`.
 - Claude Code: invoke `/delivery-harness`.
-- For automatic loading in a new project session, add the complete marked block from the [AGENTS template](assets/AGENTS.block.template.md) or [CLAUDE template](assets/CLAUDE.block.template.md) to the project's effective `AGENTS.md` or `CLAUDE.md` file.
-- For a restricted or other runtime, use the [generic entry template](assets/restricted-runtime-entry.block.template.md) only in an instruction surface that runtime actually reads.
+- For automatic loading in a new project session, add the complete marked block from the [AGENTS template](assets/en/AGENTS.block.template.md) or [CLAUDE template](assets/en/CLAUDE.block.template.md) to the project's effective `AGENTS.md` or `CLAUDE.md` file.
+- For a restricted or other runtime, use the [generic entry template](assets/en/restricted-runtime-entry.block.template.md) only in an instruction surface that runtime actually reads.
 
 The same Skill name may be available from more than one location. Do not assume the runtime merges sources or selects the newest copy. Record the selected path and validate again in a new session after updating.
 
@@ -62,10 +76,10 @@ After every installation or update:
 2. Confirm that the runtime lists or explicitly invokes `delivery-harness`.
 3. Open a fresh context-free session and confirm that the startup receipt appears before the first tool call.
 
-The complete four-level evidence model plus update and rollback rules are in [Runtime installation and arrival verification (Chinese)](references/runtime-installation.md). A present file does not prove runtime loading; a listed Skill does not prove timely automatic loading.
+The complete four-level evidence model plus update and rollback rules are in [Runtime installation and arrival verification](references/en/runtime-installation.md). A present file does not prove runtime loading; a listed Skill does not prove timely automatic loading.
 
 ## Boundaries
 
-[SKILL.md](SKILL.md) is the authoritative rule entry point. Read `references/` progressively by task, rather than loading every reference. Use the [project overlay template](assets/project-overlay.template.md) for project-local state and persistence boundaries; the entry point routes phase gates, diagnosis, capability selection, and external integrations to their corresponding references.
+[SKILL.md](SKILL.md) is the authoritative rule entry point. Read `references/en/` progressively by task, rather than loading every reference. Use the [node execution reference](references/en/execution.md) for phase details; the entry point routes gates, diagnosis, capability selection, and integrations to their corresponding English references.
 
 Do not write personal data, host names, tokens, private addresses, or raw diagnostic values into the general Skill or archived material. Diagnostics are non-persistent by default; redact before archival.
