@@ -1,0 +1,6 @@
+uploads/*
+!uploads/.gitkeep
+artifacts/*
+!artifacts/.gitkeep
+debug/*
+!debug/.gitkeep
