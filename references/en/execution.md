@@ -8,6 +8,8 @@ Read repository rules, the project overlay, `.delivery/state.md`, accepted speci
 
 When a screenshot, original source, human decision, or external result arrives, write a minimal evidence receipt before analysis or a design request: received time, reviewable source (or `needs-source`), scope, direct observations, limits, and open questions. The receipt freezes facts only; it neither approves a design nor authorizes a side effect.
 
+Before a new session or active node reuses older evidence, check that its receipt contains `source_ref` or `needs-source`; backfill it first when absent. Do not use an untraceable old receipt for implementation, deployment, or an external write.
+
 Use the [English project overlay template](../../assets/en/project-overlay.template.md) when the project needs local rules, durable lessons, or a Resolver. The overlay stores stable project facts; `state.md` stores mutable active state.
 
 ## requirements: clarify the need
