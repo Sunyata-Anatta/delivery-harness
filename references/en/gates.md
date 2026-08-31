@@ -41,6 +41,14 @@ Do not re-ask for the same explicitly approved action class inside one active no
 
 Never extend one approval to a new data class or cost range. New or broader cost, different external recipient, changed persistence, broader authority, or a new node requires new approval. Ambiguous authority means not authorized.
 
+## Evidence receipt, conditional authority, and side effects
+
+Trigger: a user screenshot, original source, human decision, or external result arrives. Action: record a minimal evidence receipt in `.delivery/state.md` before analysis, design, or side effects. Method: record `received_at`, `source_ref` (or `needs-source` when it cannot be preserved), scope, direct observations, limits, and open questions; copy the original into an evidence slot only when authorized. Criterion: later claims trace to a source and distinguish fact from inference. Failure: mark `needs-source`; do not present inference as confirmed fact. Evidence: the receipt and any authorized evidence-slot reference.
+
+Keep authority classes separate: evidence recording, reversible local experiment, remote deployment or service restart, external persistent write, and import/activation/release. One class never authorizes the next. “Check first and report” or “continue after checking” authorizes only the check and report; do not implement, deploy, or write external state until the user receives the report and explicitly accepts the next action.
+
+A preliminary experiment is not completion, even when deployed. Record its purpose, changed version, unproven acceptance conditions, rollback, and prohibited inferences. Until it satisfies the approved design, do not call it live, implementation-complete, or evidence for later import or activation.
+
 ## Stop at an evidence gate
 
 - Required real sample, device, browser state, user behavior, dataset, account, service, or production-like environment is unavailable.
