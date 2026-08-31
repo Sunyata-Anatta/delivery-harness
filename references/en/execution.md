@@ -54,6 +54,8 @@ For every behavior: write the smallest test; observe expected RED; implement the
 
 Before completion run `IDENTIFY -> RUN -> READ -> VERIFY -> THEN`. Record command, exit code, test count, artifact or observation, and limitations. Unit tests cannot replace required real samples, devices, browsers, datasets, accounts, external services, production-like loads, or user acceptance.
 
+When independent review finds a Critical or Important issue, make it the active node, reproduce it, apply the smallest fix, and re-review. Do not end the turn at that finding unless a new decision, authority, or real-evidence blocker exists; then use the gates stop line and unblock condition.
+
 Register each evidence artifact's location and access route, processing, conclusion, boundary, and review date. Default slots are `.delivery/uploads/`, `artifacts/`, and `debug/`. Before calling evidence absent, state the current machine, directory, network, and authority reachability boundary.
 
 Branch, HEAD, worktree, remote, identity, and installation inventory are checkable facts, not timeless prose. Store them only as a dated receipt with `verified_at`, the probe command or resolver, scope, and limits. A later session must re-probe before reuse; if reality changed, update active state instead of repeating the old receipt.

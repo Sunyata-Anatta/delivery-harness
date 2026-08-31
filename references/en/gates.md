@@ -101,6 +101,12 @@ When a secret is found:
 
 Public usernames, public repository addresses, and documentation examples are not secrets. Whether to anonymize account identifiers depends on the publication boundary. Reports record file, commit, secret type, and disposition, never the value.
 
+## Independent-review recovery gate
+
+Trigger: independent review reports a Critical or Important finding. Action: make it the sole active node, reproduce it, apply the smallest fix, and repeat independent review; continue to block the deployment, external write, import, activation, or release protected by the failed gate. Method: record the finding, affected scope, reproduction command, fix, and re-review evidence. Criterion: the finding is reproduced and fixed, with relevant tests and re-review passing. Failure: pause only for a new decision, authority, or missing real evidence, and write the visible stop line plus the unblock condition. Evidence: the review report and reproduction, fix, and re-review records.
+
+An unresolved Critical or Important finding cannot be the final activity of an active node or a completed session; the finding alone is not a reason to pause.
+
 ### Output redaction for diagnostics, probes, and status commands
 
 Tool output enters conversation and persistent records verbatim. Before any command that may expose credentials, verify its masking strategy: values are redacted before context; key names and structure may remain. Success means no real credential value appears. Diagnostics are non-persistent by default. Before approved archival, redact, write only to an approved appropriately protected location, and register retention. A project evidence slot is not a secret vault; synchronization does not waive redaction.
