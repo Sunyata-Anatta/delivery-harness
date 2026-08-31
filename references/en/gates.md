@@ -45,6 +45,8 @@ Never extend one approval to a new data class or cost range. New or broader cost
 
 Trigger: a user screenshot, original source, human decision, or external result arrives. Action: record a minimal evidence receipt in `.delivery/state.md` before analysis, design, or side effects. Method: record `received_at`, `source_ref` (or `needs-source` when it cannot be preserved), scope, direct observations, limits, and open questions; copy the original into an evidence slot only when authorized. Criterion: later claims trace to a source and distinguish fact from inference. Failure: mark `needs-source`; do not present inference as confirmed fact. Evidence: the receipt and any authorized evidence-slot reference.
 
+Reusing older user or external evidence in a new session or active node also triggers this gate. When its old receipt lacks `source_ref` or `needs-source`, backfill it before using the evidence to support implementation, deployment, or an external write.
+
 Keep authority classes separate: evidence recording, reversible local experiment, remote deployment or service restart, external persistent write, and import/activation/release. One class never authorizes the next. “Check first and report” or “continue after checking” authorizes only the check and report; do not implement, deploy, or write external state until the user receives the report and explicitly accepts the next action.
 
 A preliminary experiment is not completion, even when deployed. Record its purpose, changed version, unproven acceptance conditions, rollback, and prohibited inferences. Until it satisfies the approved design, do not call it live, implementation-complete, or evidence for later import or activation.
