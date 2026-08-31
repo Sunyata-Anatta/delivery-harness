@@ -6,6 +6,8 @@ Read only the section for the active node. General stages, state transitions, an
 
 Read repository rules, the project overlay, `.delivery/state.md`, accepted specifications and plans, relevant implementation and tests, Git state, and available runtime evidence. Distinguish designed, implemented, tested, deployed, and accepted; identify the outcome, non-goals, success evidence, constraints, risks, authority boundary, active node, and next gate. Old messages, checked roadmap boxes, and simulated results cannot independently prove current implementation.
 
+When a screenshot, original source, human decision, or external result arrives, write a minimal evidence receipt before analysis or a design request: received time, reviewable source (or `needs-source`), scope, direct observations, limits, and open questions. The receipt freezes facts only; it neither approves a design nor authorizes a side effect.
+
 Use the [English project overlay template](../../assets/en/project-overlay.template.md) when the project needs local rules, durable lessons, or a Resolver. The overlay stores stable project facts; `state.md` stores mutable active state.
 
 ## requirements: clarify the need
@@ -24,11 +26,15 @@ Request a user decision only when an option materially changes behavior, archite
 
 Record the choice, reason, rejected options, assumptions, risks, rollback, and revisit condition. An implementation node names files, RED test, target, verification command, dependencies, estimate, and stop gate. A strong rule is anchored to an externally observable event and states trigger, action, reproducible method, criterion, failure handling, and evidence; escalation uses observable event counts.
 
+List evidence recording, reversible local experiments, remote deployment, external persistent writes, and import/activation as separate action classes. When the user says “check first and report,” deliver that report first; the conditional authority does not cover implementation or side effects. A preliminary experiment states its purpose, untested acceptance conditions, rollback, and prohibited inferences; “deployed” never substitutes for implementation evidence of an approved design.
+
 ## environment_and_authority: verify environment and authority
 
 Start with read-only checks. Record OS, runtime, dependencies, network, storage, services, credential boundary, repository shape, unrelated edits, and verification commands. Reuse existing components first. Before third-party software, inspect source, license, telemetry, installer, and security impact.
 
 An authority request states action, target, persistence, external effect, and rollback. A preauthorized tool set removes repeated prompts only for items inside that set; it does not remove compatibility checks, post-install verification, or registration.
+
+Local RED/GREEN evidence or a written plan never authorizes remote copying, service restart, external persistent writes, import, or activation. Check explicit authority for each such side effect; ambiguous or conditional wording is not authority.
 
 ## repository_integration: integrate surgically
 
