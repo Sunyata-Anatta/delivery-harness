@@ -107,6 +107,10 @@ Trigger: independent review reports a Critical or Important finding. Action: mak
 
 An unresolved Critical or Important finding cannot be the final activity of an active node or a completed session; the finding alone is not a reason to pause.
 
+## Final-review freshness gate
+
+Trigger: code, runtime configuration, or delivery artifact changes after an independent review. Action: independently review the final artifact before deployment, release, or completion. Criterion: the reviewed object exactly matches the version to be deployed, released, or declared complete. Failure: an old review, tests, scans, self-review, or old-version live verification does not pass this gate; when an old version is already deployed, record the version divergence and do not use its live conclusion for the changed version. Evidence: the final version identifier and new independent-review record.
+
 ### Output redaction for diagnostics, probes, and status commands
 
 Tool output enters conversation and persistent records verbatim. Before any command that may expose credentials, verify its masking strategy: values are redacted before context; key names and structure may remain. Success means no real credential value appears. Diagnostics are non-persistent by default. Before approved archival, redact, write only to an approved appropriately protected location, and register retention. A project evidence slot is not a secret vault; synchronization does not waive redaction.
