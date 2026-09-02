@@ -5,6 +5,7 @@ These principles choose the next action; they do not add ceremony.
 ## Verify reality first
 
 - Before status claims, inspect code, runtime, dependencies, tests, and deployment evidence.
+- Treat an explicit Skill, project rule, or reference as loaded only after it is decoded correctly and legible. If it is garbled, truncated, or unparsed, reread it with an explicit encoding or equivalent method before diagnosing, claiming it is loaded, or causing side effects.
 - Designed, implemented, tested, deployed, and accepted are different states.
 - An interface existing does not prove its backend is deployed; a local commit is not a release.
 - Synthetic fixtures prove mechanics, not real-world quality.
