@@ -19,6 +19,7 @@ description: Use when an agent is asked to own a complex multi-stage software pr
 - 选定语言同时约束回复、参考路径、README 链接和自动载入模板；同一项目不重复载入两种语言。
 - 中文会话读本页与中文参考；英文会话从 [English index](references/en/index.md) 进入，只读英文参考。
 - 中文是规范源；冲突时执行中文，并把英文差异作为同一变更必须修补的缺陷。
+- 可读性门：显式 Skill、项目规则或参考文件只有以正确编码读出且文字可辨时才算载入。出现乱码、截断或未解析文本时，立即按明确编码或等价读取方式重读；在可读前不得据此诊断、声明已加载或产生任何副作用。
 
 ## 按任务路由
 
@@ -74,7 +75,7 @@ Boundary: <sandbox/authority/tool limits, one sentence>
 
 ## 项目状态
 
-默认存放根是 `.delivery/`。`state.md` 是活动状态的唯一事实源并进入版本控制；只写活动节点、当次授权、已过证据门和待决断。稳定项目事实、命令、规则、Resolver 和经验写项目覆盖层。`uploads/`、`artifacts/`、`debug/` 默认忽略，不随交付分发。首次接入复制完整的 [`.delivery` 骨架](assets/delivery-skeleton.template.md)；项目可在覆盖层改存放根并登记偏离。
+默认存放根是 `.delivery/`。`state.md` 是活动状态的唯一事实源并进入版本控制；只写活动节点、当次授权、已过证据门和待决断。稳定项目事实、命令、规则、Resolver 和经验写项目覆盖层；仓库未声明其他规则文档路径时，默认使用 `.delivery/overlay.md`，不得把全局记忆或 Skill 源仓库当作其替代。若项目隐私规则要求忽略该覆盖层，在 `state.md` 只登记其路径、范围和限制，不写敏感值。`uploads/`、`artifacts/`、`debug/` 默认忽略，不随交付分发。首次接入复制完整的 [`.delivery` 骨架](assets/delivery-skeleton.template.md)；项目可在覆盖层改存放根并登记偏离。
 
 分支、HEAD、工作树、远端、身份、安装清单等**可现查事实**不得作为无时限的当前断言。需要登记时写成证据回执，包含验证时间、判据命令或解析器、适用范围和限制；后续会话引用前必须重新探测，事实漂移后立即更新活动状态。历史回执保留其 `as_of` 语义，不冒充当前现实。
 

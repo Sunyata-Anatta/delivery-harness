@@ -57,7 +57,7 @@ Then run `git check-ignore -v --no-index .delivery/uploads/__delivery_probe__`, 
 
 ## Related project files
 
-Copy the English overlay into a project documentation or rule path the repository actually uses, remove unused placeholders, and fill stable facts. A copied overlay has no dependency on relative links inside the installed Skill. Append the matching marked `AGENTS.md`, `CLAUDE.md`, or restricted-runtime block to an instruction file the runtime actually reads; replace an existing marked block as a unit.
+Copy the English overlay into a project-declared documentation or rule path. If none is declared, use `.delivery/overlay.md`; do not ask the user merely to choose a path. The overlay belongs in the governed project, never global memory or the Skill source repository. When project privacy rules require it to be ignored, record only its path, scope, and limits in `state.md`, never sensitive values. Remove unused placeholders and fill stable facts. A copied overlay has no dependency on relative links inside the installed Skill. Append the matching marked `AGENTS.md`, `CLAUDE.md`, or restricted-runtime block to an instruction file the runtime actually reads; replace an existing marked block as a unit.
 
 ## Completion evidence
 
