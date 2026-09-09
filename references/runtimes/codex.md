@@ -43,7 +43,7 @@ $delivery-harness 从当前现实开始，推进到已接受证据门通过。
 1. 核对目标目录四项清单和逐文件哈希。
 2. 确认 Codex 能列出或显式调用 `delivery-harness`。
 3. 新建无上下文会话，在第一次工具调用前检查 `【启动回执】` 和 `【能力信号评估】`。
-4. 至少重复两次，并记录成功数、失败数和 Codex 版本。
+4. 至少重复五次，并记录成功数、失败数和 Codex 版本。
 
 只有目录存在，没有运行时发现结果，不算安装成功。
 
@@ -61,3 +61,7 @@ $delivery-harness 从当前现实开始，推进到已接受证据门通过。
 - `agents/openai.yaml` 是 OpenAI 界面元数据，不是其他运行时的入口文件。
 - 同名 Skill 可能同时出现且不会合并；跨项目结果不能相互代替。
 - ChatGPT 中 Skill 的可用面与 Codex 本地发现路径不是同一个部署面，分别验证。
+
+预注入可使用全局 `$CODEX_HOME/AGENTS.md` 或实际生效的项目 `AGENTS.md` 标记块；`allow_implicit_invocation` 只影响技能选择，不能代替启动合同。新会话确认项目指令大小限制没有截断块。
+
+原生入口补充复核：2026-09-08，[official documentation](https://learn.chatgpt.com/docs/agent-configuration/agents-md).

@@ -2,92 +2,83 @@
 
 [中文](README.md) | [English](README.en.md)
 
-`delivery-harness` is an Agent Skill for complex software delivery. It keeps work moving within accepted authority while using project state, evidence gates, and explicit stop conditions to control stage changes.
+`delivery-harness` is an Agent Skill for multi-stage delivery. It continues within existing authority and uses current project state, real evidence and explicit gates to decide the next action. Specialist Skills, MCPs and CLIs do the work; Harness keeps goals, authority, state and verification aligned.
 
-It is not a project template, task tracker, or deployment script. It does not contain project-specific business facts, credentials, runtime logs, or development records.
+## Loading
 
-English readers start with the [English routing index](references/en/index.md).
+Startup needs a short entry, `SKILL.md` and one language core. Read execution, installation, publishing and provider details only when their actions occur.
 
-## When to use it
+| Layer | Contents | When to read |
+|---|---|---|
+| Native startup block | Receipt shape, pending unknowns, core entry | Before the first tool in a new session |
+| One language core | Unique active state, action routes, lasting boundaries | When the Skill is invoked |
+| Action rules | Nodes, evidence, commits, deployment, debugging | Before the relevant event |
+| Provider/project detail | Installation, Resolver, historical evidence | When the current selection needs it |
 
-Use the Skill when an agent owns a multi-stage project and must keep analysis, design, implementation, debugging, validation, and handoff aligned. Typical cases include:
+`language=auto|zh|en` follows explicit choice, project-session lock, dominant message language, then UI language. Code and logs do not switch it. Read one language core and reference tree. English starts at the [core](references/en/core.md).
 
-- continuing an existing project from live repository and runtime evidence;
-- taking an accepted goal through a verifiable real-world evidence gate;
-- coordinating agents, tools, external services, or runtimes without exceeding authority; and
-- diagnosing, recovering, retesting, and recording a failed node instead of only reporting failure.
+Harness text budgets use `o200k_base`: startup block <=250 tokens, SKILL + selected core <=1000, active state <=600, overlay startup summary <=450, ordinary startup total <=2300. Count host-injected skill catalogs, tools and other global rules separately. These budgets promise neither whole-conversation savings nor removal of previously loaded content. See the [budget and verification contract](references/en/runtime-installation.md).
 
-## Repository and runtime payload
+## Project adoption
 
-The repo retains two repository guide files, `README.md` (Chinese) and `README.en.md` (English), and two repository infrastructure files: `.gitattributes` pins line endings and `.gitignore` keeps the development surface out of the tracked face. All four are required parts of the published repository, and none of them is needed by an agent to execute the Skill.
+| Scenario | Approach |
+|---|---|
+| Temporary question or small task | Work in the session without state directories |
+| New project | Default `.delivery/state.md`, overlay and evidence slots |
+| Existing governance | Preserve rules; map one state pointer and its fields, never dual-write |
+| Restricted runtime | Invoke explicitly and record unavailable pre-injection |
+| Self-bootstrap | Installed baseline governs candidate changes; synchronize after verification |
 
-Infrastructure files must be versioned rather than kept only in a local location such as `.git/info/exclude`. This repository rebuilds its history as a routine operation, local configuration does not survive a clone, and after a rebuild the delivery boundary would have nothing enforcing it.
+`.delivery/state.md` stays in version control by default. Explicit privacy deviations require recovery and verification records. `uploads/`, `artifacts/` and `debug/` are ignored by default. Follow [safe initialization](references/en/project-initialization.md), the [complete skeleton](assets/en/delivery-skeleton.template.md) and [overlay template](assets/en/project-overlay.template.md); merge existing content incrementally.
 
-The runtime Skill payload consists of these four items:
+This repository's own `.delivery/` holds legitimate development state, plans, tests and reviews, kept local under its public-distribution boundary. Companion case studies have independent goals and records, linked through findings only.
+
+## Capability groups and routing
+
+Candidate groups are `research`, `engineering`, `verification`, `documents`, `operations` and `domain`. Groups narrow selection without loading every body. `profile=auto|research|develop|review|document|operate` changes candidate order, never authority.
+
+Filter task, directory, language, offline, data and authority constraints first. Then rank current user choice > most-specific directory binding > project Resolver > user preference > profile > new candidate. Read only the selected provider. Fall back in configured order; missing required capability leaves its evidence gate failed. Record Skill, plugin, MCP and CLI sources and verification separately.
+
+Use the project overlay Resolver. Move long tables to one `.delivery/routing.md`, leaving a pointer in the overlay. After source/compatibility checks and a small-task test, add new Skills as candidates without changing Harness core. Temporary choices never become global defaults automatically. Unresolved same-name sources cannot be silently selected. Recheck tools and authentication when switching Agents.
+
+For example, bind offline review to one directory:
+
+| Condition | Required capability | Ordered candidates | Verification/fallback |
+|---|---|---|---|
+| packages/api/** | review | Verified local reviewer Skill > manual review | Find a known defect; block the review gate if neither meets it |
+
+See [capability routing](references/en/capability-routing.md) and the [configuration contract](references/en/routing-configuration.md) for fields, adoption and limits.
+
+## Install and invoke
+
+The runtime Skill payload contains four items. Copy them completely into a directory named `delivery-harness`:
 
 ```text
-SKILL.md       execution contract and entry point
+SKILL.md       language selection and core entry
 agents/        Codex interface metadata
-assets/        project overlay, state skeleton, and auto-load block templates
-references/    task-routed rules and runtime contracts
+assets/        state, overlay and native startup block templates
+references/    language cores, action rules and runtime guidance
 ```
 
-The repo root therefore contains the four payload items `SKILL.md`, `agents/`, `assets/`, and `references/`, plus the four non-payload files `README.md`, `README.en.md`, `.gitattributes`, and `.gitignore`; install only the four payload items into an Agent. Do not add `.git/`, project-state instances, test output, review material, transcripts, or machine-specific configuration to either surface. Do not write project-specific facts back into this general Skill.
+`README.md` and `README.en.md` are repository guide files; `.gitattributes` and `.gitignore` are versioned repository infrastructure. All four ship with the repository, outside the runtime Skill payload. Do not distribute `.git/`, development state, tests, raw logs or machine configuration as Skill contents.
 
-## Project state contract
+| Runtime | Common user-level surface | Explicit invocation |
+|---|---|---|
+| Codex | `$HOME/.agents/skills/delivery-harness` | `$delivery-harness` |
+| Claude Code | `$HOME/.claude/skills/delivery-harness` | `/delivery-harness` |
+| Hermes Agent | `$HOME/.hermes/skills/delivery-harness` | `/delivery-harness`; CLI preload via `hermes chat --skills delivery-harness` |
+| OpenClaw / other Agent Skills hosts | Runtime-declared installer or directory | Check native help |
 
-Downstream projects use `.delivery/` by default:
+For pre-injection, put the [AGENTS.md block](assets/en/AGENTS.block.template.md), [CLAUDE.md block](assets/en/CLAUDE.block.template.md) or [other entry block](assets/en/restricted-runtime-entry.block.template.md) in the effective native instruction surface. Preserve other user rules; replace only the matching marked block. An installed directory, implicit-invocation metadata and a complete startup contract are separate conditions.
 
-- `.delivery/state.md` is the single source for active state and stays in version control; it records the active node, session authority, passed evidence gates, and pending decisions.
-- `.delivery/uploads/`, `artifacts/`, and `debug/` are ignored by default and are not distributed.
-- Stable rules, commands, Resolver routes, and evidence-based lessons live in the project overlay created from the [English project overlay template](assets/en/project-overlay.template.md).
+Without pre-injection, an explicit cold invocation may read the Skill and core before its receipt, then use business tools. This is not a pre-injection pass where the receipt precedes all tools. Runtime paths, trust, precedence and removal are documented in the [runtime contracts](references/en/runtime-installation.md).
 
-For first-time setup, follow [Project Initialization and Safe Merge](references/en/project-initialization.md) and copy the [complete `.delivery` skeleton](assets/en/delivery-skeleton.template.md). Its `state.md` is a project-tracked placeholder that is filled and maintained with the project; the skeleton also includes ignore rules and trackable placeholders for all three empty directories.
+## Verification, updates and limits
 
-This Skill source repository is a public delivery surface. Its own `.delivery/` contains development tests, state, reviews, and the companion case study, so a project-specific exception keeps it local and outside published history. That exception does not change the downstream default for version-controlled `state.md`.
+Back up the full old payload and entry before updating. Compare exact file sets and per-file hashes, then run structural checks, a real explicit invocation and fresh-session validation. Verify target scope before removing retired files; copying new files alone does not establish set equality.
 
-## Install
+For each runtime claimed to pre-inject correctly, test at least 5 fresh sessions: receipt before first tool, correct loaded source and successful real task. Test cold invocation, missing capabilities and conflicting rules separately. Structural tests, existing files and exit code 0 do not prove those behaviors. Record unreachable runtimes and account/hosted surfaces as unverified separately.
 
-Copy all four items into the target runtime's skill directory named `delivery-harness`. Do not copy only `SKILL.md`, and do not leave a second `SKILL.md` inside the target.
+On recovery, read only current state summaries and needed sources. Record new evidence receipts first. Check authority by action class for commits, global installation, outbound data, deployment and publishing. Repair and re-review independent findings; changes to a reviewed artifact invalidate its old review. Markdown rules depend on Agent adherence; deterministic blocking belongs in host permissions and actual execution entry points.
 
-Common user-level locations:
-
-| Runtime | Target directory |
-|---|---|
-| Codex | `$HOME/.agents/skills/delivery-harness` |
-| Claude Code | `$HOME/.claude/skills/delivery-harness` |
-| OpenClaw | Use its Git or local-directory installation flow |
-| Hermes Agent | `$HOME/.hermes/skills/delivery-harness` |
-
-For runtime-specific discovery, updating, removal, and verification, read [Runtime installation and arrival verification](references/en/runtime-installation.md) and follow its runtime link.
-
-## Invoke and auto-load
-
-Installation makes a Skill discoverable; it does not make every project load it automatically.
-
-Language control is `language=auto|zh|en`. `auto` selects once per project using explicit user choice, locked project-session language, dominant user-message language, then interface language. The selection binds replies, references, and auto-load templates; code, paths, commands, logs, and quotations do not trigger switching.
-
-- Codex: invoke `$delivery-harness`.
-- Claude Code: invoke `/delivery-harness`.
-- For automatic loading in a new project session, add the complete marked block from the [AGENTS template](assets/en/AGENTS.block.template.md) or [CLAUDE template](assets/en/CLAUDE.block.template.md) to the project's effective `AGENTS.md` or `CLAUDE.md` file.
-- For a restricted or other runtime, use the [generic entry template](assets/en/restricted-runtime-entry.block.template.md) only in an instruction surface that runtime actually reads.
-
-For the exact role of `agents/openai.yaml`, the three entry blocks, the `.delivery` skeleton, the state template, and the project overlay, read [Template responsibilities and use](references/en/agent-config.md#template-responsibilities-and-use).
-
-The same Skill name may be available from more than one location. Do not assume the runtime merges sources or selects the newest copy. Record the selected path and validate again in a new session after updating.
-
-## Verify and update
-
-After every installation or update:
-
-1. Compare the source and target four-item manifests and per-file hashes.
-2. Confirm that the runtime lists or explicitly invokes `delivery-harness`.
-3. Open a fresh context-free session and confirm that the startup receipt appears before the first tool call.
-
-The complete four-level evidence model plus update and rollback rules are in [Runtime installation and arrival verification](references/en/runtime-installation.md). A present file does not prove runtime loading; a listed Skill does not prove timely automatic loading.
-
-## Boundaries
-
-[SKILL.md](SKILL.md) is the authoritative rule entry point. Read `references/en/` progressively by task, rather than loading every reference. Use the [node execution reference](references/en/execution.md) for phase details; the entry point routes gates, diagnosis, capability selection, and integrations to their corresponding English references.
-
-Do not write personal data, host names, tokens, private addresses, or raw diagnostic values into the general Skill or archived material. Diagnostics are non-persistent by default; redact before archival.
+See [node contracts](references/en/execution.md), [gates](references/en/gates.md) and [Agent/template roles](references/en/agent-config.md). General Skills do not store project secrets or machine facts. Diagnostics are non-persistent by default and redacted before archival.

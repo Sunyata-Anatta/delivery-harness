@@ -1,6 +1,6 @@
 # Agent Configuration
 
-Delivery Harness has one execution contract: `SKILL.md`. Agents and projects reference it instead of copying the workflow, preventing contradictory rule versions.
+Delivery Harness has one canonical source: the `SKILL.md` entry and its on-demand references. Agents and projects reference it instead of copying the workflow, preventing contradictory rule versions.
 
 ## Installation locations
 
@@ -43,7 +43,7 @@ These files belong to different layers and cannot replace one another. `agents/o
 | Distributed file | Consumer | How to use | Role and maintenance boundary |
 |---|---|---|---|
 | `agents/openai.yaml` | OpenAI/Codex interfaces supporting this metadata | Install with `SKILL.md`, `assets/`, and `references/`; never copy into project instruction files | Display name, description, default invocation prompt, and implicit-invocation policy; no project state; Claude, OpenClaw, and Hermes may ignore it |
-| `assets/AGENTS.block.template.md` | Codex or hosts that read `AGENTS.md` | Open the template and copy only the marked block into the effective project `AGENTS.md`; replace the whole `delivery-harness:start` / `delivery-harness:end` block when present | Makes new project sessions read the installed Skill first; entry, not Skill copy or state store |
+| `assets/AGENTS.block.template.md` | Codex or hosts that read `AGENTS.md` | Open the template and copy only the marked block into the effective project `AGENTS.md`; replace the whole `delivery-harness:start` / `delivery-harness:end` block when present | Makes new project sessions emit the short receipt, then read the installed Skill; entry, not Skill copy or state store |
 | `assets/CLAUDE.block.template.md` | Claude Code | Copy only the marked block into the effective project `CLAUDE.md`; replace the whole marked block when present | Same auto-load entry for Claude; never invent `claude.yaml` |
 | `assets/restricted-runtime-entry.block.template.md` | OpenClaw, Hermes, or another host with a persistent instruction surface | Replace `{{RUNTIME_INSTRUCTION_FILE}}` with a confirmed file the runtime reads, then copy only the marked block; omit when no such surface exists | Minimal entry for non-`AGENTS.md` / non-`CLAUDE.md` surfaces; an unread placeholder cannot prove auto-load |
 | `assets/delivery-skeleton.template.md` | Agent initializing a project | Follow the document to copy the same-language `delivery-skeleton/.delivery/` tree; safely merge an existing `.delivery/`; do not copy the explanatory file | Creates project state, ignore rules, and three trackable empty-directory placeholders; second run must make no change |
@@ -73,7 +73,7 @@ A subagent completion report is not acceptance evidence. The primary agent inspe
 
 ## Project overlay
 
-Copy [project-overlay.template.md](../../assets/en/project-overlay.template.md) into the project's documentation or rule location and fill project facts. The overlay stores commands, durable authority boundaries, project-only rules, integration state, evidence-gate definitions, a distribution-surface registry, Resolver entries, and lessons. Session authority and passed gates remain in `.delivery/state.md`.
+Copy [project-overlay.template.md](../../assets/en/project-overlay.template.md) into the project's documentation or rule location and fill project facts. The overlay stores commands, durable authority boundaries, project-only rules, integration state, evidence-gate definitions, a distribution-surface registry, Resolver entries, and lessons. Session authority and passed gates belong only in the sole active state resolved from the overlay (default `.delivery/state.md`); existing governance adapters never dual-write.
 
 A lesson is an evidence record; a Resolver is an execution route. Lessons say what happened, what proved it, and what changes next time. A Resolver says which Skill, tool, or process to choose under verified conditions. Create a route only after credible repeatable evidence.
 

@@ -2,92 +2,83 @@
 
 [中文](README.md) | [English](README.en.md)
 
-`delivery-harness` 是一个面向复杂软件交付的 Agent Skill。它让 Agent 在已有授权内持续推进工作，并用项目状态、证据门和明确的停止条件约束每一次阶段转换。
+`delivery-harness` 是面向多阶段交付的 Agent Skill：在已有授权内持续推进，以当前项目状态、真实证据和明确门控决定下一步。专业 Skill、MCP 和 CLI 负责具体工作，Harness 负责目标、授权、状态与验证的一致性。
 
-它不是项目模板、任务管理系统或部署脚本。它不保存具体项目的业务事实、凭据、运行日志或开发记录。
+## 如何加载
 
-英文读者使用 Skill 时，从 [英文路由索引](references/en/index.md) 进入。
+启动只需要短入口、`SKILL.md` 与选定语言的核心。详细执行、安装、发布和提供者说明，走到对应动作时再读。
 
-## 适用场景
+| 层 | 内容 | 何时读取 |
+|---|---|---|
+| 原生启动块 | 回执格式、未知事实待探测、核心入口 | 新会话首次工具前 |
+| 单语言核心 | 唯一活动状态、动作路由、始终有效的边界 | Skill 调用时 |
+| 动作规则 | 节点、证据、提交、部署、排错 | 对应事件发生前 |
+| 提供者与项目详情 | 安装方法、Resolver、历史证据 | 当前选择确实需要时 |
 
-在 Agent 需要负责多阶段项目，并且需要把分析、设计、实施、排错、验证和交接保持一致时使用。典型触发包括：
+`language=auto|zh|en` 按显式选择、项目会话锁定、消息主语言、界面语言判定；代码和日志不触发切换。只读一种语言的核心和参考。英文使用 [English core](references/en/core.md)。
 
-- 继续一个已有项目，先以当前仓库和运行证据确认真实状态；
-- 将已接受的目标推进至可验证的真实证据门；
-- 协调多个 Agent、工具、外部服务或运行时，并保持权限边界；
-- 对失败节点进行诊断、恢复、复验和记录，而不是仅报告失败。
+预算按 `o200k_base` 计 Harness 自身文本：启动块 ≤250 tokens，SKILL + 单语言核心 ≤1000，活动状态 ≤600，覆盖层启动摘要 ≤450，普通启动合计 ≤2300。宿主已注入的技能目录、工具清单与其他全局规则另计；预算不承诺整场对话的节省比例或旧内容自动卸载。详见 [预算与验证合同](references/runtime-installation.md)。
 
-## 仓库与运行时载荷
+## 接入项目
 
-repo 保留两份仓库说明文件：`README.md`（中文）和 `README.en.md`（English），以及两份仓库基础设施文件：`.gitattributes` 固定行尾，`.gitignore` 把开发面挡在跟踪面外。四份都属于仓库发布面，必须随远端保留，但都不是 Agent 执行 Skill 所需的运行时文件。
+| 场景 | 做法 |
+|---|---|
+| 临时问答、小任务 | 会话内执行，不创建状态目录 |
+| 新项目 | 默认 `.delivery/state.md`、覆盖层和证据槽 |
+| 已有治理项目 | 保留原规则，声明唯一状态指针与字段映射，不双写 |
+| 受限运行时 | 使用显式调用，登记缺失的预注入能力 |
+| 自举开发 | 当前安装基线治理候选修改；新版本验证后才同步 |
 
-基础设施文件必须版本化，不能只放在 `.git/info/exclude` 一类的本地位置：本仓库以重建历史为常规动作，本地配置不随克隆走，重建之后交付边界就失去执行体。
+`.delivery/state.md` 默认进入版本控制；明确的隐私偏离需登记恢复与验证方式。`uploads/`、`artifacts/`、`debug/` 默认忽略。首次接入按 [安全初始化](references/project-initialization.md) 使用 [完整骨架](assets/delivery-skeleton.template.md) 和 [覆盖层模板](assets/project-overlay.template.md)，已有内容增量合并。
 
-运行时 Skill 载荷由以下四项构成：
+本仓库自身的 `.delivery/` 保存合法的自举开发状态、计划、测试与审阅，按公开分发边界留在本地。伴随案例研究有独立目标与记录，只通过结论引用关联。
+
+## 能力分组与路由
+
+候选组为 `research`、`engineering`、`verification`、`documents`、`operations`、`domain`；组只缩小选择范围，不整组加载正文。`profile=auto|research|develop|review|document|operate` 调整候选顺序，不扩大权限。
+
+先筛任务、目录、语言、离线、数据和授权约束，再按“当前用户选择 > 最具体目录绑定 > 项目 Resolver > 用户偏好 > profile > 新候选”选择。只读取所选提供者；失败按已配置顺序回退，缺失必需能力保持证据门失败。Skill、插件、MCP、CLI 分别记录来源与验证。
+
+配置沿用项目覆盖层 Resolver；长表可移到唯一 `.delivery/routing.md`，覆盖层保留指针。新技能经过来源/兼容性检查和小任务验证后加入候选，无需修改 Harness 核心。临时选择不自动变成全局默认，同名来源冲突不能静默选择。换 Agent 后重新验证工具与认证。
+
+例如，为某个子目录绑定离线审阅能力：
+
+| 条件 | 必需能力 | 有序候选 | 验证/回退 |
+|---|---|---|---|
+| packages/api/** | review | 已验证本地 reviewer Skill > 人工审阅 | 找出已知缺陷；均不满足则阻塞审阅门 |
+
+完整字段、接入步骤与限制见 [能力路由](references/capability-routing.md) 和 [配置合同](references/routing-configuration.md)。
+
+## 安装与调用
+
+运行时 Skill 载荷只有四项，完整复制到目标名为 `delivery-harness` 的目录：
 
 ```text
-SKILL.md       执行规范和入口
+SKILL.md       语言选择与核心入口
 agents/        Codex 界面元数据
-assets/        项目覆盖层、状态骨架和自动载入块模板
-references/    按任务读取的规则与运行时契约
+assets/        状态、覆盖层和原生启动块模板
+references/    单语言核心、动作规则与运行时说明
 ```
 
-因此 repo 顶层是 `SKILL.md`、`agents/`、`assets/`、`references/` 四项载荷，加上 `README.md`、`README.en.md`、`.gitattributes`、`.gitignore` 四份非载荷文件；安装到 Agent 时只复制四项载荷。不要把 `.git/`、项目状态实例、测试输出、评审材料、聊天记录或机器配置加入 repo 或运行时载荷。项目特有事实不写回此通用 Skill。
+`README.md`、`README.en.md` 是仓库说明文件；`.gitattributes`、`.gitignore` 是版本化仓库基础设施。这四份随仓库发布，不属于运行时 Skill 载荷。`.git/`、开发状态、测试、原始日志和机器配置不随技能分发。
 
-## 项目状态契约
+| 运行时 | 常用用户级安装面 | 显式调用 |
+|---|---|---|
+| Codex | `$HOME/.agents/skills/delivery-harness` | `$delivery-harness` |
+| Claude Code | `$HOME/.claude/skills/delivery-harness` | `/delivery-harness` |
+| Hermes Agent | `$HOME/.hermes/skills/delivery-harness` | `/delivery-harness`；CLI 可用 `hermes chat --skills delivery-harness` 预载 |
+| OpenClaw / 其他 Agent Skills 主机 | 运行时声明的安装器或目录 | 按原生帮助确认 |
 
-下游项目默认使用 `.delivery/`：
+需要预注入时，将 [AGENTS.md 启动块](assets/AGENTS.block.template.md)、[CLAUDE.md 启动块](assets/CLAUDE.block.template.md) 或 [其他入口块](assets/restricted-runtime-entry.block.template.md) 写入实际生效的原生指令面；保留其他用户规则，只替换同名标记块。安装目录存在、隐式调用元数据和完整启动合同是不同条件。
 
-- `.delivery/state.md` 是活动状态唯一事实源，进入版本控制；记录活动节点、当次授权、已过证据门和待决断。
-- `.delivery/uploads/`、`artifacts/`、`debug/` 默认忽略，不随交付分发。
-- 稳定规则、命令、Resolver 和经验写入 [项目覆盖层模板](assets/project-overlay.template.md) 生成的项目覆盖层。
+没有预注入时，显式冷调用允许先读 Skill 和核心，再输出回执，再用业务工具；该结果不能计为“回执先于所有工具”的预注入通过。不同运行时的路径、信任、优先级和卸载方式见 [运行时合同](references/runtime-installation.md)。
 
-首次接入时按 [项目初始化与安全合并](references/project-initialization.md) 复制 [`.delivery` 完整骨架](assets/delivery-skeleton.template.md)。其中 `state.md` 是随项目提交、随后持续填写的占位；骨架还包含忽略规则和三个空目录的可追踪占位。
+## 验证、更新与边界
 
-本 Skill 源仓库是公开交付面：它自身的 `.delivery/` 只含开发测试、状态、评审和 case study，因此按项目特例留在本机、不进入发布历史。该特例不改变下游项目对 `state.md` 的默认版本控制规则。
+更新前备份完整旧载荷与入口；更新后比较精确文件集合及逐文件哈希，再做结构检查、真实显式调用和全新会话验证。清理废弃文件前核对目标范围，不能只覆盖新文件便宣称集合一致。
 
-## 安装
+每个声称预注入有效的运行时至少验证 5 次全新会话：回执先于首工具、实际加载来源正确、真实任务成功；另测冷调用、缺失能力与规则冲突。结构测试、文件存在、退出码 0 都不能单独证明这些行为。不可达运行时及账号/托管面分别登记未验证。
 
-将上述四项完整复制到目标运行时名为 `delivery-harness` 的技能目录。不要只复制 `SKILL.md`，也不要在目标中保留第二份 `SKILL.md`。
+恢复时只读取当前状态摘要和所需来源。收到新证据先登记回执；提交、全局安装、外发、部署与发布按各自动作类别核对授权。独立审阅发现必须修复重审；审阅后交付物改变使旧审阅失效。Markdown 规则依赖 Agent 遵循，确定性阻断仍应由宿主权限与实际执行入口提供。
 
-常见用户级位置：
-
-| 运行时 | 目标目录 |
-|---|---|
-| Codex | `$HOME/.agents/skills/delivery-harness` |
-| Claude Code | `$HOME/.claude/skills/delivery-harness` |
-| OpenClaw | 使用其 Git 或本地目录安装方式 |
-| Hermes Agent | `$HOME/.hermes/skills/delivery-harness` |
-
-不同运行时的发现、更新、卸载和验证方式见 [运行时安装与到达验证](references/runtime-installation.md)，再按其中的运行时链接操作。
-
-## 调用与自动载入
-
-安装只让运行时能够发现技能；它不保证每个项目自动载入。
-
-语言控制使用 `language=auto|zh|en`。`auto` 首次按用户明确要求、项目会话锁定、用户消息主要语言、界面语言的顺序选择，并同时约束回复、参考文件和自动载入模板；代码、路径、命令、日志和引文不触发切换。
-
-- Codex：显式输入 `$delivery-harness`。
-- Claude Code：显式输入 `/delivery-harness`。
-- 项目希望在新会话自动载入时，将与项目锁定语言一致的 [AGENTS 模板](assets/AGENTS.block.template.md) 或 [CLAUDE 模板](assets/CLAUDE.block.template.md) 的完整标记块写入实际生效的 `AGENTS.md` 或 `CLAUDE.md`；英文项目使用 `assets/en/` 中的同名模板。
-- 受限或其他运行时使用 [通用入口模板](assets/restricted-runtime-entry.block.template.md)，并只写入该运行时确认会读取的指令面。
-
-各 Agent 如何使用 `agents/openai.yaml`、三个自动载入块、`.delivery` 骨架、状态模板和项目覆盖层，见 [模板职责与使用](references/agent-config.md#模板职责与使用)。
-
-同名 Skill 可能来自多个位置。不要推测运行时会合并它们或优先选择最新副本；记录实际选择的路径，并在更新后新开会话验证。
-
-## 验证与更新
-
-每次安装或更新后，至少完成：
-
-1. 对比源和目标的四项清单与逐文件哈希。
-2. 确认运行时能列出或显式调用 `delivery-harness`。
-3. 新开无上下文会话，确认启动回执先于首次工具调用。
-
-完整的四级证据模型、更新和回滚规则在 [运行时安装与到达验证](references/runtime-installation.md)。文件存在不等于运行时读取；运行时可列出也不等于自动载入按时生效。
-
-## 使用边界
-
-Skill 规则的权威入口是 [SKILL.md](SKILL.md)。按任务渐进读取 `references/`，不要把所有参考文件无差别载入上下文。节点执行细节见 [节点执行参考](references/execution.md)；阶段门、诊断、能力路由和外部集成由入口链接到相应参考文件。
-
-不要把个人信息、主机名、令牌、私有地址或原始诊断值写入通用 Skill 或归档材料。诊断默认不落盘；需要归档时先脱敏。
+执行细则见 [节点合同](references/execution.md)、[门控](references/gates.md) 与 [Agent/模板职责](references/agent-config.md)。通用技能不保存项目秘密或机器事实；诊断默认不落盘，归档前脱敏。

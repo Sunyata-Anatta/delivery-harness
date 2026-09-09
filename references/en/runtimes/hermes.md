@@ -34,7 +34,7 @@ The project instruction entry depends on the instruction surface currently reach
 1. Per-file hashes prove all four items were copied completely.
 2. `skills list` and `skills inspect` return the actual source and trust state.
 3. Explicit invocation produces this Skill's fixed startup block.
-4. Any automatic-loading claim requires fresh-session ordering evidence, repeated at least twice.
+4. Any automatic-loading claim requires fresh-session ordering evidence, repeated at least five times.
 
 A readable but untrusted project Skill is not an executable installation.
 
@@ -52,3 +52,9 @@ For a local copy, remove only the exact target directory. For a Hub installation
 - External directories can create same-name shadowing and writable-source risk; record the source actually resolved.
 - The default tap's `skills/` layout differs from this repository's single-Skill root. Without a custom tap path, compatibility is not promised.
 - Direct-URL installation must prove every relatively referenced resource was fetched; fetching only `SKILL.md` is incomplete.
+
+Explicit preload is available through `hermes chat --skills delivery-harness`. Without ignore-rules options, project context priority is `.hermes.md`, `AGENTS.override.md`, `AGENTS.md`, then `CLAUDE.md`; put the short block in the effective entry. Use `skill_view` for references on demand. Do not put the whole process in global identity files or invent configuration keys. Bundles may skip missing members; verify each required capability.
+
+Native entry addendum checked 2026-09-08: [official documentation](https://hermes-agent.nousresearch.com/docs/reference/cli-commands/).
+
+[Context files](https://hermes-agent.nousresearch.com/docs/user-guide/features/context-files/) define instruction precedence.

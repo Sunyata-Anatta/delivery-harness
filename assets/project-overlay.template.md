@@ -41,6 +41,13 @@
 - 代码与文档风格：{{PROJECT_CONVENTIONS}}
 - 数据与隐私：{{DATA_RULES}}
 
+## 启动摘要
+
+只保留目标、规则/状态/过程记录指针、profile 与硬约束，目标 ≤450 tokens；长详情按当前动作读取。
+- profile：`auto`（research/develop/review/document/operate 只调整候选）
+- 路由事实源：本页 Resolver；过长才移到 `.delivery/routing.md` 并删除本页重复表
+- 活动状态：默认 `.delivery/state.md`；复用已有治理状态时写唯一 {{ACTIVE_STATE_PATH}}、字段映射、写入权限和验证方式，禁双写
+
 ## 项目 Resolver
 
 Resolver 把已验证经验变成条件路由。只在条件、能力、选择或重审条件变化时更新，不按节点机械改写。

@@ -4,6 +4,8 @@ Chinese rule files are normative. This English tree is an operational equivalent
 
 | Task | Read |
 |---|---|
+| Ordinary startup | [core.md](core.md) |
+| Configure profiles and candidate bindings | [routing-configuration.md](routing-configuration.md) |
 | Execute the current lifecycle node | [execution.md](execution.md) |
 | Initialize a project or merge an existing `.delivery/` | [project-initialization.md](project-initialization.md) |
 | Change state, install, deploy, or enter a phase | [gates.md](gates.md) |

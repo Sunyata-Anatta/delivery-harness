@@ -1,10 +1,17 @@
-# CLAUDE.md auto-load block
+# CLAUDE.md Startup Block
 
-Append this complete marked block to the effective `CLAUDE.md`; replace the full existing block with the same markers. Never keep duplicates.
+Append or replace only the marked block in the runtime-read `CLAUDE.md`; preserve other user rules.
 
 ```markdown
 <!-- delivery-harness:start -->
-This project runs under delivery-harness. On first contact with the project, read the installed delivery-harness/SKILL.md, select the project language, and emit its startup receipt before any tool call.
-Keep the active node, session authority, passed evidence gates, and pending decisions only in `.delivery/state.md`; keep stable rules, commands, and Resolver routes in the project overlay. Synchronize affected facts before commit. Reverify recorded external state before relying on it.
+On first project contact, before any tool, emit:
+【Startup Receipt】
+Rules: pending probe
+Version control: pending probe
+Node: pending probe
+Boundary: pending probe
+【Capability Signal Assessment】Current triggers or none, with reason.
+For Chinese use 【启动回执】, 规则：, 版本控制：, 节点：, 边界：, 【能力信号评估】. Fill known facts; leave unknowns pending.
+Read installed delivery-harness/SKILL.md and the selected-language core first; receive and understand results before business tools. Never batch them together. Then follow the core to inspect project rules, overlay and unique state (default .delivery/state.md); report verified facts read-only. Reread unreadable rules; unverified facts cannot support completion. Load only current-action references; authority and evidence gates always apply.
 <!-- delivery-harness:end -->
 ```
