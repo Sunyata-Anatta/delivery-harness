@@ -1,5 +1,7 @@
 # Decision, Authority, and Evidence Gates
 
+Before any gate here, read and execute the [common contract](execution.md), including the runway check before independent review or gate actions; then read the complete rule unit for the current event.
+
 ## Continue directly
 
 Within accepted scope, Harness may:
@@ -39,11 +41,11 @@ Request the smallest authority possible and state action, target, persistence, e
 
 Do not re-ask for the same explicitly approved action class inside one active node when target, action class, data class, cost range, persistence, and external effect are unchanged.
 
-Never extend one approval to a new data class or cost range. New or broader cost, different external recipient, changed persistence, broader authority, or a new node requires new approval. Ambiguous authority means not authorized.
+Never extend one approval to a new data class or cost range. A new data class, new or broader cost, different external recipient, changed persistence or broader authority requires new approval. At a new node, recheck existing authority; approval of the full plan remains valid for covered actions. Ambiguous authority means not authorized.
 
 ## Evidence receipt, conditional authority, and side effects
 
-Trigger: a user screenshot, original source, human decision, or external result arrives. Action: record a minimal evidence receipt in `.delivery/state.md` before analysis, design, or side effects. Method: record `received_at`, `source_ref` (or `needs-source` when it cannot be preserved), scope, direct observations, limits, and open questions; copy the original into an evidence slot only when authorized. Criterion: later claims trace to a source and distinguish fact from inference. Failure: mark `needs-source`; do not present inference as confirmed fact. Evidence: the receipt and any authorized evidence-slot reference.
+Trigger: a user screenshot, original source, human decision, or external result arrives. Action: record a minimal evidence receipt in the sole active state resolved from the overlay (default `.delivery/state.md`) before analysis, design, or side effects. Method: record `received_at`, `source_ref` (or `needs-source` when it cannot be preserved), scope, direct observations, limits, and open questions; copy the original into an evidence slot only when authorized. Criterion: later claims trace to a source and distinguish fact from inference. Failure: mark `needs-source`; do not present inference as confirmed fact. Evidence: the receipt and any authorized evidence-slot reference.
 
 Reusing older user or external evidence in a new session or active node also triggers this gate. When its old receipt lacks `source_ref` or `needs-source`, backfill it before using the evidence to support implementation, deployment, or an external write.
 
@@ -73,6 +75,10 @@ If you cannot write that line, do not stop, including after announcing an action
 A user's preferred cadence constrains handoff size, not turn boundaries. Confusing them creates a stable failure mode where “I am starting now” becomes the whole handoff.
 
 ## Commit, remote publication, and redaction gate
+
+### Record and identity availability gate
+
+Trigger: before the first `git add` for a delivery change. Action: confirm that the sole active state, the project overlay, and the process record are readable, that the process record can be appended before commit, and that an author-identity policy is available. Method: run the smallest read/write preflight at the paths declared by the project overlay without reading evidence-slot contents, then compare `git var GIT_AUTHOR_IDENT` with the author policy. Criterion: the record is updated, the identity policy is available, and the candidate identity matches. Failure: **do not stage, commit, or push**; never infer policy from the current Git identity, old commits, or remote authors. Make a record-path failure the active diagnostic node: run one time-bounded minimal read, one equivalent read-only retry, and one append preflight that cannot overwrite the original. Never relocate records, create a substitute record surface, or call a timeout a successful record. After three safe checks still fail, preserve unstaged changes and report the exact path, operation, timeout/error, and unblock condition before stopping. Evidence: paths, preflight time, append result, identity-policy source, and comparison result; never record sensitive values.
 
 Before commit, inspect worktree, staged set, and full Git history for private keys, tokens, passwords, cloud credentials, connection strings, authentication files, session cookies, real personal information, machine-specific paths, and output containing identity or authority data.
 

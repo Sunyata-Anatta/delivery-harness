@@ -34,7 +34,7 @@ foreach ($name in "agents", "assets", "references") {
 1. 核对目标四项清单和逐文件哈希。
 2. 确认 `/delivery-harness` 出现在可用命令中并能显式执行。
 3. 新建无上下文会话，检查启动固定块先于第一次工具调用。
-4. 至少重复两次，记录 Claude Code 版本、成功数和失败数。
+4. 至少重复五次，记录 Claude Code 版本、成功数和失败数。
 
 若只验证 `/delivery-harness` 能调用，不能推导 `CLAUDE.md` 自动载入已经生效。
 
@@ -52,3 +52,7 @@ standalone 安装只移除准确的 `delivery-harness` 目标目录；插件安�
 - Claude.ai 上传 Skill 与 Claude Code 本地 Skill 是不同部署面，分别验证。
 - `agents/openai.yaml` 对 Claude 不构成配置；不要另造 `claude.yaml`。
 - 自动载入是否生效只能由新会话顺序证据证明。
+
+预注入使用实际生效的用户或项目 `CLAUDE.md` 标记块。原生 `paths` 条件只能作本运行时的适配，不写入通用 frontmatter；相同技能再次调用不保证回收旧正文。
+
+原生入口补充复核：2026-09-08，[official documentation](https://code.claude.com/docs/en/skills).

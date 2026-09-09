@@ -43,7 +43,7 @@ When a project needs automatic loading, append the fixed block from [AGENTS.bloc
 1. Verify the target directory's four-item manifest and per-file hashes.
 2. Confirm Codex can list or explicitly invoke `delivery-harness`.
 3. Start a context-free session and check for `【Startup Receipt】` and `【Capability Signal Assessment】` before the first tool call.
-4. Repeat at least twice and record successes, failures, and the Codex version.
+4. Repeat at least five times and record successes, failures, and the Codex version.
 
 A directory that exists without runtime discovery evidence is not a successful installation.
 
@@ -61,3 +61,7 @@ Remove the exact target directory; do not recursively operate on its `.agents/sk
 - `agents/openai.yaml` is OpenAI interface metadata, not an entry file for other runtimes.
 - Same-name Skills can coexist without merging; results from one project do not prove another.
 - Skill availability in ChatGPT and Codex local discovery paths are separate deployment surfaces and must be verified separately.
+
+Pre-injection may use a marked block in global `$CODEX_HOME/AGENTS.md` or the effective project `AGENTS.md`. `allow_implicit_invocation` affects Skill selection, not delivery of the startup contract. Check that project-instruction size limits do not truncate the block.
+
+Native entry addendum checked 2026-09-08: [official documentation](https://learn.chatgpt.com/docs/agent-configuration/agents-md).

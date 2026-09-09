@@ -2,6 +2,12 @@
 
 Read this when a project first adopts Delivery Harness or an existing `.delivery/` needs repair. The outcome is idempotent and lossless: copy a new layout as a unit, but never replace the directory wholesale when it already exists.
 
+## Lightweight and existing governance adoption
+
+Temporary questions create no directories. Inspect existing rules and state first; preserve original governance. The overlay may declare one active-state path, mappings for node/authority/evidence/decisions, writer and authority, verification and recovery. Adoption passes only when these fields can be verified for reading and writing. Do not maintain a second state in `.delivery/state.md`; a compatibility entry is a pointer only. Preserve history before migration and read it on demand. Companion tasks remain independent.
+
+Default skeleton and Git criteria below apply only to projects using that layout. For an external-state adapter, validate declared fields, writes and recovery; do not require a second `.delivery/` or tracking private material. Use a decision gate only when changing existing governance exceeds authority. Adoption remains incomplete if controlled actions cannot keep the sole state current.
+
 ## Select the delivery surface
 
 - English projects use the [English skeleton](../../assets/en/delivery-skeleton.template.md), [state template](../../assets/en/harness-state.template.md), [overlay](../../assets/en/project-overlay.template.md), and matching auto-load block under `assets/en/`.
@@ -29,7 +35,7 @@ Read this when a project first adopts Delivery Harness or an existing `.delivery
 | A slot is a directory | Preserve all contents; add only a missing `.gitkeep`. |
 | An expected directory path is another object | Stop that path and report its type and required decision. |
 
-An explicit project deviation controls slot layout or tracking. If it prevents `state.md` from entering version control, do not claim that the Harness state contract is installed.
+An explicit project deviation controls slot layout or tracking. Explicit approval of local-private state requires a recovery location, unique writer and verification method; do not claim that state is version controlled.
 
 ## Parent ignore rules
 
@@ -63,6 +69,6 @@ Copy the English overlay into a project-declared documentation or rule path. If 
 
 1. `.delivery/state.md`, `.delivery/.gitignore`, and all three `.gitkeep` files exist; no prior file or slot content was deleted or overwritten.
 2. `git diff -- .delivery` contains only approved additions; `git status --short -- .delivery` is explainable.
-3. `state.md` is not ignored, while ordinary slot contents are ignored.
+3. `state.md` is not ignored unless an explicit private-state deviation was verified; ordinary slot contents are ignored.
 4. Repeat the same procedure. The second run produces no new diff.
 5. Before commit, inspect the actual staged set. Commit state, ignore rules, and placeholders only; handle real slot contents under project policy and the sensitive-data gate.

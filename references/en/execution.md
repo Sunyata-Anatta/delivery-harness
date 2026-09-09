@@ -1,6 +1,6 @@
 # Node Execution Reference
 
-Read only the section for the active node. General stages, state transitions, and stop rules remain in `SKILL.md`.
+Read the common contract at the end first, then the active-node section; ordinary startup reads only the [core](core.md).
 
 ## reality_audit: start from reality
 
@@ -58,8 +58,26 @@ When independent review finds a Critical or Important issue, make it the active 
 
 Any code, runtime-configuration, or delivery-artifact change after the last independent review invalidates that review. Before deployment, release, or completion, independently review the final artifact; tests, scans, self-review, and old-version live verification do not substitute.
 
-Before a long test, independent review, or gate action, reserve enough model, tool, and time runway to read the result, update state, and start the next gate. If that runway is unavailable or uncertain, first record a resumable handoff: active finding/evidence, completed verification, frozen side effects, single resume action, and unblock condition. Exhaustion is not completion; the next session resumes the handoff and re-reviews.
-
 Register each evidence artifact's location and access route, processing, conclusion, boundary, and review date. Default slots are `.delivery/uploads/`, `artifacts/`, and `debug/`. Before calling evidence absent, state the current machine, directory, network, and authority reachability boundary.
 
 Branch, HEAD, worktree, remote, identity, and installation inventory are checkable facts, not timeless prose. Store them only as a dated receipt with `verified_at`, the probe command or resolver, scope, and limits. A later session must re-probe before reuse; if reality changed, update active state instead of repeating the old receipt.
+
+## Common contract: state and transitions
+
+Default storage is `.delivery/`. `state.md` is the sole active-state source; version it by default. Explicit privacy deviations or an existing-governance adapter follow the initialization contract. Keep only the active node, authority, passed gates and pending decisions. Stable facts, commands, rules and Resolver belong in the project overlay, default `.delivery/overlay.md`; neither global memory nor the Skill source repository substitutes. Record private-overlay path, scope and limits without sensitive values. `uploads/`, `artifacts/`, `debug/` are ignored by default. Use the [full skeleton](../../assets/en/delivery-skeleton.template.md).
+
+Checkable facts need verification time, probe/resolver, scope and limits; re-probe before reuse. Historical receipts retain their as-of meaning. New source evidence must receive `received_at`, `source_ref` or `needs-source`, scope, observations, limits and open questions before analysis, design requests or side effects. Copy originals only when authorized. A receipt is not design approval. Before reusing evidence at a new session/node, backfill missing source references.
+
+Stage order:
+
+```text
+reality_audit -> requirements -> tool_research -> solution_decision
+  -> design_and_plan -> environment_and_authority -> repository_integration
+  -> tdd_nodes -> real_evidence -> release_or_handoff
+```
+
+At every transition: verify the current gate with fresh evidence; update the sole active state; synchronize affected specification, plan, rules, lessons, Resolver, README and counterpart language before commit. Before commit append discoveries, error details, improvement purpose, options/choice and supporting data to the process record named by the overlay; explicitly record no new findings when applicable. Commit the smallest complete change when authorized and continue while in scope. Search for superseded statements after fact changes; documentation is a checkpoint, not a stop. Handoffs carry one-time context, not undated live Git or identity assertions.
+
+Strong rules specify an externally observable trigger, action, reproducible method, success criterion, failure handling and evidence; escalation uses event counts. Before completion run `IDENTIFY -> RUN -> READ -> VERIFY -> THEN`: accepted outcome, real evidence, regression, state/docs, installation/version control, rollback and limits must match reality, with no required work unfinished.
+
+Before a long test, independent review, or gate action, reserve enough model, tool, and time runway to read the result, update state, and start the next gate. If that runway is unavailable or uncertain, first record a resumable handoff: active finding/evidence, completed verification, frozen side effects, single resume action, and unblock condition. Exhaustion is not completion; the next session resumes the handoff and re-reviews.

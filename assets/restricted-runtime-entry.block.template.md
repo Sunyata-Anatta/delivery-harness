@@ -1,10 +1,17 @@
-# 受限运行时自动载入块
+# {{RUNTIME_INSTRUCTION_FILE}} 启动块
 
-把下面固定块追加到 `{{RUNTIME_INSTRUCTION_FILE}}`；已有同名块时整块替换。**追加或整块替换**，不要保留两份。若运行时没有可持久读取的项目指令文件，只保留手动调用路径，并把此项记为已知边界。
+只把标记块追加或整块替换到运行时实际读取的 `{{RUNTIME_INSTRUCTION_FILE}}`；其余用户规则保留。
 
 ```markdown
 <!-- delivery-harness:start -->
-本项目在 delivery-harness 下运行。首次触碰项目时，先读取已安装的 delivery-harness/SKILL.md，并按其要求输出启动回执。
-活动节点、当次授权、已过证据门和待决断只写 `.delivery/state.md`；稳定规则、命令和 Resolver 写项目覆盖层。提交前同步两者涉及的事实。引用旧的外部状态前先用判据命令复验。
+首次触碰项目，任何工具前先输出：
+【启动回执】
+规则：待探测
+版本控制：待探测
+节点：待探测
+边界：待探测
+【能力信号评估】当前触发项或无；理由。
+英文标题/字段用【Startup Receipt】、Rules:、Version control:、Node:、Boundary:、【Capability Signal Assessment】。已知填事实，未知待探测。
+先读已安装 delivery-harness/SKILL.md 与选定语言核心；收到并理解结果后才可用业务工具，禁止合批。再按核心查项目规则、覆盖层和唯一状态（默认 .delivery/state.md），只读补报事实。规则不可读即重读；未核实不称完成。只加载当前动作引用；授权与证据门始终有效。
 <!-- delivery-harness:end -->
 ```

@@ -77,3 +77,11 @@ For each level, record source version, target runtime version, criterion, exit c
 ## Release criteria
 
 Before release, all are true: repository root installs directly; only one `SKILL.md`; no hard executable dependency; every local link resolves; all five runtime contracts cover installation, discovery, arrival, update, uninstall, and boundaries; at least one target runtime completes a real invocation; every claimed auto-loaded runtime has fresh-session sequence evidence; and the distribution surface registry contains no silently omitted target.
+
+## Pre-injection, cold invocation and context budgets
+
+Inject only the marked receipt contract, never the full Skill, overlay, history or capability group. It must be visible before the first tool; “read the Skill then emit” cannot satisfy that order. Without pre-injection, an explicit cold invocation may read the Skill and selected core before its receipt, with the first business tool after it. Score the two entries separately; neither proves the other.
+
+Measure newly injected Harness text using `o200k_base`: marked block <=250 tokens; SKILL + selected core <=1000; active state <=600; overlay startup summary <=450; ordinary startup total <=2300. Restore active summaries and pointers only; read history/process/long Resolver on demand. Report host-injected skill catalogs, tool inventory, global rules and cache separately. This is not a host-total context cap or a promise that previously read content unloads.
+
+For each reachable runtime run at least 5 fresh pre-injected sessions, checking the first visible receipt, first tool event, actual read path, selected language and one real task. Separately test explicit cold entry, missing capabilities, unreadable text and source conflicts. No tool event, template echoes or old-session cache do not constitute full behavioral passes. Record every sample and never mark unreachable runtimes passed.

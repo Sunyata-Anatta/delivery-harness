@@ -1,6 +1,6 @@
 # Agent 配置
 
-Delivery Harness 只有一份执行规范，就是 `SKILL.md`。不同 Agent 或项目只引用它，不复制整套流程。这样修改规则时不会出现多个互相矛盾的版本。
+Delivery Harness 只有一份规范源：`SKILL.md` 入口与其按需引用。不同 Agent 或项目只引用它，不复制整套流程。这样修改规则时不会出现多个互相矛盾的版本。
 
 ## 安装位置
 
@@ -43,7 +43,7 @@ policy:
 | 分发文件 | 消费者 | 如何使用 | 作用与维护边界 |
 |---|---|---|---|
 | `agents/openai.yaml` | 支持该元数据的 OpenAI/Codex 界面 | 随 `SKILL.md`、`assets/`、`references/` 一起安装，不复制到项目指令文件 | 提供显示名、简介、默认调用提示和隐式调用策略；不保存项目状态，Claude、OpenClaw、Hermes 可忽略它 |
-| `assets/AGENTS.block.template.md` | Codex 或明确读取 `AGENTS.md` 的主机 | 打开模板，只复制标记块到项目实际生效的 `AGENTS.md`；已有 `delivery-harness:start` / `delivery-harness:end` 时整块替换 | 让新项目会话先读取已安装 Skill；它是入口，不是 Skill 副本，也不保存状态 |
+| `assets/AGENTS.block.template.md` | Codex 或明确读取 `AGENTS.md` 的主机 | 打开模板，只复制标记块到项目实际生效的 `AGENTS.md`；已有 `delivery-harness:start` / `delivery-harness:end` 时整块替换 | 让新项目会话先输出短回执，再读取已安装 Skill；它是入口，不是 Skill 副本，也不保存状态 |
 | `assets/CLAUDE.block.template.md` | Claude Code | 只复制标记块到项目实际生效的 `CLAUDE.md`；已有同名标记块时整块替换 | 为 Claude 项目会话提供同一自动载入入口；不另造 `claude.yaml` |
 | `assets/restricted-runtime-entry.block.template.md` | OpenClaw、Hermes 或其他有持久项目指令面的主机 | 先把 `{{RUNTIME_INSTRUCTION_FILE}}` 替换为运行时确认会读取的文件名，再只复制标记块；没有此类指令面就不用 | 为非 `AGENTS.md` / `CLAUDE.md` 指令面提供最小入口；不能用一个不会被读取的占位文件冒充自动载入 |
 | `assets/delivery-skeleton.template.md` | 初始化项目的 Agent | 按文档复制同语言 `delivery-skeleton/.delivery/` 实体目录；已有 `.delivery/` 时执行增量安全合并，不复制这份说明文件本身 | 生成项目状态、忽略规则和三个可追踪空目录占位；二次执行必须零差异 |
@@ -73,7 +73,7 @@ policy:
 
 ## 项目覆盖层
 
-把 [project-overlay.template.md](../assets/project-overlay.template.md) 复制到项目的文档或规则目录，填写项目事实。覆盖层适合存放命令、长期授权边界、项目独有规则、集成状态、证据门定义、分发面登记、Resolver 和经验教训；当次授权和已过证据门只写 `.delivery/state.md`。
+把 [project-overlay.template.md](../assets/project-overlay.template.md) 复制到项目的文档或规则目录，填写项目事实。覆盖层适合存放命令、长期授权边界、项目独有规则、集成状态、证据门定义、分发面登记、Resolver 和经验教训；当次授权和已过证据门只写覆盖层解析的唯一活动状态（默认 `.delivery/state.md`）；已有治理适配禁双写。
 
 经验是证据记录，Resolver 是执行路由。经验回答之前发生了什么、证据是什么、以后要改变什么；Resolver 回答在已知条件下应该选择哪个 Skill、工具或流程。先有可信经验，再把稳定且会重复使用的结论写进 Resolver。
 

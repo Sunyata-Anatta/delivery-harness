@@ -34,7 +34,7 @@ When a project needs automatic loading, put the fixed block from [CLAUDE.block.t
 1. Verify the four-item target manifest and per-file hashes.
 2. Confirm `/delivery-harness` appears among available commands and can be invoked explicitly.
 3. Start a context-free session and confirm the fixed startup block appears before the first tool call.
-4. Repeat at least twice and record the Claude Code version, successes, and failures.
+4. Repeat at least five times and record the Claude Code version, successes, and failures.
 
 Proving only that `/delivery-harness` can be invoked does not prove that automatic loading through `CLAUDE.md` is active.
 
@@ -52,3 +52,7 @@ For a standalone installation, remove only the exact `delivery-harness` target d
 - A Skill uploaded to Claude.ai and a local Claude Code Skill are separate deployment surfaces and must be verified separately.
 - `agents/openai.yaml` does not configure Claude; do not invent a `claude.yaml`.
 - Only fresh-session ordering evidence can prove that automatic loading is active.
+
+Pre-inject a marked block through the effective user or project `CLAUDE.md`. Native `paths` conditions are runtime-specific adapters, not portable frontmatter. Reinvoking the same Skill does not guarantee removal of prior body text.
+
+Native entry addendum checked 2026-09-08: [official documentation](https://code.claude.com/docs/en/skills).

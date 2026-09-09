@@ -34,7 +34,7 @@ hermes skills inspect delivery-harness
 1. 逐文件哈希证明四项复制完整。
 2. `skills list` 与 `skills inspect` 返回实际来源及信任状态。
 3. 显式调用出现本 Skill 的启动固定块。
-4. 自动载入声明必须用全新会话顺序证据，并至少重复两次。
+4. 自动载入声明必须用全新会话顺序证据，并至少重复五次。
 
 目录可读但未 trust 的项目 Skill，不算可执行安装。
 
@@ -52,3 +52,9 @@ hermes skills inspect delivery-harness
 - external directories 可能引入同名遮蔽和可写来源风险，必须记录实际来源。
 - 默认 tap 的 `skills/` 布局与本仓库根目录单 Skill 不同；若未自定义 tap 路径，不作兼容承诺。
 - 直接 URL 安装需要验证所有相对引用资源都被获取；只取 `SKILL.md` 会造成不完整安装。
+
+预载可显式使用 `hermes chat --skills delivery-harness`；未使用忽略规则选项时，项目上下文文件优先级是 `.hermes.md`、`AGENTS.override.md`、`AGENTS.md`、`CLAUDE.md`，应把短块放进真实生效的入口。用 `skill_view` 按需读取参考文件。不要把完整流程塞进全局身份文件或发明配置键。bundle 可能跳过缺失成员，仍需单项能力验证。
+
+原生入口补充复核：2026-09-08，[official documentation](https://hermes-agent.nousresearch.com/docs/reference/cli-commands/).
+
+[Context files](https://hermes-agent.nousresearch.com/docs/user-guide/features/context-files/) define instruction precedence.

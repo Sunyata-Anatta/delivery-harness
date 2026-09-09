@@ -30,6 +30,13 @@ Deviations: {{STORAGE_DEVIATIONS}}
 - Conventions: {{PROJECT_CONVENTIONS}}
 - Data/privacy: {{DATA_RULES}}
 
+## Startup summary
+
+Keep only outcome, rule/state/process-record pointers, profile and hard constraints; target <=450 tokens. Read long details only for the current action.
+- profile: `auto` (research/develop/review/document/operate adjust candidates only)
+- Routing source: this Resolver; move long detail to `.delivery/routing.md` and remove duplicate tables
+- Active state: default `.delivery/state.md`; existing governance uses one {{ACTIVE_STATE_PATH}}, field mapping, write authority and verification, never dual writes
+
 ## Resolver
 | Condition | Skill/tool/process | Evidence | Fallback | Verification | Revisit when | Last verified |
 |---|---|---|---|---|---|---|
