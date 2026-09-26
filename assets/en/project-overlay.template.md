@@ -12,16 +12,19 @@ Store project facts only. This overlay may tighten Delivery Harness but cannot o
 - Repository rules: {{REPOSITORY_INSTRUCTIONS}}
 - Accepted specification: {{ACCEPTED_SPEC}}
 - Execution plan: {{EXECUTION_PLAN}}
-- Active state: `.delivery/state.md` (single source of truth)
-- Process record: {{PROCESS_RECORD_PATH}} (append findings, error details, improvement intent, options and the choice, and supporting data at the commit gate; state the location here when it stays outside the delivery surface)
+- Active state: `{{ACTIVE_STATE_PATH}}` (sole pointer; use `.delivery/state.md` for the default layout)
+- Navigation: `{{PROJECT_MAP_PATH}}` (default `PROJECTMAP.md`; skeleton and on-demand entries, never recursively expanded)
+- Rule entries: {{RULE_CLAUSE_ENTRIES}} (source paths and scope/sections; reference existing clauses instead of copying them)
+- Process record: {{PROCESS_RECORD_PATH}} (default `.delivery/process.md`; read by date/topic. Keep adoption and conformance receipts; append findings, error details, improvement intent, options/choice and supporting data at the commit gate. State its location when outside the delivery surface)
+- Existing-state adapter: {{STATE_FIELD_MAPPING_WRITER_AUTHORITY_VERIFY_RECOVERY}} (node/authority/evidence/decision fields, writer and authority, verification and recovery; no additional active state)
 
 ## Storage
 Root: `.delivery/`
-- `.delivery/state.md`: active node, session authority, passed evidence gates, and pending decisions; version controlled
-- `uploads/`: immutable user inputs
-- `artifacts/`: generated and evidence artifacts
-- `debug/`: essential reproduction/debug files
-On first setup, follow the installed Skill's project-initialization reference and copy the complete `.delivery` skeleton; do not create empty directories that Git cannot record.
+- Active state: use the sole pointer above; version by default, with recovery location and verification for privacy deviations
+- `uploads/`: approved short-term user inputs, unchanged
+- `artifacts/`: one-off outputs and temporary evidence
+- `debug/`: temporary debugging output and reproduction material
+For the default layout, follow the installed Skill's initialization reference and copy the full `.delivery` skeleton. With an existing-state adapter, skip default state creation. Durable specifications, evidence reports and fixtures use project-semantic locations, created only when content exists; sensitive originals stay in approved restricted storage.
 Deviations: {{STORAGE_DEVIATIONS}}
 
 ## Project rules
@@ -32,10 +35,10 @@ Deviations: {{STORAGE_DEVIATIONS}}
 
 ## Startup summary
 
-Keep only outcome, rule/state/process-record pointers, profile and hard constraints; target <=450 tokens. Read long details only for the current action.
+Keep only outcome, references to source fields, profile and hard constraints; target <=450 tokens. Define rule/state/navigation/process paths above only. Read long details for the current action; budgets never remove necessary safety or acceptance clauses.
 - profile: `auto` (research/develop/review/document/operate adjust candidates only)
 - Routing source: this Resolver; move long detail to `.delivery/routing.md` and remove duplicate tables
-- Active state: default `.delivery/state.md`; existing governance uses one {{ACTIVE_STATE_PATH}}, field mapping, write authority and verification, never dual writes
+- Conformance: check applicable clauses before actions; at transitions, rule/path changes or validation failures follow the Harness execution contract. Current conclusions go to sole state, detailed receipts to the process record
 
 ## Resolver
 | Condition | Skill/tool/process | Evidence | Fallback | Verification | Revisit when | Last verified |

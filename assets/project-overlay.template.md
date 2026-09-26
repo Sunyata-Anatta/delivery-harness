@@ -13,17 +13,20 @@
 - 仓库规则：{{REPOSITORY_INSTRUCTIONS}}
 - 已接受规格：{{ACCEPTED_SPEC}}
 - 执行计划：{{EXECUTION_PLAN}}
-- 活动状态：`.delivery/state.md`（唯一事实源）
-- 过程记录：{{PROCESS_RECORD_PATH}}（提交门追加发现、错误细节、改进目的、方案与选择、支撑数据。留在交付面之外时在此写明位置）
+- 活动状态：`{{ACTIVE_STATE_PATH}}`（唯一指针；默认布局填 `.delivery/state.md`）
+- 导航：`{{PROJECT_MAP_PATH}}`（默认 `PROJECTMAP.md`；骨架与按需导引，不递归展开）
+- 规约入口：{{RULE_CLAUSE_ENTRIES}}（来源路径及适用范围/章节；已有规则只引用，不复制正文）
+- 过程记录：{{PROCESS_RECORD_PATH}}（默认 `.delivery/process.md`；按日期/主题读取。保存接入对齐与规约检查回执，提交门追加发现、错误细节、改进目的、方案与选择、支撑数据。留在交付面之外时在此写明位置）
+- 既有状态适配：{{STATE_FIELD_MAPPING_WRITER_AUTHORITY_VERIFY_RECOVERY}}（节点/授权/证据/待决断字段、写入方与权限、验证及恢复方法；不另建活动状态）
 
 ## 目录约定
 
 存放根：`.delivery/`（默认名，改名后在此写明）
-- `.delivery/state.md`：活动节点、当次授权、已过证据门和待决断，进版本控制
-- `uploads/`：用户上传的材料，只入不改
-- `artifacts/`：临时生成与证据产物
-- `debug/`：排查纠错的关键文件（错误输出、复现脚本）
-首次接入按已安装 Skill 的项目初始化参考复制完整 `.delivery` 骨架，不要只创建无法被 Git 记录的空目录。
+- 活动状态：使用上方唯一指针，默认进版本控制；隐私偏离需登记可恢复位置和验证方法
+- `uploads/`：获准留存的短期用户输入，只入不改
+- `artifacts/`：一次性生成物与临时证据
+- `debug/`：临时排错输出与复现材料
+采用默认布局时按已安装 Skill 的初始化参考复制完整 `.delivery` 骨架；已适配既有状态时跳过默认状态创建。长期规格、证据报告和 fixture 沿用项目语义目录，只在有内容时建立；敏感原件留在获准受限位置。
 偏离默认的存放位置写在这里并说明原因：{{STORAGE_DEVIATIONS}}
 
 ## 项目独有规则
@@ -43,10 +46,10 @@
 
 ## 启动摘要
 
-只保留目标、规则/状态/过程记录指针、profile 与硬约束，目标 ≤450 tokens；长详情按当前动作读取。
+只保留目标、事实源字段的引用、profile 与硬约束，目标 ≤450 tokens；规则/状态/导航/过程记录的路径只在上方定义。长详情按当前动作读取，必要安全与验收条款不因预算省略。
 - profile：`auto`（research/develop/review/document/operate 只调整候选）
 - 路由事实源：本页 Resolver；过长才移到 `.delivery/routing.md` 并删除本页重复表
-- 活动状态：默认 `.delivery/state.md`；复用已有治理状态时写唯一 {{ACTIVE_STATE_PATH}}、字段映射、写入权限和验证方式，禁双写
+- 规约检查：动作前核对适用条款；节点转换、规则/路径变化或验证失败时按 Harness 执行合同检查，当前结论写唯一状态，详细回执写过程记录
 
 ## 项目 Resolver
 
