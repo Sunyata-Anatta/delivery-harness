@@ -49,12 +49,13 @@ These files belong to different layers and cannot replace one another. `agents/o
 | `assets/delivery-skeleton.template.md` | Agent initializing a project | Follow the document to copy the same-language `delivery-skeleton/.delivery/` tree; safely merge an existing `.delivery/`; do not copy the explanatory file | Creates project state, ignore rules, and three trackable empty-directory placeholders; second run must make no change |
 | `assets/harness-state.template.md` | Project `.delivery/state.md` | Same-language placeholder only when state is absent; normally supplied by the full skeleton | Dynamic single source for active node, session authority, passed gates, and pending decisions |
 | `assets/project-overlay.template.md` | Project agent and maintainers | Copy into the actual project documentation/rules location, remove irrelevant placeholders, and fill stable facts | Stores project commands, durable authority policy, gate definitions, distribution-surface registry, Resolver, and lessons; never copies session state |
+| `assets/project-map.template.md` | Agents and maintainers locating project material | Fill and merge into `PROJECTMAP.md` or the existing map declared by the overlay; keep existing entries only | Skeleton and task navigation; no progress, results or authority, and no recursive link loading |
 
 Chinese projects use templates under `assets/`; English projects use same-named files under `assets/en/`. Do not mix them in one project session. Installation, explicit invocation, and project auto-load are independent evidence surfaces: installed Skill does not prove the entry block was read, and block presence does not prove sequence.
 
 ## Single agent
 
-One agent owns reality audit, active node, documentation synchronization, tests, evidence, and version control. Keep one active node. Use brief status updates during long work.
+One agent owns reality audit, active node, documentation synchronization, tests, evidence, and version control. Keep one active node per project-declared scope; never split state merely for convenient parallelism. Use brief status updates during long work.
 
 ## Multiple agents
 

@@ -1,6 +1,6 @@
 # Execution Core
 
-Keep one active node. Simple questions need no project state. Follow the injected startup block first. An explicit cold invocation may read only the Skill and this core before emitting a receipt, then use business tools; it is not a pre-injection pass. Receipt: rules, version control, node, boundary, current capability signals. Mark unknowns pending probe, then verify read-only.
+Keep one active node per declared scope. Simple questions need no project state. Follow the injected startup block first. An explicit cold invocation may read only the Skill and this core before emitting a receipt, then use business tools; it is not a pre-injection pass. Receipt: rules, version control, node, boundary, current capability signals. Mark unknowns pending probe, then verify read-only.
 
 Cold invocations use this fixed block too. Fill known facts without renaming fields. Mark irrelevant probes not applicable with a reason.
 
@@ -13,9 +13,13 @@ Boundary: pending probe
 【Capability Signal Assessment】Current triggers or none, with reason.
 ```
 
-At project startup read only project rules, overlay (default `.delivery/overlay.md`), unique active state (default `.delivery/state.md`), and current Git/environment facts. Re-probe old receipts before reuse. An overlay may point to existing governed state as the sole source; never dual-write. See [initialization](project-initialization.md). Record new evidence first: time, source or `needs-source`, observations and limits. Facts are not authority.
+At project startup read only project rules, overlay (default `.delivery/overlay.md`), unique active state (default `.delivery/state.md`), and current Git/environment facts. Re-probe old receipts before reuse. Reuse the overlay's sole pointer for existing governance; never dual-write. Use the project map (default `PROJECTMAP.md`) to locate needed material without recursively opening its links; read [initialization](project-initialization.md) only for adoption or governance changes. Record new evidence first: time, source or `needs-source`, observations and limits. Facts are not authority.
 
-Before each action, load its triggered reference:
+Before each action check applicable rules, scope, authority and evidence gates. At node transitions or rule/path changes run the [conformance check](execution.md#project-conformance). Reuse fully read, unchanged content; expand or reread when sources are unclear, conflicting, truncated or changed. Stop expanding once the action has enough information.
+
+Replace the current state summary on every update; target <=80 lines. If exceeded, [archive history before writing](execution.md#state-size), never truncate necessary authority or unresolved risks.
+
+Before each action, load the relevant rule units for its triggers:
 
 | Event | Required reading |
 |---|---|

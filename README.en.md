@@ -24,14 +24,20 @@ Harness text budgets use `o200k_base`: startup block <=250 tokens, SKILL + selec
 | Scenario | Approach |
 |---|---|
 | Temporary question or small task | Work in the session without state directories |
-| New project | Default `.delivery/state.md`, overlay and evidence slots |
-| Existing governance | Preserve rules; map one state pointer and its fields, never dual-write |
+| New project | PROJECTMAP navigation, default sole state, overlay and temporary slots; create directories for actual content |
+| Existing governance | Inventory and record rule gaps; adapt sole state, writer and recovery; resume the current node after adoption passes |
 | Restricted runtime | Invoke explicitly and record unavailable pre-injection |
 | Self-bootstrap | Installed baseline governs candidate changes; synchronize after verification |
 
 `.delivery/state.md` stays in version control by default. Explicit privacy deviations require recovery and verification records. `uploads/`, `artifacts/` and `debug/` are ignored by default. Follow [safe initialization](references/en/project-initialization.md), the [complete skeleton](assets/en/delivery-skeleton.template.md) and [overlay template](assets/en/project-overlay.template.md); merge existing content incrementally.
 
+The [PROJECTMAP template](assets/en/project-map.template.md) supplies a directory skeleton and "task trigger -> entry -> section" navigation without progress or recursive link loading. Durable specifications, evidence reports and fixtures stay in project-semantic locations; governance state and temporary material retain their own roles. Incrementally add necessary pointers to rules, overlay and README; repeat initialization must produce no new diff.
+
+During execution, [conformance checks](references/en/execution.md#project-conformance) compare actions, scope, authority and acceptance. Expand relevant source rules at node transitions, rule/path changes or validation failures. Repair and recheck drift, then continue within authority; pause affected actions only for missing necessary decisions, authority or evidence. Reuse fully read unchanged rules instead of repeatedly loading every document.
+
 This repository's own `.delivery/` holds legitimate development state, plans, tests and reviews, kept local under its public-distribution boundary. Companion case studies have independent goals and records, linked through findings only.
+
+Target **<=80 physical lines** of active state, including blanks. Replace current summaries on every update; archive and reread history before retaining exact references. Never accumulate full logs or truncate necessary authority and unresolved risks. See [state compaction](references/en/execution.md#state-size) for triggers, ordering and failure recovery.
 
 ## Capability groups and routing
 
@@ -56,7 +62,7 @@ The runtime Skill payload contains four items. Copy them completely into a direc
 ```text
 SKILL.md       language selection and core entry
 agents/        Codex interface metadata
-assets/        state, overlay and native startup block templates
+assets/        state, overlay, project map and native startup block templates
 references/    language cores, action rules and runtime guidance
 ```
 

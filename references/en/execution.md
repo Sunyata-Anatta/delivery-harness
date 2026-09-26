@@ -4,13 +4,13 @@ Read the common contract at the end first, then the active-node section; ordinar
 
 ## reality_audit: start from reality
 
-Read repository rules, the project overlay, `.delivery/state.md`, accepted specifications and plans, relevant implementation and tests, Git state, and available runtime evidence. Distinguish designed, implemented, tested, deployed, and accepted; identify the outcome, non-goals, success evidence, constraints, risks, authority boundary, active node, and next gate. Old messages, checked roadmap boxes, and simulated results cannot independently prove current implementation.
+Read repository rules, the overlay startup summary and its resolved sole active state, and Git state. Use the project map to locate the specifications, plans, implementation, tests and runtime evidence needed by the active node, reading by section or identifier rather than treating links as a full-reading list. Distinguish designed, implemented, tested, deployed, and accepted; identify the outcome, non-goals, success evidence, constraints, risks, authority boundary, active node, and next gate. Old messages, checked roadmap boxes, and simulated results cannot independently prove current implementation.
 
 When a screenshot, original source, human decision, or external result arrives, write a minimal evidence receipt before analysis or a design request: received time, reviewable source (or `needs-source`), scope, direct observations, limits, and open questions. The receipt freezes facts only; it neither approves a design nor authorizes a side effect.
 
 Before a new session or active node reuses older evidence, check that its receipt contains `source_ref` or `needs-source`; backfill it first when absent. Do not use an untraceable old receipt for implementation, deployment, or an external write.
 
-Use the [English project overlay template](../../assets/en/project-overlay.template.md) when the project needs local rules, durable lessons, or a Resolver. The overlay stores stable project facts; `state.md` stores mutable active state.
+Use the [English project overlay template](../../assets/en/project-overlay.template.md) when the project needs local rules, durable lessons, or a Resolver. The overlay stores stable project facts; the sole active state stores mutable content. For first adoption or governance gaps, map and align existing work through [initialization](project-initialization.md); do not restart completed phases.
 
 ## requirements: clarify the need
 
@@ -64,9 +64,21 @@ Branch, HEAD, worktree, remote, identity, and installation inventory are checkab
 
 ## Common contract: state and transitions
 
-Default storage is `.delivery/`. `state.md` is the sole active-state source; version it by default. Explicit privacy deviations or an existing-governance adapter follow the initialization contract. Keep only the active node, authority, passed gates and pending decisions. Stable facts, commands, rules and Resolver belong in the project overlay, default `.delivery/overlay.md`; neither global memory nor the Skill source repository substitutes. Record private-overlay path, scope and limits without sensitive values. `uploads/`, `artifacts/`, `debug/` are ignored by default. Use the [full skeleton](../../assets/en/delivery-skeleton.template.md).
+Default storage is `.delivery/`. `state.md` is the sole active-state source; with existing governance, resolve the overlay's unique pointer before every read or write instead of writing to the default path. Version state by default; explicit privacy deviations or an existing-governance adapter follow the initialization contract. Keep only the active node, authority, passed gates and pending decisions. Stable facts, commands, rules and Resolver belong in the project overlay, default `.delivery/overlay.md`; neither global memory nor the Skill source repository substitutes. Record private-overlay path, scope and limits in the sole state without sensitive values. `uploads/`, `artifacts/`, `debug/` are ignored temporary slots, excluded from distribution; store durable specifications, evidence and reproducible inputs by [content purpose](project-initialization.md#project-map). Use the [full skeleton](../../assets/en/delivery-skeleton.template.md) only for first adoption of the default layout; record storage-root deviations in the overlay.
 
 Checkable facts need verification time, probe/resolver, scope and limits; re-probe before reuse. Historical receipts retain their as-of meaning. New source evidence must receive `received_at`, `source_ref` or `needs-source`, scope, observations, limits and open questions before analysis, design requests or side effects. Copy originals only when authorized. A receipt is not design approval. Before reusing evidence at a new session/node, backfill missing source references.
+
+<a id="state-size"></a>
+### State compaction: around 80 lines
+
+`state.md` is the recovery entry for current work, not an append-only log. Target **<=80 physical lines, including headings and blanks**, while retaining the <=600-token active-summary budget. Do not pack long lines to evade limits. With existing governance, use its mapped active-summary fields rather than adding writable state.
+
+- **Before every update**, replace summaries by topic. At transitions, move out finished nodes, resolved blockers, expired authority and evidence no longer supporting the current action. Record new evidence minimally first, then archive detail if needed. Never keep appending full command output, past test scores, conversations or specifications.
+- **Retain what current work needs**: one active node and completion gate, effective authority with action/boundary/source, relevant latest evidence conclusions and exact references, unresolved risks/decisions and unblock conditions, and one next action. Stable rules/commands/Resolver stay in existing rule sources or overlay; specifications, plans and PROJECTMAP never take over live state.
+- **Compact an over-budget candidate**: append history by date/topic to the existing process record or evidence report named by the overlay, retaining sources, check times and conclusion limits. Keep current summaries with `path#anchor` or record identifiers in state. Write and reread the archive before replacing state; then verify references, required fields and line count. Never split current state into `state-2.md`.
+- **Preserve data on failure**: if archival is unwritable, sources cannot be traced or another writer changed the original state, retain the original and recover the recording/write conditions first. If necessary authority or risks still exceed the budget, retain them and state the reason and recovery action; never truncate or claim the size check passed. Pause dependent work only for new authority, decision or evidence obstacles.
+
+Count lines using an available tool, for example PowerShell `@(Get-Content -LiteralPath '<sole-state-path>').Count` or Python `len(text.splitlines())`. Check after every write. Transition receipts record the count and archive location; ordinary updates do not add another stream of size logs. Eighty lines measures size, not token savings or correctness.
 
 Stage order:
 
@@ -76,8 +88,23 @@ reality_audit -> requirements -> tool_research -> solution_decision
   -> tdd_nodes -> real_evidence -> release_or_handoff
 ```
 
-At every transition: verify the current gate with fresh evidence; update the sole active state; synchronize affected specification, plan, rules, lessons, Resolver, README and counterpart language before commit. Before commit append discoveries, error details, improvement purpose, options/choice and supporting data to the process record named by the overlay; explicitly record no new findings when applicable. Commit the smallest complete change when authorized and continue while in scope. Search for superseded statements after fact changes; documentation is a checkpoint, not a stop. Handoffs carry one-time context, not undated live Git or identity assertions.
+At every transition: run the conformance check below, then verify the current gate with fresh evidence; update the overlay-resolved sole active state, keeping one active node per declared scope; synchronize affected specification, plan, rules, lessons, Resolver, README and counterpart language before commit. Before commit append discoveries, error details, improvement purpose, options/choice and supporting data to the process record named by the overlay; explicitly record no new findings when applicable. Commit the smallest complete change when authorized and continue while in scope. Search for superseded statements after fact changes; documentation is a checkpoint, not a stop. Handoffs carry one-time context, not undated live Git or identity assertions.
 
 Strong rules specify an externally observable trigger, action, reproducible method, success criterion, failure handling and evidence; escalation uses event counts. Before completion run `IDENTIFY -> RUN -> READ -> VERIFY -> THEN`: accepted outcome, real evidence, regression, state/docs, installation/version control, rollback and limits must match reality, with no required work unfinished.
 
 Before a long test, independent review, or gate action, reserve enough model, tool, and time runway to read the result, update state, and start the next gate. If that runway is unavailable or uncertain, first record a resumable handoff: active finding/evidence, completed verification, frozen side effects, single resume action, and unblock condition. Exhaustion is not completion; the next session resumes the handoff and re-reviews.
+
+<a id="project-conformance"></a>
+## Project conformance check
+
+This check runs during execution. It creates no background monitor, duplicate checklist or periodic full reread. Reuse loaded rules for ordinary actions; expand source rules and evidence at these events.
+
+| Trigger | Action and method | Pass criterion |
+|---|---|---|
+| Select an action, enter a node or switch worktrees/workflows | Resolve rules and state through the overlay; use the map to locate current scope, rule clauses, authority and acceptance, then check the plan item and proposed paths | Action matches the outcome, rules and authority; the current scope has one state writer; no phase acceptance gate was bypassed |
+| User corrects rules; rules/overlay/map/paths change; a reference breaks | Compare changes and source versions, fully reread affected clauses and verify each item's sole source; check links/anchors when entries change | Conflicts and broken entries are repaired; plans and actions follow effective rules without substituting old receipts for new evidence |
+| Validation fails, a node transitions or completion is claimed | Check actual diffs, specific results, state and related documents against current acceptance; for document edits check links and consistency, for executable-path changes check test-name sets, skips and run results | Evidence covers the current version and rules; state is current; specifications, plans and map contain no active-state copies |
+
+On drift, stop the affected action and gated side effects; record the deviation and single recovery action in active state. Repair and recheck within existing scope and authority, then continue; independent safe work may proceed. Ask the user under [gates](gates.md) only for a material decision, new authority or missing necessary evidence. Finding drift is not completion; alignment never authorizes code migration, branch merging or weaker acceptance.
+
+At transitions, rule changes or detected drift, leave a minimal receipt in the existing process record: time, rule source and version/check date, action/scope, method, result, limits and recovery action. Active state retains only the current conclusion and evidence pointer. Unchanged ordinary actions need no repetitive entries. Update the map only when entries, responsibilities or reading triggers change. Agent adherence enforces these rules; deterministic blocking remains with host permissions and actual execution entry points.

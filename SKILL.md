@@ -1,6 +1,6 @@
 ---
 name: delivery-harness
-description: Use when an agent is asked to own a complex multi-stage software project, keep plans and implementation aligned, continue without repeated confirmation, research changing tools, or stop only at material decisions, authority boundaries, and real-world evidence gates.
+description: Use when an agent is asked to initialize or adopt a project, own complex multi-stage delivery, keep plans and implementation aligned, continue without repeated confirmation, research changing tools, or stop only at material decisions, authority boundaries, and real-world evidence gates.
 ---
 
 # Delivery Harness

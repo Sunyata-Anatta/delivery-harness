@@ -7,7 +7,8 @@ Chinese rule files are normative. This English tree is an operational equivalent
 | Ordinary startup | [core.md](core.md) |
 | Configure profiles and candidate bindings | [routing-configuration.md](routing-configuration.md) |
 | Execute the current lifecycle node | [execution.md](execution.md) |
-| Initialize a project or merge an existing `.delivery/` | [project-initialization.md](project-initialization.md) |
+| Adopt/align a project, repair governance or project navigation | [project-initialization.md](project-initialization.md) |
+| Check rules at an action, transition or rule/path change | [execution.md](execution.md#project-conformance) |
 | Change state, install, deploy, or enter a phase | [gates.md](gates.md) |
 | Bootstrap a session or handle node failure | [principles.md](principles.md) |
 | Diagnose, recover, or retry | [debugging.md](debugging.md) |
