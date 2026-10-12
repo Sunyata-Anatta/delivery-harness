@@ -109,7 +109,7 @@ No output with exit code 1 means the untracked state file can enter Git. For an 
 !.delivery/debug/.gitkeep
 ```
 
-Then run `git check-ignore -v --no-index .delivery/uploads/__delivery_probe__`, `git check-ignore -v --no-index .delivery/artifacts/__delivery_probe__`, and `git check-ignore -v --no-index .delivery/debug/__delivery_probe__`. Each ordinary slot probe must still match the nested skeleton rules; no probe file needs to be created.
+Then run `git check-ignore -v --no-index .delivery/uploads/__delivery_probe__`, `git check-ignore -v --no-index .delivery/artifacts/__delivery_probe__`, `git check-ignore -v --no-index .delivery/debug/__delivery_probe__`, and `git check-ignore -v --no-index .delivery/artifacts/__delivery_task__/retained/__delivery_probe__` for the deeper `artifacts/<task>/retained/` layout. Each ordinary slot probe must still match the nested skeleton rules; no probe file needs to be created.
 
 Verify README, map, rules, overlay and process record against their declared tracking/privacy policy. Add the narrowest unignore rules for newly versioned paths as needed; do not unignore all governance content. Without Git, mark this section not applicable and record storage/recovery instead. Ignore rules are not access control for sensitive data.
 

@@ -109,7 +109,7 @@ git check-ignore -v .delivery/state.md
 !.delivery/debug/.gitkeep
 ```
 
-随后分别用 `git check-ignore -v --no-index .delivery/uploads/__delivery_probe__`、`git check-ignore -v --no-index .delivery/artifacts/__delivery_probe__` 和 `git check-ignore -v --no-index .delivery/debug/__delivery_probe__` 验证槽内普通内容仍被骨架规则忽略。探针路径不需要实际创建文件。
+随后分别用 `git check-ignore -v --no-index .delivery/uploads/__delivery_probe__`、`git check-ignore -v --no-index .delivery/artifacts/__delivery_probe__` 、`git check-ignore -v --no-index .delivery/debug/__delivery_probe__` 和 `git check-ignore -v --no-index .delivery/artifacts/__delivery_task__/retained/__delivery_probe__` 验证槽内普通内容（含 `artifacts/<task>/retained/` 这类新布局的深层路径）仍被骨架规则忽略。探针路径不需要实际创建文件。
 
 README、地图、规则、overlay 与过程记录分别按声明的跟踪/隐私策略验证；新增的版本化路径按需补最窄反向规则，不无条件放开整个治理目录。没有 Git 时此节不适用，记录存储与恢复方式；不能把忽略目录当敏感数据的访问控制。
 

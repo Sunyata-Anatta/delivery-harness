@@ -18,7 +18,7 @@ Confirm the user outcome, roles, sensitive data, privacy and authority, input/ou
 
 ## tool_research: research current tools
 
-For external specs, service boundaries/features/usage and configuration questions, invoke Context7 under [capability routing](capability-routing.md); use its query, missing-installation and fallback rules.
+For external specs, service boundaries, features, or library/service configuration usage, invoke Context7 under [capability routing](capability-routing.md); use its query, missing-installation and fallback rules.
 
 When a library, model, service, Skill, protocol, license, or deployment option may have changed, inspect prior project decisions first, then use primary sources to verify version, platform, license, security, telemetry, maintenance, and deployment requirements. Compare at least the no-new-component baseline, current capability, and the strongest alternative justified by the need.
 

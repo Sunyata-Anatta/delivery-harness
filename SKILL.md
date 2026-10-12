@@ -14,4 +14,4 @@ Version: `2026.10.12`
 - 中文：[核心](references/core.md)。
 - **English readers:** [core](references/en/core.md); [routing index](references/en/index.md) only when needed.
 
-Chinese is authoritative; fix translations together. Load one language only. Reread unreadable, truncated or garbled instructions with explicit encoding before acting.
+Chinese is authoritative; fix both languages together, load one only, and reread unreadable or garbled instructions with explicit encoding before acting.
