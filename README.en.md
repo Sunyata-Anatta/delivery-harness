@@ -43,7 +43,7 @@ Target **<=80 physical lines** of active state, including blanks. Replace curren
 
 ## Capability groups and routing
 
-For external specs/API contracts, service boundaries, features, usage or configuration, invoke existing Context7 first under the [query rules](references/en/capability-routing.md). If missing, verify official installation sources and install/test within authority; disclose coverage or invocation gaps and check official docs. Read project-owned specs locally without uploading private content.
+For external library/framework/service specs, features or usage, invoke existing Context7 first under the [query rules](references/en/capability-routing.md); platform-level specifications go to official pages. Check official sources only when no provider is available; a failed call or no match is failure, so use primary sources instead of installing. Authority follows [gates](references/en/gates.md): reuse existing authority only when it covers the target, action and configuration scope together, and always authorize new global configuration or persistent registration separately. Read project-owned specs locally without uploading private content.
 
 Candidate groups are `research`, `engineering`, `verification`, `documents`, `operations` and `domain`. Groups narrow selection without loading every body. `profile=auto|research|develop|review|document|operate` changes candidate order, never authority.
 

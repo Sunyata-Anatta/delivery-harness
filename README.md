@@ -43,7 +43,7 @@
 
 ## 能力分组与路由
 
-查询外部 spec/API 规范、服务边界、功能、用法或配置时，按[Context7 查询规则](references/capability-routing.md)先调用现有 Context7。缺失则查官方来源，在授权范围内安装并实测；无覆盖或调用失败时说明缺口并核对官方文档。项目自有 spec 先本地读取，不上传私有内容。
+查询外部库/框架/服务 spec、功能或用法时，按 [Context7 查询规则](references/capability-routing.md)先调用现有 Context7；平台级规范直接查官方页。提供者缺失才查官方来源；调用失败或无匹配属失败，只补一手来源、不据此安装。授权按[门控](references/gates.md)：仅当授权同时覆盖目标、动作与配置范围时才复用，新增全局配置或持久注册一律单独授权。项目自有 spec 先本地读取，不上传私有内容。
 
 候选组为 `research`、`engineering`、`verification`、`documents`、`operations`、`domain`；组只缩小选择范围，不整组加载正文。`profile=auto|research|develop|review|document|operate` 调整候选顺序，不扩大权限。
 
