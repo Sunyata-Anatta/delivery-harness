@@ -13,7 +13,7 @@
 
 | 当前动作 | 能力候选组 |
 |---|---|
-| 查一手资料/版本 | research |
+| 查外部 spec、服务边界/功能/用法、一手资料/版本 | research |
 | 读代码/实现/排错 | engineering |
 | 测试/真实证据/审阅 | verification |
 | 文档/表格/幻灯片/图片 | documents |
@@ -21,6 +21,16 @@
 | 领域格式/专有工作流 | domain |
 
 组只缩小候选集，不授权、不整组加载；profile 也不是流程或权限替代。启动只评估当前相关信号；无信号写无，节点、目录、配置、版本、失败或任务类型变化时重评。只有选择变化/失败/用户要求解释时输出一行：`能力 -> 提供者(类型/来源)；依据；回退/限制`。
+
+## 文档查询：Context7
+
+触发：查询外部库、框架、平台、协议或服务的 spec/API 规范、能力边界、功能、使用方法、安装与配置步骤。在允许联网和该数据传输的边界内，必须先调用已可用的 Context7 能力；不必等用户再说“use context7”。先读项目自有 spec；其中涉及的外部事实再按本规则查询，不把私有规格上传。
+
+方法：先发现已安装的 Context7 Skill、插件、MCP 或 CLI，复用可实际调用者，不因缺少同名 SKILL.md 就判定未安装。按[Context7 调用与安装](capability-catalog.md#context7)解析目标库/产品和版本，再检索相关文档。服务类别需先定位具体产品；只有会实质改变答案的歧义才澄清。
+
+判据与证据：记录产品/库 ID、版本范围、查询日期、实际调用结果和支持结论的官方文档链接；名称命中或安装成功不等于查到答案。涉及限制、额度、支持范围等事实，核对对应官方页面。
+
+缺失或失败：先从 [upstash/context7](https://github.com/upstash/context7) 查当前安装方式；官方入口不可达时搜索并核实官方来源。已有明确安装授权覆盖时执行并验证，否则说明安装目标、配置/认证与数据影响后请求授权。受离线/数据限制、无匹配文档、版本缺口或调用失败时，说明具体原因并用获准的一手来源补证，不虚称已使用 Context7；用户明确要求 Context7 成功作为验收时，保留该证据门未通过。
 
 ## 配置与提供者
 
@@ -32,7 +42,7 @@
 | Caveman | Skill/插件；JuliusBrussee/caveman | 简洁沟通 |
 | Humanizer | Skill；blader/humanizer | 人工编辑非中文正文 |
 | Humanizer-ZH | Skill；op7418/humanizer-zh | 人工编辑中文正文 |
-| Context7 | MCP/CLI；upstash/context7 | 官方文档 |
+| Context7 | Skill/插件/MCP/CLI；upstash/context7 | 按上方查询规则说明缺口后核对官方文档 |
 | 文档解析 / book-to-skill | 工具/Skill；维护者见目录 | 关键页核对 |
 | codebase-memory | MCP 配套 Skill；DeusData/codebase-memory-mcp | rg + 定点源码 |
 

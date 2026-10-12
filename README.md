@@ -2,6 +2,8 @@
 
 [中文](README.md) | [English](README.en.md)
 
+当前版本：**2026.10.12**。使用日期版本，规范值随 [SKILL.md](SKILL.md) 分发；此前载荷未声明数字版本。
+
 `delivery-harness` 是面向多阶段交付的 Agent Skill：在已有授权内持续推进，以当前项目状态、真实证据和明确门控决定下一步。专业 Skill、MCP 和 CLI 负责具体工作，Harness 负责目标、授权、状态与验证的一致性。
 
 ## 如何加载
@@ -24,14 +26,14 @@
 | 场景 | 做法 |
 |---|---|
 | 临时问答、小任务 | 会话内执行，不创建状态目录 |
-| 新项目 | PROJECTMAP 导引、默认唯一状态、覆盖层与临时槽；目录按实际内容建立 |
+| 新项目 | PROJECTMAP 导引、默认唯一状态、覆盖层与资源槽；目录按实际内容建立 |
 | 已有治理项目 | 先盘点并记录规约差异，适配唯一状态、写入方与恢复方法；验收后从当前节点继续 |
 | 受限运行时 | 使用显式调用，登记缺失的预注入能力 |
 | 自举开发 | 当前安装基线治理候选修改；新版本验证后才同步 |
 
 `.delivery/state.md` 默认进入版本控制；明确的隐私偏离需登记恢复与验证方式。`uploads/`、`artifacts/`、`debug/` 默认忽略。首次接入按 [安全初始化](references/project-initialization.md) 使用 [完整骨架](assets/delivery-skeleton.template.md) 和 [覆盖层模板](assets/project-overlay.template.md)，已有内容增量合并。
 
-[PROJECTMAP 模板](assets/project-map.template.md) 提供目录骨架及“任务触发→入口→章节”导引，不保存进度或递归载入链接。长期规格、证据报告和 fixture 留在项目语义目录；治理状态与临时材料各守职责。规则、overlay 与 README 只增量接入所需指针，重复初始化应无新差异。
+[PROJECTMAP 模板](assets/project-map.template.md) 提供目录骨架及“任务触发→入口→章节”导引，不保存进度或递归载入链接。按 [资源归档](references/execution.md#resource-storage) 将 demo、图片、文档、语音、视频放入 `artifacts/<task>/tmp/` 或 `retained/`；沙盒成果先复制到项目并验证，保留项登记恢复入口。长期规格、正式证据报告和 fixture 留在项目语义目录。规则、overlay 与 README 只增量接入所需指针，重复初始化应无新差异。
 
 执行中按 [规约检查](references/execution.md#project-conformance) 核对动作、范围、授权和验收；节点转换、规则/路径变化或验证失败时展开对应原文。发现偏离先修复复验，在已有授权内继续；必要决策、权限或证据缺失才暂停受影响动作。已读且未变的规则复用，不靠反复全文载入保证遵守。
 
@@ -40,6 +42,8 @@
 活动状态目标 **≤80 个物理行**（含空行）：每次更新替换当前摘要，历史先归档回读，再保留精确引用；不积累全量日志，也不截断必要授权或未决风险。具体触发、顺序和失败恢复见 [状态收敛](references/execution.md#state-size)。
 
 ## 能力分组与路由
+
+查询外部 spec/API 规范、服务边界、功能、用法或配置时，按[Context7 查询规则](references/capability-routing.md)先调用现有 Context7。缺失则查官方来源，在授权范围内安装并实测；无覆盖或调用失败时说明缺口并核对官方文档。项目自有 spec 先本地读取，不上传私有内容。
 
 候选组为 `research`、`engineering`、`verification`、`documents`、`operations`、`domain`；组只缩小选择范围，不整组加载正文。`profile=auto|research|develop|review|document|operate` 调整候选顺序，不扩大权限。
 

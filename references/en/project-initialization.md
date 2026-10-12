@@ -19,7 +19,7 @@ With multiple worktrees, locate the current checkout through Git rather than ass
 <a id="project-map"></a>
 ## Project map and content ownership
 
-Full default adoption uses README, the instruction file actually read by the host, and `PROJECTMAP.md` as root entries. `.delivery/` holds overlay, sole state, process record and temporary slots. Reuse equivalent existing files and map them in the overlay instead of recreating the diagram. README links to the map; the map holds only the skeleton and "trigger + one entry + section/identifier range", never progress, SHA, test results or authority copies.
+Full default adoption uses README, the instruction file actually read by the host, and `PROJECTMAP.md` as root entries. `.delivery/` holds overlay, sole state, process record and resource slots. Reuse equivalent existing files and map them in the overlay instead of recreating the diagram. README links to the map; the map holds only the skeleton and "trigger + one entry + section/identifier range", never progress, SHA, test results or authority copies.
 
 | Content responsibility | Default location and creation condition |
 |---|---|
@@ -30,7 +30,8 @@ Full default adoption uses README, the instruction file actually read by the hos
 | Durable validation findings and evidence | Existing evidence index/reports, or `docs/evidence.md` and `docs/evidence/` when results exist; sensitive originals stay in approved restricted storage, with safe index references only |
 | Runtime code, deployment and reproducible inputs | Keep component, `ops/`, `deploy/`, test/fixture conventions; create deployment/recovery guidance when actual steps exist |
 | Attempts, errors and handoff history | Existing append-only process record, default `.delivery/process.md`; read by date/topic, not in full at startup |
-| Short-term inputs, one-off outputs, temporary diagnostics | `.delivery/uploads/`, `artifacts/`, `debug/`; not storage for durable specifications, test inputs or secrets |
+| Short-term inputs, intermediates, temporary diagnostics | `.delivery/uploads/`, `artifacts/<task>/tmp/`, `debug/`; register retention/cleanup conditions without assuming older materials are disposable |
+| Retained demos, images/documents/audio/video, manual-test samples and results | `.delivery/artifacts/<task>/retained/`; record provenance, validation and recovery using [resource storage](execution.md#resource-storage); formal test dependencies still use project test/fixture locations |
 
 File by purpose rather than extension, Skill or branch name. Create directories only for actual content and responsibilities; no phase-by-purpose matrix or copied source trees named after branches. Tidying directories is not an adoption prerequisite. For necessary moves, separately map old to new paths and impacts on callers/test discovery, fixture identity, packaging, deployment and recovery; execute only with covered authority. Never renumber or rewrite applied database migrations.
 
@@ -44,6 +45,7 @@ Always applicable: user/host/project rules and the Harness startup contract; ove
 | Continue work or design | Current scope, specification/plan item and dependency contracts pointed to by state; trace further for phase changes, conflicts or missing dependencies |
 | Code or repair | Current plan item, related implementation/callers and tests; expand for cross-module root causes, insufficient graph results or validation failure |
 | Verify evidence | Current acceptance, specific results and necessary originals; expand for version mismatch, conflict or missing samples |
+| Generate/receive files, select test materials, deliver or clean up | [Resource storage](execution.md#resource-storage), current task inventory and relevant cases; check callers, test discovery and packaging when materials become formal dependencies |
 | Deploy, publish or write data | Specific authority, final version, deploy/rollback and evidence gates; new side effects or missing recovery conditions enter the relevant gate |
 | Trace history | Index-selected date, identifier or passage; expand for broken sources, conflicts or an explicit full-audit request |
 

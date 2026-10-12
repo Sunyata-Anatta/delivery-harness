@@ -105,22 +105,22 @@ When no plugin namespace exists, use `$humanizer` or `/humanizer`. Verify that f
 
 ## Context7
 
-Purpose: retrieve library/framework primary documentation for version, API, and configuration facts during tool research. Official source is `upstash/context7`.
+For purpose and triggers, see [documentation query routing](capability-routing.md). Official source: [upstash/context7](https://github.com/upstash/context7). Usage below was checked on 2026-10-12; recheck current official instructions and host support before installation.
 
-Zero-install syntax, verified 2026-08-18:
+**Reuse existing capability**: Context7 may be a Skill/plugin, MCP/connector or CLI. Discover current tools and read the selected Skill when present; avoid duplicate installation. For MCP, call `resolve-library-id` with a public product/library name and a specific question, then pass its exact `libraryId` to `query-docs`. An exact `/org/project` or version ID supplied by the user may skip resolution under the tool contract. Match requested versions to available returned versions; never guess IDs, and disclose missing versions. Query one concept at a time and obey tool call limits.
+
+Equivalent CLI commands, using an installed `ctx7`:
 
 ```text
-npx -y context7 <library-or-org/repo> <question>
-npx -y context7 search <keywords>
+ctx7 library <name> <query>
+ctx7 docs <libraryId> <query>
 ```
 
-Observed boundary: syntax worked, but this execution environment received API 404, possibly proxy or API-key related. Run a small project-environment query before depending on it; on failure, degrade directly to web search and official pages.
+**When missing**: use the official repository and its installation links to choose a supported method for the current Agent. Check package/publisher, version, license, dependencies, configuration scope, authentication, outbound data, costs and rollback; an arbitrary same-name package is not official. If the official entry is unreachable, search and cross-check; do not execute an unverified source. The official `npx ctx7 setup` configures CLI + Skills or MCP, requires Node.js 18+, initiates OAuth, generates an API key and changes Agent settings. It is not a read-only or zero-install query. Use current official docs and help for actual options.
 
-The MCP form, `npx -y @upstash/context7-mcp`, changes persistent configuration. Consider only after repeated use and obtain separate authority.
+Install autonomously within explicit existing target/scope authority; otherwise prepare a concrete installation proposal and request authority. Pause any uncovered login, credentials, payment or new global configuration while continuing independent permitted queries. Never put keys in prompts, command output or evidence. `npx ctx7 remove` undoes setup; removing a separately installed global CLI requires its own authority check. Retain recoverable configuration/installation backups before updates.
 
-Boundary: library coverage does not replace platform official pages for Agent Skills specifications or Hooks. Record external facts as criterion receipts with command, date, and observed result; never substitute a search summary for primary verification.
-
-Verify by answering a known version fact and comparing it verbatim with the official release page. Fallback is direct web research and official pages.
+**Verification and limits**: rediscover tools, complete an actual resolution and documentation query, and compare with relevant official pages; record ID, version, date, sources and limits. Send only necessary public names/questions, never credentials, private code/specs or personal data. Explain missing coverage/version, authentication, network or quota failures and follow the routing fallback to official pages. Do not generalize one environment failure into universal unavailability or treat retrieved snippets as complete specifications or service support guarantees.
 
 ## Document parsing
 

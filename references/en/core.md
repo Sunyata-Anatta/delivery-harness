@@ -23,9 +23,9 @@ Before each action, load the relevant rule units for its triggers:
 
 | Event | Required reading |
 |---|---|
-| New node, state transition, TDD, long test, project completion | [Execution](execution.md) |
+| New node, transition, TDD, long test, artifacts/test materials, cleanup, completion | [Execution](execution.md) |
 | Decision, authority, new evidence, staging/commit, deploy/publish, final review | [Gates](gates.md) |
-| Professional capability selection or change | [Routing](capability-routing.md) |
+| External specs, service boundaries/features/usage; capability selection or change | [Routing](capability-routing.md) |
 | Installation, pre-injection, update or rollback | [Runtime](runtime-installation.md) |
 | Failure/retry | [Debugging](debugging.md), [principles](principles.md) when needed |
 | Delegation; external service; GitHub | [Agent](agent-config.md); [integrations](integrations.md); [GitHub](github.md) |

@@ -22,9 +22,11 @@ Store project facts only. This overlay may tighten Delivery Harness but cannot o
 Root: `.delivery/`
 - Active state: use the sole pointer above; version by default, with recovery location and verification for privacy deviations
 - `uploads/`: approved short-term user inputs, unchanged
-- `artifacts/`: one-off outputs and temporary evidence
+- `artifacts/<task>/tmp/`: disposable/rebuildable intermediates and one-off test resources; register cleanup conditions
+- `artifacts/<task>/retained/`: demos, images/documents/audio/video and manual-test materials needed for delivery or retention; no automatic cleanup
 - `debug/`: temporary debugging output and reproduction material
-For the default layout, follow the installed Skill's initialization reference and copy the full `.delivery` skeleton. With an existing-state adapter, skip default state creation. Durable specifications, evidence reports and fixtures use project-semantic locations, created only when content exists; sensitive originals stay in approved restricted storage.
+Reuse existing resource registration; otherwise one task README records paths, purpose/cases, provenance/limits, retention, validation and backup/recovery entries. Create task subdirectories on demand; state/map hold only entries. Preserve unclassified older materials. Copy sandbox outputs to the project and verify before delivery; on failure retain sources and register recovery. Retained items remain Git-ignored by default, which proves neither backup nor outbound authority.
+For the default layout, follow the installed Skill's initialization reference and copy the full `.delivery` skeleton. With an existing-state adapter, skip default state creation. Durable specifications, formal evidence reports and regression/build dependencies use project-semantic locations, created only when content exists; sensitive originals stay in approved restricted storage.
 Deviations: {{STORAGE_DEVIATIONS}}
 
 ## Project rules

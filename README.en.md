@@ -2,6 +2,8 @@
 
 [中文](README.md) | [English](README.en.md)
 
+Current version: **2026.10.12**. Calendar versioning; the canonical value ships in [SKILL.md](SKILL.md). Earlier payloads declared no numeric version.
+
 `delivery-harness` is an Agent Skill for multi-stage delivery. It continues within existing authority and uses current project state, real evidence and explicit gates to decide the next action. Specialist Skills, MCPs and CLIs do the work; Harness keeps goals, authority, state and verification aligned.
 
 ## Loading
@@ -24,14 +26,14 @@ Harness text budgets use `o200k_base`: startup block <=250 tokens, SKILL + selec
 | Scenario | Approach |
 |---|---|
 | Temporary question or small task | Work in the session without state directories |
-| New project | PROJECTMAP navigation, default sole state, overlay and temporary slots; create directories for actual content |
+| New project | PROJECTMAP navigation, default sole state, overlay and resource slots; create directories for actual content |
 | Existing governance | Inventory and record rule gaps; adapt sole state, writer and recovery; resume the current node after adoption passes |
 | Restricted runtime | Invoke explicitly and record unavailable pre-injection |
 | Self-bootstrap | Installed baseline governs candidate changes; synchronize after verification |
 
 `.delivery/state.md` stays in version control by default. Explicit privacy deviations require recovery and verification records. `uploads/`, `artifacts/` and `debug/` are ignored by default. Follow [safe initialization](references/en/project-initialization.md), the [complete skeleton](assets/en/delivery-skeleton.template.md) and [overlay template](assets/en/project-overlay.template.md); merge existing content incrementally.
 
-The [PROJECTMAP template](assets/en/project-map.template.md) supplies a directory skeleton and "task trigger -> entry -> section" navigation without progress or recursive link loading. Durable specifications, evidence reports and fixtures stay in project-semantic locations; governance state and temporary material retain their own roles. Incrementally add necessary pointers to rules, overlay and README; repeat initialization must produce no new diff.
+The [PROJECTMAP template](assets/en/project-map.template.md) supplies a directory skeleton and "task trigger -> entry -> section" navigation without progress or recursive link loading. Follow [resource storage](references/en/execution.md#resource-storage) for demos, images, documents, audio and video in `artifacts/<task>/tmp/` or `retained/`; copy sandbox outputs into the project and verify, and register recovery for retained items. Durable specifications, formal evidence reports and fixtures stay in project-semantic locations. Incrementally add necessary pointers to rules, overlay and README; repeat initialization must produce no new diff.
 
 During execution, [conformance checks](references/en/execution.md#project-conformance) compare actions, scope, authority and acceptance. Expand relevant source rules at node transitions, rule/path changes or validation failures. Repair and recheck drift, then continue within authority; pause affected actions only for missing necessary decisions, authority or evidence. Reuse fully read unchanged rules instead of repeatedly loading every document.
 
@@ -40,6 +42,8 @@ This repository's own `.delivery/` holds legitimate development state, plans, te
 Target **<=80 physical lines** of active state, including blanks. Replace current summaries on every update; archive and reread history before retaining exact references. Never accumulate full logs or truncate necessary authority and unresolved risks. See [state compaction](references/en/execution.md#state-size) for triggers, ordering and failure recovery.
 
 ## Capability groups and routing
+
+For external specs/API contracts, service boundaries, features, usage or configuration, invoke existing Context7 first under the [query rules](references/en/capability-routing.md). If missing, verify official installation sources and install/test within authority; disclose coverage or invocation gaps and check official docs. Read project-owned specs locally without uploading private content.
 
 Candidate groups are `research`, `engineering`, `verification`, `documents`, `operations` and `domain`. Groups narrow selection without loading every body. `profile=auto|research|develop|review|document|operate` changes candidate order, never authority.
 

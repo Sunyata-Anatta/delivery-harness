@@ -23,9 +23,9 @@
 
 | 事件 | 必读 |
 |---|---|
-| 新节点、状态转换、TDD、长测试、项目完成 | [执行](execution.md) |
+| 新节点、转换、TDD、长测试、产物/测试素材、清理、完成 | [执行](execution.md) |
 | 决策、权限、新证据、暂存/提交、部署/发布、最终审阅 | [门控](gates.md) |
-| 专业能力选择或变化 | [路由](capability-routing.md) |
+| 查外部 spec、服务边界/功能/用法；选择/切换能力 | [路由](capability-routing.md) |
 | 安装、预注入、更新或回滚 | [运行时](runtime-installation.md) |
 | 失败/重试 | [排错](debugging.md)、必要时[原则](principles.md) |
 | 委派；外部服务；GitHub | [Agent](agent-config.md)；[集成](integrations.md)；[GitHub](github.md) |

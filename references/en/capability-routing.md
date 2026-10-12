@@ -13,7 +13,7 @@ Select by current action. Read exposed names, descriptions and sources first, wi
 
 | Current action | Candidate group |
 |---|---|
-| Primary sources/versions | research |
+| External specs, service boundaries/features/usage, primary sources/versions | research |
 | Code/implementation/debugging | engineering |
 | Tests/real evidence/review | verification |
 | Documents/sheets/slides/images | documents |
@@ -21,6 +21,16 @@ Select by current action. Read exposed names, descriptions and sources first, wi
 | Domain formats/workflows | domain |
 
 Groups narrow candidates; they grant no authority and never load the whole group. Profiles replace neither process nor authority. At startup assess current signals only; say none when absent. Reassess on node, directory, configuration, version, failure or task-type changes. Explain only on selection change/failure or user request: `capability -> provider(type/source); basis; fallback/limits`.
+
+## Documentation queries: Context7
+
+Trigger: questions about external library, framework, platform, protocol or service specs/API contracts, capability boundaries, features, usage, installation or configuration. Within authorized network and data boundaries, invoke available Context7 first without waiting for another “use context7” request. Read project-owned specs locally first; query external facts they depend on without uploading private specifications.
+
+Method: discover existing Context7 Skills, plugins, MCP tools or CLIs and reuse a working provider. A missing same-name SKILL.md does not mean Context7 is absent. Follow [Context7 invocation and installation](capability-catalog.md#context7) to resolve the product/library and version before querying docs. For a service category, identify concrete products first; clarify only ambiguity that materially changes the answer.
+
+Acceptance and evidence: record product/library ID, version scope, query date, actual invocation result and supporting official documentation links. A name match or successful installation is not an answer. Verify limits, quotas and supported scope against the relevant official pages.
+
+Missing or failed provider: check current installation instructions at [upstash/context7](https://github.com/upstash/context7); if unreachable, search and verify official sources. Install and verify when explicit existing authority covers the action; otherwise explain the target, configuration/authentication and data effects and request authority. For offline/data restrictions, missing docs, version gaps or invocation failures, state the specific limitation and use permitted primary sources without claiming Context7 succeeded. If the user explicitly requires a successful Context7 query for acceptance, keep that evidence gate open.
 
 ## Configuration and providers
 
@@ -32,7 +42,7 @@ The [configuration contract](routing-configuration.md) defines profiles, directo
 | Caveman | Skill/plugin; JuliusBrussee/caveman | Concise communication |
 | Humanizer | Skill; blader/humanizer | Manual non-Chinese editing |
 | Humanizer-ZH | Skill; op7418/humanizer-zh | Manual Chinese editing |
-| Context7 | MCP/CLI; upstash/context7 | Official documentation |
+| Context7 | Skill/plugin/MCP/CLI; upstash/context7 | Explain the gap under the query rule above, then verify official docs |
 | Document parsing / book-to-skill | Tool/Skill; catalog maintainers | Key-page verification |
 | codebase-memory | MCP companion Skill; DeusData/codebase-memory-mcp | rg + focused source |
 
