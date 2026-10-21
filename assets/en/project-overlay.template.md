@@ -84,6 +84,25 @@ Use this table only when the current Agent does not discover a needed capability
 - Build: `{{BUILD_COMMAND}}`
 - Run: `{{RUN_COMMAND}}`
 - Deployment verification: `{{DEPLOY_VERIFY_COMMAND}}`
+- Mechanical preflight: `python -B -X utf8 <skill>/references/preflight.py --root . --json` (add `--staged` before commit and `--readback` after commit; fields are described in the installed `references/preflight.md`)
+
+## Mechanical preflight
+
+Record and commit mechanics come from the `references/preflight.py` shipped in the installed payload. Put the configuration in `.delivery/preflight.json`, or use a structurally identical `preflight` fenced block in this section; built-in defaults apply when unconfigured. Full fields, checks, and `--no-verify` exceptions are described in the installed `references/preflight.md`. Fill the example and delete unused lines when enabling it:
+
+```preflight
+{
+  "schema": 1,
+  "record": {"path": "{{ACTIVE_STATE_PATH}}", "related_readable": ["{{OVERLAY_PATH}}"]},
+  "code": {"paths": ["src/**"], "exclude": ["docs/**"]},
+  "evidence": {"path": "{{ACTIVE_STATE_PATH}}", "prefix": "E"},
+  "baseline": {"enabled": false, "path": "{{BASELINE_PATH}}", "pattern": "(\\d+(?:\\.\\d+)+)"},
+  "exemptions": {"path": ".delivery/preflight-exemptions.md"},
+  "identity": {"name": "{{AUTHOR_NAME}}", "email": "{{AUTHOR_EMAIL}}"},
+  "limits": {"record_max_lines": 80, "record_max_line_length": 0},
+  "checks": {"d": "warn"}
+}
+```
 
 ## Authority
 Define standing rules and boundaries here; maintain effective grants, source/actions, allocations and expiry only in sole state.

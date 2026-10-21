@@ -24,7 +24,7 @@ Before each action, load the relevant rule units for its triggers:
 | Event | Required reading |
 |---|---|
 | New node, transition, TDD, long test, artifacts/test materials, cleanup, completion | [Execution](execution.md) |
-| Decision, authority, new evidence, staging/commit, deploy/publish, final review | [Gates](gates.md) |
+| Decision, authority, new evidence, staging/commit, mechanical preflight/write-back, deploy/publish, final review | [Gates](gates.md) |
 | External specs, service boundaries/features/usage; capability selection or change | [Routing](capability-routing.md) |
 | Installation, pre-injection, update or rollback | [Runtime](runtime-installation.md) |
 | Failure/retry | [Debugging](debugging.md), [principles](principles.md) when needed |

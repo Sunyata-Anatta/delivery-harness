@@ -2,7 +2,7 @@
 
 [中文](README.md) | [English](README.en.md)
 
-当前版本：**2026.10.21.1**。使用日期版本，规范值随 [SKILL.md](SKILL.md) 分发；此前载荷未声明数字版本。
+当前版本：**2026.10.21.2**。使用日期版本，规范值随 [SKILL.md](SKILL.md) 分发；此前载荷未声明数字版本。
 
 `delivery-harness` 是面向多阶段交付的 Agent Skill：在已有授权内持续推进，以当前项目状态、真实证据和明确门控决定下一步。专业 Skill、MCP 和 CLI 负责具体工作，Harness 负责目标、授权、状态与验证的一致性。
 

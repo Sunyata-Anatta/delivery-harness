@@ -99,6 +99,25 @@ Resolver 把已验证经验变成条件路由。只在条件、能力、选择�
 - 构建：`{{BUILD_COMMAND}}`
 - 本地运行：`{{RUN_COMMAND}}`
 - 部署验证：`{{DEPLOY_VERIFY_COMMAND}}`
+- 机械预检：`python -B -X utf8 <skill>/references/preflight.py --root . --json`（提交前加 `--staged`，提交后加 `--readback`；字段说明见安装后的 `references/preflight.md`）
+
+## 机械预检
+
+记录与提交的机械校验由安装载荷内的 `references/preflight.py` 提供；配置优先放 `.delivery/preflight.json`，也可使用本节同构的 `preflight` 围栏块，未配置时用内置默认值。完整字段、检查项与 `--no-verify` 例外见安装后的 `references/preflight.md`。启用时按项目填写并删除无关行：
+
+```preflight
+{
+  "schema": 1,
+  "record": {"path": "{{ACTIVE_STATE_PATH}}", "related_readable": ["{{OVERLAY_PATH}}"]},
+  "code": {"paths": ["src/**"], "exclude": ["docs/**"]},
+  "evidence": {"path": "{{ACTIVE_STATE_PATH}}", "prefix": "E"},
+  "baseline": {"enabled": false, "path": "{{BASELINE_PATH}}", "pattern": "(\\d+(?:\\.\\d+)+)"},
+  "exemptions": {"path": ".delivery/preflight-exemptions.md"},
+  "identity": {"name": "{{AUTHOR_NAME}}", "email": "{{AUTHOR_EMAIL}}"},
+  "limits": {"record_max_lines": 80, "record_max_line_length": 0},
+  "checks": {"d": "warn"}
+}
+```
 
 ## 授权边界
 

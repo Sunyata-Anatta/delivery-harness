@@ -112,11 +112,41 @@ Evidence: use existing batch receipts for contract sources, subject/version, pre
 Process stores pointers; active state does not copy the ledger. Create no parallel record system or per-action full scan.
 Deterministic blocking belongs in the project's actual execution entry.
 
+<a id="write-back-check"></a>
+### Write-back check
+
+Trigger: after writing or updating the sole active state, an evidence receipt, the process record, the overlay, or any formal record used as delivery evidence; before claiming completion, handing off, or committing.
+
+Action: immediately read back the actual content just written instead of trusting the writing command's exit code, an editor save prompt, or a remembered draft.
+
+Criterion: the read-back matches the writing intent: fields, paths, identifiers, links, authority scope, and conclusions are present; nothing is missing, truncated, garbled, mis-encoded, or written to another path or record surface.
+
+Failure: treat the record as unfinished: do not claim completion, do not commit, and do not continue using the unread record as evidence. After fixing, read back again until it matches; when the write target cannot be confirmed, record the exact path, symptom, and unblock condition, then stop.
+
+Evidence: read-back time, path and location read, and the matched or mismatched conclusion; never copy sensitive values.
+
 ## Commit, remote publication, and redaction gate
 
 ### Record and identity availability gate
 
 Trigger: before the first `git add` for a delivery change. Action: confirm that the sole active state, the project overlay, and the process record are readable, that the existing record system can save necessary receipts and update its index before commit, and that an author-identity policy is available. Method: run the smallest read/write preflight at the paths declared by the project overlay without reading evidence-slot contents, then compare `git var GIT_AUTHOR_IDENT` with the author policy. Criterion: the record is updated, the identity policy is available, and the candidate identity matches. Failure: **do not stage, commit, or push**; never infer policy from the current Git identity, old commits, or remote authors. Make a record-path failure the active diagnostic node: run one time-bounded minimal read, one equivalent read-only retry, and one write preflight that cannot overwrite original records. Never relocate records, create a substitute record surface, or call a timeout a successful record. After three safe checks still fail, preserve unstaged changes and report the exact path, operation, timeout/error, and unblock condition before stopping. Evidence: paths, preflight time, write result, identity-policy source, and comparison result; never record sensitive values.
+
+<a id="mechanical-preflight"></a>
+### Mechanical preflight gate
+
+Trigger: before the first `git add` of this delivery change; before any completion, handoff, or release claim; on every commit once the optional commit hook is installed (`--staged --message-file`).
+
+Action: at the project root run the [mechanical preflight](preflight.md) (`python -B -X utf8 <skill>/references/preflight.py --root . --json`; add `--staged` before commit, `--message-file` for the candidate message, and `--readback` after commit) and check record availability, record-code batching, evidence links and numbers, baseline, record size, secrets, candidate message, and identity against the project configuration.
+
+Criterion: exit code 0 with no block-level failure. Register every warn and skip; skips such as a missing identity policy or a record outside version control do not pass their gates.
+
+Method: run preflight before staging and repair per the printed suggestions. Preflight never edits records, and no substitute record surface may be created to pass it. The hook is optional and needs explicit consent; without it the executor runs the same commands at the same action point.
+
+Failure: exit code 1 equals the corresponding gate failing: no `git add`, commit, push, or completion claim; repair records, evidence, message, or identity first, or record a matching exemption reason and recheck. Exit code 2 is a usage or configuration error and equally forbids continuing; never guess a configuration to bypass it.
+
+Exception: `--no-verify` is limited to an unavailable hook environment or emergency recovery, must state the reason in the process record, and requires a manual `--readback` plus other evidence after the commit; never bypass a failed check. Repeated bypass is a gate failure.
+
+Evidence: preflight command, exit code, `--json` summary, `config_source`, exemption basis, and readback result; never record secret values or session links.
 
 <a id="commit-history-coverage"></a>
 ### Check scope and historical coverage

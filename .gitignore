@@ -1,2 +1,5 @@
 /.delivery/
 /.agents/
+/*.zip
+__pycache__/
+*.pyc

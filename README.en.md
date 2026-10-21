@@ -2,7 +2,7 @@
 
 [中文](README.md) | [English](README.en.md)
 
-Current version: **2026.10.21.1**. Calendar versioning; the canonical value ships in [SKILL.md](SKILL.md). Earlier payloads declared no numeric version.
+Current version: **2026.10.21.2**. Calendar versioning; the canonical value ships in [SKILL.md](SKILL.md). Earlier payloads declared no numeric version.
 
 `delivery-harness` is an Agent Skill for multi-stage delivery. It continues within existing authority and uses current project state, real evidence and explicit gates to decide the next action. Specialist Skills, MCPs and CLIs do the work; Harness keeps goals, authority, state and verification aligned.
 

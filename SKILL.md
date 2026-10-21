@@ -5,7 +5,7 @@ description: Use when initializing or adopting a project, coordinating multi-sta
 
 # Delivery Harness
 
-Version: `2026.10.21.1`
+Version: `2026.10.21.2`
 
 在既有授权与证据边界内持续交付。Read one core; load other references only as needed.
 
