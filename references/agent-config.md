@@ -47,8 +47,11 @@ policy:
 | `assets/CLAUDE.block.template.md` | Claude Code | 只复制标记块到项目实际生效的 `CLAUDE.md`；已有同名标记块时整块替换 | 为 Claude 项目会话提供同一自动载入入口；不另造 `claude.yaml` |
 | `assets/restricted-runtime-entry.block.template.md` | OpenClaw、Hermes 或其他有持久项目指令面的主机 | 先把 `{{RUNTIME_INSTRUCTION_FILE}}` 替换为运行时确认会读取的文件名，再只复制标记块；没有此类指令面就不用 | 为非 `AGENTS.md` / `CLAUDE.md` 指令面提供最小入口；不能用一个不会被读取的占位文件冒充自动载入 |
 | `assets/delivery-skeleton.template.md` | 初始化项目的 Agent | 按文档复制同语言 `delivery-skeleton/.delivery/` 实体目录；已有 `.delivery/` 时执行增量安全合并，不复制这份说明文件本身 | 生成项目状态、忽略规则和三个可追踪空目录占位；二次执行必须零差异 |
-| `assets/harness-state.template.md` | 项目 `.delivery/state.md` | 仅在状态文件不存在时作为同语言占位来源；通常已包含在完整骨架中 | 记录活动节点、当次授权、已过证据门和待决断，是动态状态唯一事实源 |
-| `assets/project-overlay.template.md` | 项目 Agent 与维护者 | 复制到项目实际使用的文档或规则目录，删除无关占位并填写稳定事实 | 保存项目命令、长期授权策略、门定义、分发面登记、Resolver 和经验；不复制当次状态 |
+| `assets/harness-state.template.md` | 项目 `.delivery/state.md` | 仅在状态文件不存在时作为同语言占位来源；通常已包含在完整骨架中 | 记录当前节点、有效授权、当前门、未知/在途事项与恢复，是动态状态唯一事实源 |
+| `assets/project-overlay.template.md` | 项目 Agent 与维护者 | 复制到项目实际使用的文档或规则目录，删除无关占位并填写稳定事实 | 保存项目命令、长期授权策略、门定义、分发面定义、Resolver 及证据/lessons 唯一入口；不复制活动状态或实测结果 |
+| `assets/process-index.template.md` | 项目过程索引 | 有内容时创建，已有同职责记录原位适配 | 重要历史节点、最新整理回执及按需历史入口；替换短索引，不累加全文 |
+| `assets/evidence-summary.template.md` | 项目唯一证据摘要 | 有结果时建立，原始回执按批次保留 | 结果、范围、限制与精确回执入口；旧摘要归档后替换 |
+| `assets/artifact-readme.template.md` | 任务产物目录 | 复用既有登记，没有时按需填写 | 用途、最后批次、保留与恢复；明细在批次清单 |
 | `assets/project-map.template.md` | 需要定位项目材料的 Agent 与维护者 | 填写并合并到 `PROJECTMAP.md` 或 overlay 声明的既有地图；只保留存在的入口 | 骨架与任务导引；不存进度、结果或授权，不递归载入链接 |
 
 中文项目使用 `assets/` 根下模板，英文项目使用 `assets/en/` 同名模板，一次项目会话内不得混用。安装、显式调用和项目自动载入是三个独立证据面：装好 Skill 不等于入口块已被读取；入口块存在也不等于时序已经验证。
@@ -74,7 +77,7 @@ policy:
 
 ## 项目覆盖层
 
-把 [project-overlay.template.md](../assets/project-overlay.template.md) 复制到项目的文档或规则目录，填写项目事实。覆盖层适合存放命令、长期授权边界、项目独有规则、集成状态、证据门定义、分发面登记、Resolver 和经验教训；当次授权和已过证据门只写覆盖层解析的唯一活动状态（默认 `.delivery/state.md`）；已有治理适配禁双写。
+把 [project-overlay.template.md](../assets/project-overlay.template.md) 复制到项目的文档或规则目录，填写项目事实。覆盖层存放命令、长期授权策略、项目规则、集成/分发面定义、门定义和 Resolver，并解析状态、证据、过程/历史和 lessons 的唯一入口。有效动作授权、当前门、阻塞和在途工作只写唯一 state（默认 `.delivery/state.md`）；实测和经验分别维护于其既有来源。具体归属和迁移按[文档生命周期](context-lifecycle.md)，已有治理适配禁双写。
 
 经验是证据记录，Resolver 是执行路由。经验回答之前发生了什么、证据是什么、以后要改变什么；Resolver 回答在已知条件下应该选择哪个 Skill、工具或流程。先有可信经验，再把稳定且会重复使用的结论写进 Resolver。
 
@@ -88,7 +91,7 @@ Harness 在现实审计、工具变化、路由失败和阶段转换时检查 Re
   -> Delivery Harness 通用规则
 ```
 
-项目覆盖层只能在本项目内收紧或具体化规则，不能绕过更高层指令。通用经验回写技能前，先确认它已在多个项目中成立；单个项目的经验和 Resolver 留在覆盖层。
+项目覆盖层只能在本项目内收紧或具体化规则，不能绕过更高层指令。通用经验回写技能前，先确认它已在多个项目中成立；单个项目的经验留在既有 lessons 来源，Resolver 留在覆盖层或其唯一映射来源。
 
 ## 配置验证
 

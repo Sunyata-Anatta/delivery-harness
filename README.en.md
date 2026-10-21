@@ -2,7 +2,7 @@
 
 [中文](README.md) | [English](README.en.md)
 
-Current version: **2026.10.12**. Calendar versioning; the canonical value ships in [SKILL.md](SKILL.md). Earlier payloads declared no numeric version.
+Current version: **2026.10.21**. Calendar versioning; the canonical value ships in [SKILL.md](SKILL.md). Earlier payloads declared no numeric version.
 
 `delivery-harness` is an Agent Skill for multi-stage delivery. It continues within existing authority and uses current project state, real evidence and explicit gates to decide the next action. Specialist Skills, MCPs and CLIs do the work; Harness keeps goals, authority, state and verification aligned.
 
@@ -19,7 +19,7 @@ Startup needs a short entry, `SKILL.md` and one language core. Read execution, i
 
 `language=auto|zh|en` follows explicit choice, project-session lock, dominant message language, then UI language. Code and logs do not switch it. Read one language core and reference tree. English starts at the [core](references/en/core.md).
 
-Harness text budgets use `o200k_base`: startup block <=250 tokens, SKILL + selected core <=1000, active state <=600, overlay startup summary <=450, ordinary startup total <=2300. Count host-injected skill catalogs, tools and other global rules separately. These budgets promise neither whole-conversation savings nor removal of previously loaded content. See the [budget and verification contract](references/en/runtime-installation.md).
+Harness soft text budgets use `o200k_base`: startup block <=250 tokens, SKILL + selected core <=1000, active state <=600, overlay startup summary <=450, ordinary startup total <=2300. Count host-injected skill catalogs, tools and other global rules separately. These budgets promise neither whole-conversation savings nor removal of previously loaded content. See the [budget and verification contract](references/en/runtime-installation.md).
 
 ## Project adoption
 
@@ -39,7 +39,9 @@ During execution, [conformance checks](references/en/execution.md#project-confor
 
 This repository's own `.delivery/` holds legitimate development state, plans, tests and reviews, kept local under its public-distribution boundary. Companion case studies have independent goals and records, linked through findings only.
 
-Target **<=80 physical lines** of active state, including blanks. Replace current summaries on every update; archive and reread history before retaining exact references. Never accumulate full logs or truncate necessary authority and unresolved risks. See [state compaction](references/en/execution.md#state-size) for triggers, ordering and failure recovery.
+Use [document lifecycle](references/en/context-lifecycle.md) to bound downstream growth: state keeps safe-continuation essentials (<=80 physical lines, preferably <=5 KiB); process is an index of about 30 lines; evidence summaries about 50; artifact READMEs about 30. All are soft targets. Replace old summaries after preserving original batches and verifying SHA-256. History is read on demand; compaction preserves unknown outcomes, authority quotas, in-flight work and recovery. Adapt existing projects in place without another active state; no new facts means no added "no new findings" entries.
+
+Use the new templates in `assets/` or `assets/en/` only when content exists. Repository document-contract check: `python3 -m unittest discover -s tests -v`; it checks links/anchors, bilingual resources, state copies and the four-root payload structure. It does not prove installation in an actual runtime or require downstream full application tests for document-only compaction.
 
 ## Capability groups and routing
 

@@ -9,6 +9,7 @@ Chinese rule files are normative. This English tree is an operational equivalent
 | Execute the current lifecycle node | [execution.md](execution.md) |
 | Adopt/align a project, repair governance or project navigation | [project-initialization.md](project-initialization.md) |
 | Check rules at an action, transition or rule/path change | [execution.md](execution.md#project-conformance) |
+| Compact growing documents, hand off or recover a compaction batch | [context-lifecycle.md](context-lifecycle.md) |
 | Change state, install, deploy, or enter a phase | [gates.md](gates.md) |
 | Bootstrap a session or handle node failure | [principles.md](principles.md) |
 | Diagnose, recover, or retry | [debugging.md](debugging.md) |

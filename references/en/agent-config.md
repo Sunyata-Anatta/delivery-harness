@@ -47,8 +47,11 @@ These files belong to different layers and cannot replace one another. `agents/o
 | `assets/CLAUDE.block.template.md` | Claude Code | Copy only the marked block into the effective project `CLAUDE.md`; replace the whole marked block when present | Same auto-load entry for Claude; never invent `claude.yaml` |
 | `assets/restricted-runtime-entry.block.template.md` | OpenClaw, Hermes, or another host with a persistent instruction surface | Replace `{{RUNTIME_INSTRUCTION_FILE}}` with a confirmed file the runtime reads, then copy only the marked block; omit when no such surface exists | Minimal entry for non-`AGENTS.md` / non-`CLAUDE.md` surfaces; an unread placeholder cannot prove auto-load |
 | `assets/delivery-skeleton.template.md` | Agent initializing a project | Follow the document to copy the same-language `delivery-skeleton/.delivery/` tree; safely merge an existing `.delivery/`; do not copy the explanatory file | Creates project state, ignore rules, and three trackable empty-directory placeholders; second run must make no change |
-| `assets/harness-state.template.md` | Project `.delivery/state.md` | Same-language placeholder only when state is absent; normally supplied by the full skeleton | Dynamic single source for active node, session authority, passed gates, and pending decisions |
-| `assets/project-overlay.template.md` | Project agent and maintainers | Copy into the actual project documentation/rules location, remove irrelevant placeholders, and fill stable facts | Stores project commands, durable authority policy, gate definitions, distribution-surface registry, Resolver, and lessons; never copies session state |
+| `assets/harness-state.template.md` | Project `.delivery/state.md` | Same-language placeholder only when state is absent; normally supplied by the full skeleton | Dynamic single source for the active node, effective authority, open gates, unknown outcomes, in-flight work and recovery |
+| `assets/project-overlay.template.md` | Project agent and maintainers | Copy into the actual project documentation/rules location, remove irrelevant placeholders, and fill stable facts | Stores project commands, durable authority policy, gate/distribution definitions, Resolver, and sole evidence/lessons entries; never copies active state or measured results |
+| `assets/process-index.template.md` | Project process index | Create only with content; adapt equivalent existing records in place | Historical checkpoints, latest compaction receipt and lazy history entry; replace the short index without accumulating full records |
+| `assets/evidence-summary.template.md` | Sole project evidence summary | Create when results exist; retain original receipts by batch | Results, scope, limits and exact receipt entries; archive old summaries before replacement |
+| `assets/artifact-readme.template.md` | Task artifact directory | Reuse existing registration or populate on demand | Purpose, last batch, retention and recovery; detail belongs in batch manifests |
 | `assets/project-map.template.md` | Agents and maintainers locating project material | Fill and merge into `PROJECTMAP.md` or the existing map declared by the overlay; keep existing entries only | Skeleton and task navigation; no progress, results or authority, and no recursive link loading |
 
 Chinese projects use templates under `assets/`; English projects use same-named files under `assets/en/`. Do not mix them in one project session. Installation, explicit invocation, and project auto-load are independent evidence surfaces: installed Skill does not prove the entry block was read, and block presence does not prove sequence.
@@ -74,7 +77,7 @@ A subagent completion report is not acceptance evidence. The primary agent inspe
 
 ## Project overlay
 
-Copy [project-overlay.template.md](../../assets/en/project-overlay.template.md) into the project's documentation or rule location and fill project facts. The overlay stores commands, durable authority boundaries, project-only rules, integration state, evidence-gate definitions, a distribution-surface registry, Resolver entries, and lessons. Session authority and passed gates belong only in the sole active state resolved from the overlay (default `.delivery/state.md`); existing governance adapters never dual-write.
+Copy [project-overlay.template.md](../../assets/en/project-overlay.template.md) into the project's documentation or rule location and fill project facts. The overlay stores commands, durable authority policy, project rules, integration/distribution definitions, gate definitions and Resolver entries, and resolves the sole state, evidence, process/history and lessons entries. Effective action authority, current gates, blockers and in-flight work belong only in the sole state (default `.delivery/state.md`); measured results and lessons have their own existing sources. Follow [document lifecycle](context-lifecycle.md) for ownership and migration; existing governance adapters never dual-write.
 
 A lesson is an evidence record; a Resolver is an execution route. Lessons say what happened, what proved it, and what changes next time. A Resolver says which Skill, tool, or process to choose under verified conditions. Create a route only after credible repeatable evidence.
 
@@ -88,7 +91,7 @@ system, safety, and user instructions
   -> Delivery Harness generic rules
 ```
 
-The overlay may tighten or specialize rules only within its project. It cannot bypass higher instructions. Before moving a lesson into the generic Skill, prove it across multiple projects; single-project lessons and routes remain local.
+The overlay may tighten or specialize rules only within its project. It cannot bypass higher instructions. Before moving a lesson into the generic Skill, prove it across multiple projects; single-project lessons stay in their existing lessons source and routes in the overlay or its sole mapped source.
 
 ## Configuration verification
 

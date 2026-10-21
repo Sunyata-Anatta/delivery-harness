@@ -29,7 +29,8 @@ Full default adoption uses README, the instruction file actually read by the hos
 | Research, requirements, design and execution steps | Existing specification/plan locations, or `docs/specs/` and `docs/plans/` when content exists; create `docs/contracts/` or `docs/adr/` only for reusable contracts/decisions |
 | Durable validation findings and evidence | Existing evidence index/reports, or `docs/evidence.md` and `docs/evidence/` when results exist; sensitive originals stay in approved restricted storage, with safe index references only |
 | Runtime code, deployment and reproducible inputs | Keep component, `ops/`, `deploy/`, test/fixture conventions; create deployment/recovery guidance when actual steps exist |
-| Attempts, errors and handoff history | Existing append-only process record, default `.delivery/process.md`; read by date/topic, not in full at startup |
+| Process entries and history | `.delivery/process.md` is a short index; archive attempts, errors and originals by batch, default `.delivery/history/`, and read on demand; adapt existing append-only systems through bounded queries |
+| Lessons | Existing sole lessons file/section, read by topic; overlay holds only its entry, never a duplicate |
 | Short-term inputs, intermediates, temporary diagnostics | `.delivery/uploads/`, `artifacts/<task>/tmp/`, `debug/`; register retention/cleanup conditions without assuming older materials are disposable |
 | Retained demos, images/documents/audio/video, manual-test samples and results | `.delivery/artifacts/<task>/retained/`; record provenance, validation and recovery using [resource storage](execution.md#resource-storage); formal test dependencies still use project test/fixture locations |
 
@@ -59,7 +60,7 @@ Order: inventory/preflight -> resolve sole sources -> incremental merge -> popul
 
 Preserve valid past phases and original safety rules; do not restart the lifecycle for adoption. Resolve conflicts under host instruction priority; ask only when the outcome, governance responsibility or required authority changes. After acceptance, use the [project conformance check](execution.md#project-conformance) for ongoing actions, transitions and changes.
 
-Check active-summary size during first adoption too. Above roughly 80 lines, follow [state compaction](execution.md#state-size): archive and verify history before retaining the current summary. Adoption must neither delete history nor add writable state.
+Check the whole default reading path on adoption. Follow [document lifecycle](context-lifecycle.md) for necessary migration of state, process, evidence summaries and artifact READMEs: preserve originals and SHA-256, verify recovery and relative links, then replace summaries. Adapt sources in place; retain record identifiers, authority, unknown outcomes and in-flight work. Do not delete history, add parallel state or rerun the full application suite for adoption. New history storage follows original privacy/tracking policy with an explicit recovery entry; versioned-state rules do not automatically authorize publishing historical originals.
 
 ## Preflight
 
@@ -76,7 +77,7 @@ Check active-summary size during first adoption too. Above roughly 80 lines, fol
 | `.delivery/` is absent | Copy the complete English skeleton. |
 | `.delivery/` exists | Preserve the directory and every existing item; never replace the directory wholesale. |
 | `state.md` is absent | Copy the English state placeholder. |
-| `state.md` exists | Preserve the original text. Append a missing heading only when its meaning is unambiguous; route conflicting facts to a decision gate. |
+| `state.md` exists | Preserve originals; ordinary adoption fills missing fields only when semantics are clear. For compaction, archive and verify under document lifecycle before in-place replacement; initialization never justifies overwriting facts. |
 | `.gitignore` is absent | Copy the skeleton rules. |
 | `.gitignore` exists | Merge is additive only: preserve order and existing rules, append missing slot rules, and add no duplicate line. |
 | A slot is absent | Create the directory and its `.gitkeep`. |
@@ -114,6 +115,8 @@ Then run `git check-ignore -v --no-index .delivery/uploads/__delivery_probe__`, 
 Verify README, map, rules, overlay and process record against their declared tracking/privacy policy. Add the narrowest unignore rules for newly versioned paths as needed; do not unignore all governance content. Without Git, mark this section not applicable and record storage/recovery instead. Ignore rules are not access control for sensitive data.
 
 ## Related project files
+
+Select [process index](../../assets/en/process-index.template.md), [evidence summary](../../assets/en/evidence-summary.template.md) and [artifact README](../../assets/en/artifact-readme.template.md) only when there is content to record. Reuse equivalent files; define sole history, evidence and lessons entries in the overlay under [document ownership](context-lifecycle.md#ownership). Copied templates use resolved project paths, never relative dependencies on the Skill source tree.
 
 Copy the English overlay into a project-declared documentation or rule path. If none is declared, use `.delivery/overlay.md`; do not ask the user merely to choose a path. The overlay belongs in the governed project, never global memory or the Skill source repository. When project privacy rules require it to be ignored, record only its path, scope and limits in the resolved sole state, never sensitive values. Remove unused placeholders and fill stable facts. A copied overlay has no dependency on relative links inside the installed Skill. Append the matching marked `AGENTS.md`, `CLAUDE.md`, or restricted-runtime block to an instruction file the runtime actually reads; replace an existing marked block as a unit.
 

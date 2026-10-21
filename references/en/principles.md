@@ -33,4 +33,4 @@ Only observed failure or success patterns become lessons. Each lesson records co
 
 A Resolver operationalizes lessons. It maps repeatable conditions to a Skill, tool, or process and keeps rationale, fallback, verification, and revisit condition. Update it when routing facts change, not after every ordinary node.
 
-Strengthen the generic Skill only for problems that recur and generalize across projects. Project-only rules, lessons, and Resolver entries remain in the overlay.
+Strengthen the generic Skill only for problems that recur and generalize across projects. Keep project-only rules and Resolver entries in their project rule source or overlay; maintain lessons only at the overlay's sole lessons entry, following [document ownership](context-lifecycle.md#ownership).
