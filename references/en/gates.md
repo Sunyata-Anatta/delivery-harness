@@ -1,6 +1,6 @@
 # Decision, Authority, and Evidence Gates
 
-Before any gate here, read and execute the [common contract](execution.md), including the runway check before independent review or gate actions; then read the complete rule unit for the current event.
+Before any gate here, read and execute the [common contract](execution.md#common-contract), including the runway check before independent review or gate actions; then read the complete rule unit for the current event.
 
 ## Continue directly
 
@@ -47,6 +47,8 @@ Never extend one approval to a new data class or cost range. A new data class, n
 
 Trigger: a user screenshot, original source, human decision, or external result arrives. Action: record a minimal evidence receipt in the sole active state resolved from the overlay (default `.delivery/state.md`) before analysis, design, or side effects. Method: record `received_at`, `source_ref` (or `needs-source` when it cannot be preserved), scope, direct observations, limits, and open questions; copy the original into an evidence slot only when authorized. Criterion: later claims trace to a source and distinguish fact from inference. Failure: mark `needs-source`; do not present inference as confirmed fact. Evidence: the receipt and any authorized evidence-slot reference.
 
+Register new evidence minimally first. Once its full receipt is in the sole evidence source, state keeps only conclusions, limits and exact entries still affecting the current action, under [document lifecycle](context-lifecycle.md).
+
 Reusing older user or external evidence in a new session or active node also triggers this gate. When its old receipt lacks `source_ref` or `needs-source`, backfill it before using the evidence to support implementation, deployment, or an external write.
 
 Keep authority classes separate: evidence recording, reversible local experiment, remote deployment or service restart, external persistent write, and import/activation/release. One class never authorizes the next. “Check first and report” or “continue after checking” authorizes only the check and report; do not implement, deploy, or write external state until the user receives the report and explicitly accepts the next action.
@@ -67,7 +69,7 @@ Do not mark the stage complete. Record available evidence, missing evidence, exh
 Every stopping response contains exactly one reason from this closed list:
 
 ```text
-Stopping here because: <waiting for user decision / waiting for result on user's machine / new authority required / multiple reasonable interpretations require clarification>
+Stopping here because: <waiting for user decision / waiting for result on user's machine / waiting for necessary evidence or an in-flight result / new authority required / multiple reasonable interpretations require clarification>
 ```
 
 If you cannot write that line, do not stop, including after announcing an action. The line is a visibility mechanism, not a gate: it turns a zero-output turn from apparently normal into an obvious missing reason. Acceptance is not “never stop early”; it is “every stop can be judged immediately.”
@@ -78,7 +80,7 @@ A user's preferred cadence constrains handoff size, not turn boundaries. Confusi
 
 ### Record and identity availability gate
 
-Trigger: before the first `git add` for a delivery change. Action: confirm that the sole active state, the project overlay, and the process record are readable, that the process record can be appended before commit, and that an author-identity policy is available. Method: run the smallest read/write preflight at the paths declared by the project overlay without reading evidence-slot contents, then compare `git var GIT_AUTHOR_IDENT` with the author policy. Criterion: the record is updated, the identity policy is available, and the candidate identity matches. Failure: **do not stage, commit, or push**; never infer policy from the current Git identity, old commits, or remote authors. Make a record-path failure the active diagnostic node: run one time-bounded minimal read, one equivalent read-only retry, and one append preflight that cannot overwrite the original. Never relocate records, create a substitute record surface, or call a timeout a successful record. After three safe checks still fail, preserve unstaged changes and report the exact path, operation, timeout/error, and unblock condition before stopping. Evidence: paths, preflight time, append result, identity-policy source, and comparison result; never record sensitive values.
+Trigger: before the first `git add` for a delivery change. Action: confirm that the sole active state, the project overlay, and the process record are readable, that the existing record system can save necessary receipts and update its index before commit, and that an author-identity policy is available. Method: run the smallest read/write preflight at the paths declared by the project overlay without reading evidence-slot contents, then compare `git var GIT_AUTHOR_IDENT` with the author policy. Criterion: the record is updated, the identity policy is available, and the candidate identity matches. Failure: **do not stage, commit, or push**; never infer policy from the current Git identity, old commits, or remote authors. Make a record-path failure the active diagnostic node: run one time-bounded minimal read, one equivalent read-only retry, and one write preflight that cannot overwrite original records. Never relocate records, create a substitute record surface, or call a timeout a successful record. After three safe checks still fail, preserve unstaged changes and report the exact path, operation, timeout/error, and unblock condition before stopping. Evidence: paths, preflight time, write result, identity-policy source, and comparison result; never record sensitive values.
 
 Before commit, inspect worktree, staged set, and full Git history for private keys, tokens, passwords, cloud credentials, connection strings, authentication files, session cookies, real personal information, machine-specific paths, and output containing identity or authority data.
 

@@ -13,11 +13,11 @@ Boundary: pending probe
 【Capability Signal Assessment】Current triggers or none, with reason.
 ```
 
-At project startup read only project rules, overlay (default `.delivery/overlay.md`), unique active state (default `.delivery/state.md`), and current Git/environment facts. Re-probe old receipts before reuse. Reuse the overlay's sole pointer for existing governance; never dual-write. Use the project map (default `PROJECTMAP.md`) to locate needed material without recursively opening its links; read [initialization](project-initialization.md) only for adoption or governance changes. Record new evidence first: time, source or `needs-source`, observations and limits. Facts are not authority.
+At project startup read only project rules, overlay summary/hard constraints and sole-source fields (default `.delivery/overlay.md`), unique active state (default `.delivery/state.md`), and current Git/environment facts. Re-probe old receipts before reuse. Reuse the overlay's sole pointer for existing governance; never dual-write. Use the project map (default `PROJECTMAP.md`) to locate needed material without recursively opening its links; read [initialization](project-initialization.md) only for adoption or governance changes. Record new evidence first: time, source or `needs-source`, observations and limits. Facts are not authority.
 
 Before each action check applicable rules, scope, authority and evidence gates. At node transitions or rule/path changes run the [conformance check](execution.md#project-conformance). Reuse fully read, unchanged content; expand or reread when sources are unclear, conflicting, truncated or changed. Stop expanding once the action has enough information.
 
-Replace the current state summary on every update; target <=80 lines. If exceeded, [archive history before writing](execution.md#state-size), never truncate necessary authority or unresolved risks.
+Replace current summaries. On excess, duplication, node closure or handoff use [document compaction](context-lifecycle.md). Preserve authority, risks, unknown outcomes, in-flight work and recovery.
 
 Before each action, load the relevant rule units for its triggers:
 

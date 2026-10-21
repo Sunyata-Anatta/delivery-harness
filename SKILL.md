@@ -1,11 +1,11 @@
 ---
 name: delivery-harness
-description: Use when an agent is asked to initialize or adopt a project, own complex multi-stage delivery, keep plans and implementation aligned, continue without repeated confirmation, research changing tools, or stop only at material decisions, authority boundaries, and real-world evidence gates.
+description: Use when initializing or adopting a project, coordinating multi-stage delivery, resuming authorized work, or compacting growing project records while preserving scope, authority and evidence gates.
 ---
 
 # Delivery Harness
 
-Version: `2026.10.12`
+Version: `2026.10.21`
 
 在既有授权与证据边界内持续交付。Read one core; load other references only as needed.
 

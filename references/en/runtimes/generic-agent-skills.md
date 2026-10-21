@@ -20,7 +20,7 @@ If the host accepts only one file, discards relative references, or requires exe
 
 Use the host's Skill list, inspection, or parsing command to confirm `name: delivery-harness`. Take explicit invocation syntax from local help; invoke it with “Start from current reality and continue until the accepted evidence gates pass.”
 
-Write an automatic-loading entry only into a project instruction file the host explicitly reads. If the target is neither `AGENTS.md` nor `CLAUDE.md`, replace the placeholders in [restricted-runtime-entry.block.template.md](../../../assets/restricted-runtime-entry.block.template.md).
+Write an automatic-loading entry only into a project instruction file the host explicitly reads. If the target is neither `AGENTS.md` nor `CLAUDE.md`, replace the placeholders in [restricted-runtime-entry.block.template.md](../../../assets/en/restricted-runtime-entry.block.template.md).
 
 ## Arrival Verification
 

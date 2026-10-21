@@ -27,7 +27,7 @@ Explicitly invoke it in a new session:
 /delivery-harness Start from current reality and continue until the accepted evidence gates pass.
 ```
 
-The project instruction entry depends on the instruction surface currently reachable by Hermes. When one exists, use [restricted-runtime-entry.block.template.md](../../../assets/restricted-runtime-entry.block.template.md); otherwise record the explicit-invocation boundary.
+The project instruction entry depends on the instruction surface currently reachable by Hermes. When one exists, use [restricted-runtime-entry.block.template.md](../../../assets/en/restricted-runtime-entry.block.template.md); otherwise record the explicit-invocation boundary.
 
 ## Arrival Verification
 

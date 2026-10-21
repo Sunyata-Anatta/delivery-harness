@@ -27,7 +27,7 @@ Start a new Claude Code session and enter:
 /delivery-harness Start from current reality and continue until the accepted evidence gates pass.
 ```
 
-When a project needs automatic loading, put the fixed block from [CLAUDE.block.template.md](../../../assets/CLAUDE.block.template.md) in the `CLAUDE.md` that the project actually loads. Claude Code can discover a new Skill during a session, but version updates and automatic-loading verification still require a fresh session.
+When a project needs automatic loading, put the fixed block from [CLAUDE.block.template.md](../../../assets/en/CLAUDE.block.template.md) in the `CLAUDE.md` that the project actually loads. Claude Code can discover a new Skill during a session, but version updates and automatic-loading verification still require a fresh session.
 
 ## Arrival Verification
 

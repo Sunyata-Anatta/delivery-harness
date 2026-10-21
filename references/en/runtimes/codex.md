@@ -36,7 +36,7 @@ Start a new Codex session, inspect the Skill list, or enter:
 $delivery-harness Start from current reality and continue until the accepted evidence gates pass.
 ```
 
-When a project needs automatic loading, append the fixed block from [AGENTS.block.template.md](../../../assets/AGENTS.block.template.md) to the `AGENTS.md` that the project actually loads. Codex does not merge same-name Skills; multiple sources can appear in the selector at once. Verification must record the path actually selected. Open a fresh session after changes.
+When a project needs automatic loading, append the fixed block from [AGENTS.block.template.md](../../../assets/en/AGENTS.block.template.md) to the `AGENTS.md` that the project actually loads. Codex does not merge same-name Skills; multiple sources can appear in the selector at once. Verification must record the path actually selected. Open a fresh session after changes.
 
 ## Arrival Verification
 

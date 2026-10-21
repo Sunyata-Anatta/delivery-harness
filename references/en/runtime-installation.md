@@ -25,13 +25,13 @@ assets/
 references/
 ```
 
-Do not copy `.git/`, project state, development tests, review records, or local caches. A second `SKILL.md` in the repository blocks release because the canonical source has forked.
+Do not copy `.git/`, project state, development tests, review records, or local caches. A second `SKILL.md` inside the four-root runtime payload blocks release because the canonical source has forked. Historical snapshots excluded from the payload are not counted and are not active rules.
 
 ## Distribution surface registry
 
-Trigger: before first installation, update, release, or when a new runtime/account-sync entry is discovered, register the complete distribution surface inventory in the project overlay. Each entry states runtime, resolver or address, update method, canonical source, required evidence level, last verification, limits, and rollback. Filesystem targets, plugin installation, account synchronization, uploaded Skills, and hosted entries are separate surfaces and cannot substitute evidence for one another.
+Trigger: before first installation, update, release, or when a new runtime/account-sync entry is discovered, register the complete distribution surface inventory in the project overlay. Each entry states runtime, resolver or address, update method, canonical source, required evidence level, sole evidence entry, stable limits, and rollback. Filesystem targets, plugin installation, account synchronization, uploaded Skills, and hosted entries are separate surfaces and cannot substitute evidence for one another.
 
-Method: enumerate project installation records, runtime listings, plugin/account management surfaces, and local targets; then use the runtime's actual resolution result to detect omissions. Success means every known surface has one resolver or address and a current evidence state. Keep an unknown or unreachable surface as `unverified`, record the unblock condition, and **must not claim that every distribution surface is updated**. On drift, stop the release-complete claim, replace that surface completely, and restart verification at the byte level. Register evidence in the overlay and active state.
+Method: enumerate project installation records, runtime listings, plugin/account management surfaces, and local targets; then use the runtime's actual resolution result to detect omissions. Success means every known surface has one resolver or address and current results can be checked through its sole evidence entry. Keep an unknown or unreachable surface as `unverified`, record the unblock condition, and **must not claim that every distribution surface is updated**. On drift, stop the release-complete claim, replace that surface completely, and restart verification at the byte level. Register measured receipts only in the sole evidence source; active state retains the relevant gate and reference, while the overlay never copies verification results.
 
 ## Project auto-load
 
@@ -78,12 +78,13 @@ For each level, record source version, target runtime version, criterion, exit c
 
 Before release, all are true: repository root installs directly; only one `SKILL.md`; no hard executable dependency; every local link resolves; all five runtime contracts cover installation, discovery, arrival, update, uninstall, and boundaries; at least one target runtime completes a real invocation; every claimed auto-loaded runtime has fresh-session sequence evidence; and the distribution surface registry contains no silently omitted target.
 
+<a id="context-budget"></a>
 ## Pre-injection, cold invocation and context budgets
 
 Inject only the marked receipt contract, never the full Skill, overlay, history or capability group. It must be visible before the first tool; “read the Skill then emit” cannot satisfy that order. Without pre-injection, an explicit cold invocation may read the Skill and selected core before its receipt, with the first business tool after it. Score the two entries separately; neither proves the other.
 
-Measure newly injected Harness text using `o200k_base`: marked block <=250 tokens; SKILL + selected core <=1000; active state <=600; overlay startup summary <=450; ordinary startup total <=2300. Restore active summaries and pointers only; read history/process/long Resolver on demand. Report host-injected skill catalogs, tool inventory, global rules and cache separately. This is not a host-total context cap or a promise that previously read content unloads.
+These are soft targets. Measure newly injected Harness text using `o200k_base`: marked block <=250 tokens; SKILL + selected core <=1000; active state <=600; overlay startup summary <=450; ordinary startup total <=2300. Restore active summaries and pointers only; read history/process/long Resolver on demand. Report host-injected skill catalogs, tool inventory, global rules and cache separately. This is not a host-total context cap or a promise that previously read content unloads.
 
 For each reachable runtime run at least 5 fresh pre-injected sessions, checking the first visible receipt, first tool event, actual read path, selected language and one real task. Separately test explicit cold entry, missing capabilities, unreadable text and source conflicts. No tool event, template echoes or old-session cache do not constitute full behavioral passes. Record every sample and never mark unreachable runtimes passed.
 
-Also bound active-state growth at <=80 physical lines, including blanks. On every update, [archive history before replacing summaries](execution.md#state-size). Check tokens and lines separately; never remove necessary authority, risks or evidence to meet budgets. Record exceptions with reasons and recovery actions, without claiming a budget pass.
+State also has soft targets of <=80 physical lines and preferably <=5 KiB; process indexes about 30 lines, evidence summaries about 50 and artifact READMEs about 30, under [document lifecycle](context-lifecycle.md). Compare actual default read sets for the same task; report lines, bytes and tokens from the same tokenizer separately, marking unavailable token measurement unmeasured. Necessary authority, risks, unknown/in-flight work and recovery take precedence; retain and explain exceptions without a budget-pass claim. Byte reduction does not imply proportional token reduction.

@@ -8,11 +8,11 @@ Read this file when a node, command, result, or verification fails. The goal is 
 failure -> reproduce -> classify -> diagnose safely -> recover -> reverify -> continue
 ```
 
-1. Reproduce the original action. Preserve command, exit code, error class, and the minimum relevant context. Do not infer root cause from one failure.
+1. Check the original action's side effects, remaining authority and in-flight work first; reproduce only if safe to repeat and still authorized. Preserve command, exit code, error class and minimum relevant context; do not infer root cause from one failure.
 2. Classify it as implementation defect, test/data error, environment difference, execution-context isolation, network, authority or credential issue, tool capability gap, missing real evidence, or missing user decision.
 3. Diagnose without changing state first. Read machine, project, runtime, and client facts; confirm which account, credential store, network, service, or tool is actually in use.
 4. Within existing authority, choose the smallest recovery: fix implementation, rerun the reliable command, use an equivalent authorized execution context, use an installed alternative client, or roll back a reversible project-level change.
-5. After recovery, repeat the original failed action and run risk-proportionate full verification. Return to the original node only after reverification passes.
+5. After recovery, verify the original failure condition; rerun the action only if safe to repeat and covered by authority, with verification proportionate to this change's risk. For unknown, limited-use or unsafe-to-repeat actions, reconcile the original operation's receipt under [authority continuity and recovery](context-lifecycle.md#recovery); do not automatically replay it or refund capacity. Return to the original node only after its gate passes.
 
 ## Execution-context isolation
 

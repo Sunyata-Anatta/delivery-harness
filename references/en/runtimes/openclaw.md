@@ -33,7 +33,7 @@ $delivery-harness Start from current reality and continue until the accepted evi
 
 The standalone command form `/delivery-harness ...` is also available. Prefer `$delivery-harness` when composing multiple Skills in one prompt.
 
-If the OpenClaw workspace has a persistently loaded project instruction file, use [restricted-runtime-entry.block.template.md](../../../assets/restricted-runtime-entry.block.template.md); otherwise register explicit-invocation mode.
+If the OpenClaw workspace has a persistently loaded project instruction file, use [restricted-runtime-entry.block.template.md](../../../assets/en/restricted-runtime-entry.block.template.md); otherwise register explicit-invocation mode.
 
 ## Arrival Verification
 
