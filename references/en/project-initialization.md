@@ -10,6 +10,19 @@ Default skeleton and Git criteria below apply only to projects using that layout
 
 With multiple worktrees, locate the current checkout through Git rather than assuming the root is mainline. Independent workflows exist only when declared by the project: the overlay identifies each scope, sole state, writer and mainline handoff. Keep one active node per scope; merging must not overwrite mainline state with branch state. Historical facts retain check dates and source refs/commits; do not renumber existing facts or extend old authority to new actions.
 
+<a id="formal-records"></a>
+## Identify formal-record contracts
+
+On adoption or a relevant execution-path change, locate existing migration ledgers, release/version manifests, audit records and other native mechanisms in current scope.
+In the existing adoption receipt, distinguish applicable, inapplicable with a reason, and unverified.
+Absence from the overlay does not mean inapplicable; not every project needs a new ledger.
+For applicable records, resolve authoritative sources and scope, semantic role (fact/target/event), writer and timing,
+phase criteria, and execution, readback and recovery entries.
+Interpret mixed manifests by field or declared phase. Reference existing rule paths/sections when sufficient and minimally adapt missing items;
+pause affected persistent writes until necessary conditions are clear.
+The overlay holds only an optional sole contract entry; current versions, authority, debt and findings stay in state/evidence, without parallel state.
+Relevant actions use the [formal-record gate](gates.md#formal-record-consistency); ordinary actions do not repeat a full inventory.
+
 ## Select the delivery surface
 
 - English projects use the [English skeleton](../../assets/en/delivery-skeleton.template.md), [state template](../../assets/en/harness-state.template.md), [overlay](../../assets/en/project-overlay.template.md), [project map](../../assets/en/project-map.template.md), and matching auto-load block under `assets/en/`.
@@ -47,14 +60,14 @@ Always applicable: user/host/project rules and the Harness startup contract; ove
 | Code or repair | Current plan item, related implementation/callers and tests; expand for cross-module root causes, insufficient graph results or validation failure |
 | Verify evidence | Current acceptance, specific results and necessary originals; expand for version mismatch, conflict or missing samples |
 | Generate/receive files, select test materials, deliver or clean up | [Resource storage](execution.md#resource-storage), current task inventory and relevant cases; check callers, test discovery and packaging when materials become formal dependencies |
-| Deploy, publish or write data | Specific authority, final version, deploy/rollback and evidence gates; new side effects or missing recovery conditions enter the relevant gate |
+| Deploy, publish or write data | Specific authority, final version, deploy/rollback, applicable formal-record contracts and evidence gates; new side effects or missing recovery conditions enter the relevant gate |
 | Trace history | Index-selected date, identifier or passage; expand for broken sources, conflicts or an explicit full-audit request |
 
 Locate first, then fully read relevant passages and necessary references; never recursively open every map link. Reuse fully read unchanged content; reread changed sources/versions, truncated or garbled output. Stop expansion when the action has enough information. No hard word limit may block safety review, call-chain tracing or complete validation. Use a code graph only when available and data access/transmission is authorized; otherwise search locally.
 
 ## Align an existing project
 
-After the preflight below, add an adoption receipt to the existing process record: `item -> existing source -> Harness requirement -> gap/reason to preserve -> repair or adaptation -> verification evidence`. This is a dated adoption result, not another task-state file. Cover rule priority, state fields/writer, authority classes, phase acceptance, storage/privacy, reading entries and continuation node. Reuse what satisfies the contract; minimally repair gaps. When repeat adoption finds no material change and the old receipt remains valid, reuse it; do not add timestamps, duplicate receipts or state writes merely for rechecking.
+After the preflight below, save the adoption receipt at the existing evidence entry and keep only its pointer in the process record: `item -> existing source -> Harness requirement -> gap/reason to preserve -> repair or adaptation -> verification evidence`. This is a dated adoption result, not another task-state file. Cover rule priority, state fields/writer, authority classes, phase acceptance, storage/privacy, reading entries and continuation node. Reuse what satisfies the contract; minimally repair gaps. When repeat adoption finds no material change and the old receipt remains valid, reuse it; do not add timestamps, duplicate receipts or state writes merely for rechecking.
 
 Order: inventory/preflight -> resolve sole sources -> incremental merge -> populate navigation -> verify storage and reading scenarios -> repeat for idempotence -> record adoption result -> continue from the verified current node. Verify state writes with the actual adoption receipt or a system-supported non-mutating check, never by overwriting the active node as a probe. Read access without lawful update or recovery does not complete adoption.
 

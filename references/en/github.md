@@ -45,7 +45,7 @@ Never report only “GitHub is not logged in” or “plugin unavailable.”
 
 ## Hard redaction rules for Git actions
 
-Before `git commit`, repository creation, push, PR, or release, follow [gates.md](gates.md) and scan worktree, staged set, and full Git history. Include private keys, tokens, passwords, cloud credentials, connection strings, authentication files, session information, real personal data, and machine-specific paths.
+Before `git commit`, repository creation, push, PR or release, verify current content, metadata and full coverage under [check scope and historical coverage](gates.md#commit-history-coverage). That gate owns the criteria for baseline reuse and scan expansion.
 
 Hard rules:
 

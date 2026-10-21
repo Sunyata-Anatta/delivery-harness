@@ -154,6 +154,25 @@ class DocumentContract(unittest.TestCase):
             entries.extend(p.relative_to(ROOT).as_posix() for p in paths if p.is_file() and p.name == "SKILL.md")
         self.assertEqual(sorted(entries), ["SKILL.md"], "Nested Skill entry in the four-root payload")
 
+    def test_action_routes_reach_record_and_commit_gates(self):
+        """The on-demand contracts must be reachable from their action entry points."""
+        for language in LANGUAGES:
+            base = ROOT / "references" / language
+            gates = base / "gates.md"
+            routes = {
+                base / "execution.md": {"formal-record-consistency", "commit-object-readback"},
+                base / "project-initialization.md": {"formal-record-consistency"},
+                base / "github.md": {"commit-history-coverage"},
+            }
+            required = set().union(*routes.values())
+            with self.subTest(language=str(language)):
+                self.assertFalse(required - anchors(self.documents[gates]),
+                                 "Missing canonical record/commit gate anchors")
+            for source, fragments in routes.items():
+                linked = {fragment for target, fragment, _ in self.links[source] if target == gates}
+                with self.subTest(source=str(source.relative_to(ROOT))):
+                    self.assertFalse(fragments - linked, "Action entry does not route to its gate")
+
 
 def report_sizes():
     print("Soft template targets only; exceeding them does not fail a check. Tokens are not measured.")

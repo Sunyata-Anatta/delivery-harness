@@ -16,6 +16,7 @@ Keep active state in sole state, fixed observations in evidence, history in proc
 - Active state: `{{ACTIVE_STATE_PATH}}` (sole pointer; use `.delivery/state.md` for the default layout)
 - Navigation: `{{PROJECT_MAP_PATH}}` (default `PROJECTMAP.md`; skeleton and on-demand entries, never recursively expanded)
 - Rule entries: {{RULE_CLAUSE_ENTRIES}} (source paths and scope/sections; reference existing clauses instead of copying them)
+- Formal-record contract (when applicable): {{FORMAL_RECORD_CONTRACT_ENTRY}} (sole entry for sources/scope, semantic roles, writers/timing, phase criteria, readback and recovery; no current results)
 - Process index: `{{PROCESS_RECORD_PATH}}` (default `.delivery/process.md`; important historical checkpoints and latest compaction receipt, read by topic/ID)
 - Original history entry: `{{HISTORY_ENTRY_PATH}}` (existing archive entry or on-demand manifest; immutable originals, never expanded at startup)
 - Evidence entry: `{{EVIDENCE_ENTRY_PATH}}` (existing report/section or on-demand summary; fixed subject, version, result, limits and original receipts)

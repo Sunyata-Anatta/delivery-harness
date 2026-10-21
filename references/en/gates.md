@@ -76,25 +76,82 @@ If you cannot write that line, do not stop, including after announcing an action
 
 A user's preferred cadence constrains handoff size, not turn boundaries. Confusing them creates a stable failure mode where “I am starting now” becomes the whole handoff.
 
+<a id="formal-record-consistency"></a>
+## Formal-record consistency and completion gate
+
+Trigger: before a persistent change, deployment, publication or reconciliation that must maintain formal records,
+and before accepting or declaring completion of that batch.
+Resolve authoritative sources, scope, record meaning, writers/timing, pre/post checks and recovery from the project contract.
+If unmapped, use [initialization](project-initialization.md#formal-records) to locate native mechanisms; undeclared does not mean inapplicable.
+
+| Record meaning | Precondition | Completion criterion |
+|---|---|---|
+| Past facts or current-state record | Claims about the baseline needed for this action match reality, without relevant omissions, conflicts or unknown outcomes | Batch effects and required records agree; identity, outcome and authoritative readback are complete |
+| Target declaration | An accepted target is bound to exact artifacts and permits moving from the baseline; baseline and target may differ now | Actual results reach the target; do not revise the target to accept unfinished work |
+| Event record | Check required predecessors and in-flight status by operation ID, not the table's last row | Required events and results for this operation satisfy its protocol; acceptance, start or another operation's success is not completion |
+
+Method: fix the subject, environment, artifacts and batch scope; use native execution, registration and readback entries.
+Custom, restricted and manual paths carry the same obligations.
+Check relevant record identity, content, dependencies, effective state and actual effects under the project's model,
+not just the last row, maximum identifier or newest repository file.
+For concurrent writers, use native locking, version conditions or a final pre-execution check; do not silently accept a drifted baseline.
+Passing preconditions permits starting only; close completion only after batch effects, required records and readback satisfy postconditions.
+Batch closure does not require one database transaction; handle partial or pending results in non-atomic/asynchronous protocols under project phase gates, never directly as success.
+
+Failure: relevant omissions, conflicts or unknown outcomes keep affected writes and dependent gates closed;
+state retains the current conclusion, one recovery action and the evidence entry.
+“Debt retained,” exit code zero or encoding residual values as expected values does not permit continuation.
+Read-only investigation, recovery within existing authority and independent safe work may continue.
+Reconciliation needs both authority for that write and sufficient factual evidence; record only proven scope and read it back.
+Never substitute reconciliation time for an unknown original execution time.
+Use the [recovery contract](context-lifecycle.md#recovery) to inspect the original operation first;
+do not blindly replay, alter executed artifacts or history to conceal discrepancies, or record success without evidence.
+Reuse covered authority; ask only for a necessary decision, permission or evidence. Approval to repair does not itself resolve the discrepancy.
+
+Evidence: use existing batch receipts for contract sources, subject/version, pre/post criteria, relevant record IDs, method, result, limits and recovery entries.
+Process stores pointers; active state does not copy the ledger. Create no parallel record system or per-action full scan.
+Deterministic blocking belongs in the project's actual execution entry.
+
 ## Commit, remote publication, and redaction gate
 
 ### Record and identity availability gate
 
 Trigger: before the first `git add` for a delivery change. Action: confirm that the sole active state, the project overlay, and the process record are readable, that the existing record system can save necessary receipts and update its index before commit, and that an author-identity policy is available. Method: run the smallest read/write preflight at the paths declared by the project overlay without reading evidence-slot contents, then compare `git var GIT_AUTHOR_IDENT` with the author policy. Criterion: the record is updated, the identity policy is available, and the candidate identity matches. Failure: **do not stage, commit, or push**; never infer policy from the current Git identity, old commits, or remote authors. Make a record-path failure the active diagnostic node: run one time-bounded minimal read, one equivalent read-only retry, and one write preflight that cannot overwrite original records. Never relocate records, create a substitute record surface, or call a timeout a successful record. After three safe checks still fail, preserve unstaged changes and report the exact path, operation, timeout/error, and unblock condition before stopping. Evidence: paths, preflight time, write result, identity-policy source, and comparison result; never record sensitive values.
 
-Before commit, inspect worktree, staged set, and full Git history for private keys, tokens, passwords, cloud credentials, connection strings, authentication files, session cookies, real personal information, machine-specific paths, and output containing identity or authority data.
+<a id="commit-history-coverage"></a>
+### Check scope and historical coverage
 
-Commit metadata is also in scope. Author and committer identities travel with a push and cannot be found by scanning file contents alone; inspect author and committer addresses across all commits separately.
+Before commit, inspect the current worktree, staged set, candidate message and historical coverage for private keys, tokens, passwords, cloud credentials, connection strings, authentication files, session cookies, real personal information, machine-specific paths, and output containing identity or authority data.
 
-Trigger: before running `git commit`. Action: inspect the candidate commit message title, body, and trailers, not only existing history. Treat text from `-m`, `-F`, an editor, or an Agent-generated message the same way. Session, share, chat, or other opaque collaboration links must not enter commit metadata; a `Claude-Session`-style trailer must not enter commit metadata either.
+On first adoption or without a trusted baseline, inspect the full history required by project scope.
+Bind the receipt to a verifiable object set/boundary, ref scope, rule/tool versions, results and limits.
+Subsequently check all new, rewritten or introduced objects not covered by a valid baseline; reuse results only for unchanged covered objects, not periodic rescans solely because time passed.
+Rule changes, wider scope, history import/rewrite or an unverifiable baseline require checking affected scope; expand to the necessary full scan when coverage boundaries cannot be proved.
+Before push or publication, prove that the complete outgoing object scope is covered by current effective rules.
+A baseline never replaces current worktree, staged-set or candidate-message checks.
+
+Commit metadata is part of that coverage. File-content scans cannot inspect messages or author/committer identities; verify them separately. Checking an old HEAD does not prove full coverage.
+
+Trigger: before `git commit` or another entry that creates/rewrites commits. Action: inspect the candidate commit message title, body, and trailers, not only existing history. Treat text from `-m`, `-F`, an editor, or an Agent-generated message the same way. Session, share, chat, or other opaque collaboration links must not enter commit metadata; a `Claude-Session`-style trailer must not enter commit metadata either.
 
 Method: review the exact draft before committing, with special attention to URLs and combinations of `session`, `share`, and platform names. Keep only domain-neutral text needed to explain the change. Criterion: the candidate message contains no session/share link or trailer and remains understandable without one. Failure: abort the commit, remove the link or rewrite the reason neutrally, then recheck; when already pushed, record the historical exposure and request explicit authority for a cleanup plan. Evidence: record check time, message source, finding type, and disposition, never the link value.
+
+<a id="commit-object-readback"></a>
+### Commit-object readback
+
+Trigger: after commits are created, rewritten or introduced, before relying on them to continue, hand off, push or publish.
+Read messages, author/committer identities and other policy-bound metadata by actual SHA; compare with candidate content, identity policy and the delivery object.
+For a normal commit check that object; for amend, rebase, cherry-pick, merge, squash or import, check every affected new object not already covered, not only the final HEAD.
+Bind receipts to the object set and rule version; changed objects cannot inherit old-SHA results.
+A reviewed draft or tool success message alone does not verify the final message.
+On failure, pause affected follow-on actions, repair within existing authority and history-rewrite boundaries, then recheck.
+Record object identifiers, finding types and disposition without copying prohibited values.
 
 Before every commit, read the effective identity instead of assuming it matches project policy. Repository config may be absent, global config may serve another purpose, and a runtime may inject environment identity. Across projects, runtimes, or machines, the effective values can change silently.
 
 Compare the effective values with the author policy in the project overlay. `git var GIT_AUTHOR_IDENT` evaluates config and injected environment together and fails when identity is unknown. When values differ, override only that commit with `git -c user.name=... -c user.email=... commit`; never change global configuration for this purpose.
 
-Multiple identities in the same repository history are direct evidence that this gate was not consistently executed.
+Check identity changes against applicable policy and receipts; multiple authorized contributors do not themselves prove a missed check.
 
 Never commit a real secret as a test fixture. Use obviously invalid placeholders and avoid complete shapes that resemble usable credentials. Prefer a dedicated secret scanner. When unavailable, use repository search and Git-object inspection as a documented degraded check.
 

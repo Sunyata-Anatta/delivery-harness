@@ -18,6 +18,7 @@
 - 活动状态：`{{ACTIVE_STATE_PATH}}`（唯一指针；默认布局填 `.delivery/state.md`）
 - 导航：`{{PROJECT_MAP_PATH}}`（默认 `PROJECTMAP.md`；骨架与按需导引，不递归展开）
 - 规约入口：{{RULE_CLAUSE_ENTRIES}}（来源路径及适用范围/章节；已有规则只引用，不复制正文）
+- 正式记录契约（适用时）：{{FORMAL_RECORD_CONTRACT_ENTRY}}（唯一入口；来源/作用域、语义角色、写入方与时机、阶段判据、回读及恢复，不存当前结果）
 - 过程索引：`{{PROCESS_RECORD_PATH}}`（默认 `.delivery/process.md`；只存重要历史检查点与最近压缩回执，按主题/编号读取）
 - 原始历史入口：`{{HISTORY_ENTRY_PATH}}`（既有归档入口或按需创建的历史清单；原文不可变，不在启动时展开）
 - 证据入口：`{{EVIDENCE_ENTRY_PATH}}`（既有报告/章节或按需摘要；固定对象、版本、结果、限制与原始回执）

@@ -30,6 +30,10 @@ Request a user decision only when an option materially changes behavior, archite
 
 Record the choice, reason, rejected options, assumptions, risks, rollback, and revisit condition. An implementation node names files, RED test, target, verification command, dependencies, estimate, and stop gate. A strong rule is anchored to an externally observable event and states trigger, action, reproducible method, criterion, failure handling, and evidence; escalation uses observable event counts.
 
+Expected values come from an accepted contract and identify their phase: baseline B permits starting; postcondition target T is what this batch must achieve.
+Fix both and their sources separately. Do not silently redefine old parameters or change expected values to accept observed drift.
+Use the fixed artifacts and scope of this release for the target, not automatically the newest repository version.
+
 List evidence recording, reversible local experiments, remote deployment, external persistent writes, and import/activation as separate action classes. When the user says “check first and report,” deliver that report first; the conditional authority does not cover implementation or side effects. A preliminary experiment states its purpose, untested acceptance conditions, rollback, and prohibited inferences; “deployed” never substitutes for implementation evidence of an approved design.
 
 ## environment_and_authority: verify environment and authority
@@ -46,6 +50,7 @@ Local RED/GREEN evidence or a written plan never authorizes remote copying, serv
 - Do not commit secrets, personal data, or machine-specific paths. Redact credential values before context; diagnostics are non-persistent by default and redacted before archival. If a value leaked, do not repeat it; register rotation, residual cleanup, and exposure surface.
 - Derive input/output directories from project root or evidence slots. Inject absolute paths as parameters and register deviations in the overlay.
 - Before commit, read the actual staged file list; the commit message covers every staged file. Run secret, portability, and identity checks.
+- After creating, rewriting or introducing commits, verify actual results through [commit-object readback](gates.md#commit-object-readback) before dependent actions.
 - Separate deliverable and development-only paths. Judge dependencies at the delivery boundary. Caches and indexes remain rebuildable by default.
 
 ## tdd_nodes: execute each node with TDD
@@ -119,6 +124,7 @@ This check runs during execution. It creates no background monitor, duplicate ch
 | Trigger | Action and method | Pass criterion |
 |---|---|---|
 | Select an action, enter a node or switch worktrees/workflows | Resolve rules and state through the overlay; use the map to locate current scope, rule clauses, authority and acceptance, then check the plan item and proposed paths | Action matches the outcome, rules and authority; the current scope has one state writer; no phase acceptance gate was bypassed |
+| Before a persistent change involving formal records, or at batch acceptance/completion | Resolve the project record contract and check subject, phase, actual effects and records through the [consistency and completion gate](gates.md#formal-record-consistency) | Preconditions permit starting only; postconditions and record obligations must pass before completion closes; known debt is not default permission |
 | User corrects rules; rules/overlay/map/paths change; a reference breaks | Compare changes and source versions, fully reread affected clauses and verify each item's sole source; check links/anchors when entries change | Conflicts and broken entries are repaired; plans and actions follow effective rules without substituting old receipts for new evidence |
 | Validation fails, a node transitions or completion is claimed | Check actual diffs, specific results, state and related documents against current acceptance; for document edits check links and consistency, for executable-path changes check test-name sets, skips and run results | Evidence covers the current version and rules; state is current; specifications, plans and map contain no active-state copies |
 
