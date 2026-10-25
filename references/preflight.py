@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Delivery Harness preflight: mechanical checks for records and commits.
 
-A single-file, standard-library tool for Python 3.9+. It reads the project
+A single-file, standard-library tool for Python 3.9+. Checks a-i guard records
+and commits; checks j-o are the hard constraints H1-H6. It reads the project
 record, the Git index/worktree and candidate commit metadata; it never edits
 project records. The only write it can perform is the optional commit-msg hook
 requested explicitly with --install-hook.
@@ -42,6 +43,12 @@ CHECK_TITLES = {
     "g": "candidate commit message has no session/share link or agent trailer",
     "h": "effective Git identity matches the configured policy",
     "i": "the batch commit really contains the record change",
+    "j": "the state file follows the fixed three-sentence format",
+    "k": "evidence entries are one of three kinds; minor batches add none",
+    "l": "evidence entries per day stay under the threshold",
+    "m": "independent reviews of one change stop at round two unless the owner names a third",
+    "n": "rule decisions are traceable and mechanically checkable",
+    "o": "work stays on the main line: no new local branches",
 }
 
 DEFAULT_CODE_PATHS = [
@@ -101,6 +108,17 @@ DEFAULT_BANNED_LINKS = [
 ]
 DEFAULT_BANNED_TRAILERS = [r"(?im)^\s*Claude-[A-Za-z0-9-]+\s*:"]
 
+# Hard-constraint vocabulary (references/hard-constraints.md). Bilingual labels are fixed.
+DEFAULT_ID_PATTERN = r"\b[A-Z]{1,2}\d+[a-z]?\b"
+DEFAULT_BANNED_TOKENS = ["→", "=>", "->", "TBD", "w/", "&&"]
+DEFAULT_MINOR_PATHS = ["**/*.css", "**/*.scss", "**/*.sass", "**/*.less", "**/locales/**", "**/i18n/**"]
+VAGUE_WORDS = ["适度", "必要时", "酌情", "尽量", "适当",
+               "视情况", "合理", "as needed", "if necessary", "when necessary",
+               "appropriate", "reasonable", "where possible"]
+EVIDENCE_KIND = re.compile(r"\[(?:门结论|变更|根因|gate|change|root-cause)\]", re.I)
+DATE = re.compile(r"\b(\d{4}-\d{2}-\d{2})\b")
+REVIEW_WORD = re.compile(r"复审|\breview", re.I)
+ROUND = re.compile(r"第\s*(\d+)\s*轮|\bround\s*(\d+)", re.I)
 EVIDENCE_LINE = re.compile(r"^\s*(?:[-*+]\s+)?(?:\[)?{prefix}(\d+)(?:\])?(?=\s|$|[:|.,;!?\-—])")
 INLINE_LINK = re.compile(r"\[[^\]\n]*\]\(\s*<?([^)>\s]+)>?")
 IDENTITY_LINE = re.compile(r"^(?P<name>.*?) <(?P<email>[^>]*)> (?P<ts>\d+) (?P<tz>[+-]\d{4})$")
@@ -134,7 +152,14 @@ def default_config() -> dict:
             "mtime_tolerance_seconds": 0,
         },
         "code": {"paths": list(DEFAULT_CODE_PATHS), "exclude": []},
-        "evidence": {"path": None, "prefix": "E", "allow_needs_source": False},
+        "evidence": {
+            "path": None,
+            "prefix": "E",
+            "allow_needs_source": False,
+            "daily_limit": 5,
+            "minor_paths": list(DEFAULT_MINOR_PATHS),
+            "files": [".delivery/artifacts/**"],
+        },
         "baseline": {"enabled": False, "path": None, "pattern": None, "ref": "HEAD"},
         "exemptions": {"path": ".delivery/preflight-exemptions.md"},
         "identity": {"name": None, "email": None, "check_committer": False},
@@ -148,7 +173,13 @@ def default_config() -> dict:
             "banned_links": list(DEFAULT_BANNED_LINKS),
             "banned_trailers": list(DEFAULT_BANNED_TRAILERS),
         },
-        "checks": {key: "block" for key in "abcdefghi"},
+        "state": {
+            "id_pattern": DEFAULT_ID_PATTERN,
+            "banned_tokens": list(DEFAULT_BANNED_TOKENS),
+        },
+        "decisions": {"path": ".delivery/decisions.md", "executors": ["AGENTS.md", "CLAUDE.md"]},
+        "branches": {"allowed": ["main", "master"]},
+        "checks": dict({key: "block" for key in CHECK_TITLES}, l="warn"),
         "readback": {"ref": "HEAD"},
         "hook": {"python": None},
     }
@@ -222,6 +253,28 @@ def validate_config(cfg: dict) -> list:
     if not evidence["prefix"].strip():
         raise ConfigError("evidence.prefix must not be empty")
     _expect(evidence.get("allow_needs_source"), bool, "evidence.allow_needs_source")
+    _expect(evidence.get("daily_limit"), int, "evidence.daily_limit")
+    if evidence["daily_limit"] < 1:
+        raise ConfigError("evidence.daily_limit must be >= 1")
+    _list_of_strings(evidence.get("minor_paths"), "evidence.minor_paths")
+    _list_of_strings(evidence.get("files"), "evidence.files")
+
+    state = cfg["state"]
+    _expect(state, dict, "state")
+    _expect(state.get("id_pattern"), str, "state.id_pattern")
+    _compile(state["id_pattern"], "state.id_pattern")
+    _list_of_strings(state.get("banned_tokens"), "state.banned_tokens")
+
+    decisions = cfg["decisions"]
+    _expect(decisions, dict, "decisions")
+    _expect(decisions.get("path"), str, "decisions.path")
+    _list_of_strings(decisions.get("executors"), "decisions.executors")
+
+    branches = cfg["branches"]
+    _expect(branches, dict, "branches")
+    _list_of_strings(branches.get("allowed"), "branches.allowed")
+    if not branches["allowed"]:
+        raise ConfigError("branches.allowed must name at least the main line")
 
     baseline = cfg["baseline"]
     _expect(baseline, dict, "baseline")
@@ -603,7 +656,7 @@ def skip(check_id: str, severity: str, note: str) -> dict:
 
 
 # ---------------------------------------------------------------------------
-# Checks a-i
+# Checks a-i: record, batch, evidence, size, secrets, message, identity, readback
 # ---------------------------------------------------------------------------
 
 
@@ -1401,6 +1454,434 @@ def check_readback(root: Path, cfg: dict, git: Git) -> dict:
 
 
 # ---------------------------------------------------------------------------
+# Checks j-o: hard constraints H1-H6 (references/hard-constraints.md)
+# ---------------------------------------------------------------------------
+
+THREE = {
+    "zh": ("三句话", ("现在在", "下一步", "在等")),
+    "en": ("Three sentences", ("Now at", "Next", "Waiting on")),
+}
+AUTH_HEADING = {"zh": "授权与作用域", "en": "Authorizations and scope"}
+AUTH_SCOPE = {"zh": "适用", "en": "Applies to"}
+AUTH_NOT_COVERED = {"zh": "不在该授权内", "en": "Not covered"}
+REVIEW_HEADING = {"zh": "复审轮次", "en": "Review rounds"}
+NAMED = re.compile(r"(?:点名|named by)\s*[：:]\s*([^；;。]*)", re.I)
+EMPTY_VALUES = {"", "无", "none", "n/a", "-", "—"}
+SENTENCE_END = re.compile(r"[。！？.!?][)）\"'”’」』\]*]*\s*$")
+CODE_SPAN = re.compile(r"(`+).*?\1")
+FIELD = re.compile(r"^\s*[-*+]\s*([^：:]+?)\s*[：:]\s*(.*)$")
+DECISION_HEADING = re.compile(r"^##\s+(D\d+)\b(.*)$")
+DECISION_FIELDS = {
+    "type": ("类型", "type"),
+    "rule": ("规则", "rule"),
+    "relation": ("补充或取代", "relation"),
+    "basis": ("依据", "basis"),
+    "check": ("检查", "check"),
+    "violations": ("违反", "violations"),
+}
+
+
+def _is_empty(value: str) -> bool:
+    value = value.strip().rstrip("。.").strip()
+    return value.lower() in EMPTY_VALUES or bool(re.fullmatch(r"<.*>", value))
+
+
+def _prose_lines(text: str):
+    """Yield (number, line) outside fenced blocks and HTML comments."""
+    fence = None
+    comment = False
+    for number, line in enumerate(text.splitlines(), 1):
+        marker = re.match(r"^\s*(`{3,}|~{3,})", line)
+        if fence:
+            if marker and marker.group(1)[0] == fence[0] and len(marker.group(1)) >= len(fence):
+                fence = None
+            continue
+        if marker:
+            fence = marker.group(1)
+            continue
+        if comment or line.lstrip().startswith("<!--"):
+            comment = "-->" not in line
+            continue
+        yield number, line
+
+
+def _sections(text: str):
+    """Map each level-2 heading title to its (number, line) prose lines."""
+    sections, current, order = {}, None, []
+    for number, line in _prose_lines(text):
+        heading = re.match(r"^##\s+(.+?)\s*$", line)
+        if heading:
+            current = heading.group(1)
+            order.append(current)
+            sections[current] = []
+        elif current is not None and line.strip():
+            sections[current].append((number, line))
+    return sections, order
+
+
+def _state_language(order):
+    for language, (heading, _) in THREE.items():
+        if order and order[0] == heading:
+            return language
+    return None
+
+
+def _record_text(root: Path, cfg: dict):
+    record = root / norm_rel(cfg["record"]["path"])
+    if not record.is_file():
+        return None, record
+    try:
+        return read_text_file(record), record
+    except (OSError, UnicodeDecodeError):
+        return None, record
+
+
+def check_state_format(root: Path, cfg: dict) -> dict:
+    severity = cfg["checks"]["j"]
+    text, record = _record_text(root, cfg)
+    if text is None:
+        return skip("j", severity, "record is missing or unreadable; see check a")
+    where = display_path(record, root)
+    findings = []
+
+    def add(kind, message, line=None, fix=None):
+        if len(findings) < 25:
+            findings.append(finding("block", kind, message, path=where, line=line, fix=fix))
+
+    sections, order = _sections(text)
+    language = _state_language(order)
+    if language is None:
+        add("state-three-sentences-missing",
+            "the first level-2 section must be '## 三句话' or '## Three sentences'",
+            fix="start the state with the fixed three-sentence section from the state template")
+        language = "en" if re.search(r"(?m)^## [A-Za-z]", text) else "zh"
+    else:
+        labels = THREE[language][1]
+        items = sections[THREE[language][0]]
+        found = []
+        for number, line in items:
+            field = FIELD.match(line)
+            if field is None:
+                add("state-three-sentences-shape", "the three-sentence section holds only its three labelled bullets", line=number)
+                continue
+            found.append(field.group(1))
+            if _is_empty(field.group(2)):
+                add("state-three-sentences-empty", f"'{field.group(1)}' has no content", line=number)
+        if found != list(labels):
+            add("state-three-sentences-labels",
+                "the three sentences must be, in order: " + " / ".join(labels),
+                fix="answer where the work is, what happens next and who or what it waits on")
+
+    id_pattern = _compile(cfg["state"]["id_pattern"], "state.id_pattern")
+    banned = cfg["state"]["banned_tokens"]
+    for number, line in _prose_lines(text):
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#") or stripped.startswith("|"):
+            continue
+        plain = CODE_SPAN.sub("", stripped)
+        if not SENTENCE_END.search(stripped):
+            add("state-incomplete-sentence", "state prose must be complete sentences ending with a full stop",
+                line=number, fix="rewrite the line as a full sentence; no shorthand fragments")
+        for token in banned:
+            if token in plain:
+                add("state-shorthand", f"shorthand token '{token}' is not allowed in the state", line=number,
+                    fix="spell the relation out in words")
+        definition = re.match(r"^\s*(?:[-*+]\s+)?\[?(" + id_pattern.pattern + r")\]?(?=\s|[:：])", plain)
+        for match in id_pattern.finditer(plain):
+            if definition and match.start() == definition.start(1):
+                continue
+            if not re.match(r"\s?[（(]", plain[match.end():]):
+                add("state-id-without-meaning", f"identifier {match.group(0)} is used without its meaning",
+                    line=number, fix=f"write it as {match.group(0)}（meaning） / {match.group(0)} (meaning)")
+
+    auth = sections.get(AUTH_HEADING[language])
+    if auth is None:
+        add("state-authorization-missing", f"the state needs a '## {AUTH_HEADING[language]}' section")
+    else:
+        scope, not_covered = AUTH_SCOPE[language], AUTH_NOT_COVERED[language]
+        has_not_covered = False
+        for number, line in auth:
+            if not re.match(r"^[-*+]\s", line):
+                continue
+            label = FIELD.match(line)
+            if label and label.group(1) == not_covered:
+                has_not_covered = not _is_empty(label.group(2))
+                continue
+            if not re.search(re.escape(scope) + r"\s*[：:]\s*\S", line):
+                add("state-authorization-scope", f"each authorization must state '{scope}:' (the rounds or tasks it covers)",
+                    line=number, fix="name the task or round; a new task never inherits an older authorization")
+        if not has_not_covered:
+            add("state-not-covered-missing", f"the authorization section must say '{not_covered}:' explicitly",
+                fix="list what the current task may not do under these authorizations")
+    return result("j", severity, findings)
+
+
+def _evidence_contents(root: Path, cfg: dict, git: Git, staged: bool):
+    evidence = _evidence_file(root, cfg)
+    if not evidence.is_file():
+        return None, None, evidence
+    relative = norm_rel(evidence.relative_to(root))
+    content = None
+    if staged and git.is_work_tree():
+        raw = git.run("show", f":{relative}")
+        content = raw.stdout.decode("utf-8", "replace") if raw.returncode == 0 else None
+    if content is None:
+        content = read_text_file(evidence)
+    old = None
+    if git.is_work_tree() and git.head_exists():
+        blob = git.blob("HEAD", relative)
+        old = None if blob is None else blob.decode("utf-8", "replace")
+    return content, old, evidence
+
+
+def changed_evidence(cfg: dict, content: str, old_content):
+    """Evidence lines that are new or edited relative to old_content, plus new numbers."""
+    old = {number: line for _, number, line in parse_evidence_lines(old_content, cfg)} if old_content is not None else {}
+    changed, added = [], []
+    for source_line, number, line in parse_evidence_lines(content, cfg):
+        if old_content is None or number not in old:
+            changed.append((source_line, number, line))
+            added.append(number)
+        elif line != old[number]:
+            changed.append((source_line, number, line))
+    return changed, added
+
+
+def _baseline_values(root: Path, cfg: dict, git: Git):
+    baseline = cfg["baseline"]
+    if not baseline["enabled"] or not git.is_work_tree():
+        return None, None
+    pattern = _compile(baseline["pattern"], "baseline.pattern")
+    path = norm_rel(baseline["path"])
+    try:
+        current = pattern.search(read_text_file(root / path))
+    except (OSError, UnicodeDecodeError):
+        return None, None
+    blob = git.blob(baseline["ref"], path)
+    old = pattern.search(blob.decode("utf-8", "replace")) if blob is not None else None
+    value = lambda match: None if match is None else (match.group(1) if match.groups() else match.group(0))
+    return value(current), value(old)
+
+
+def _decision_numbers(text):
+    return {match.group(1) for match in re.finditer(r"(?m)^##\s+(D\d+)\b", text or "")}
+
+
+def check_evidence_kinds(root: Path, cfg: dict, git: Git, staged: bool) -> dict:
+    severity = cfg["checks"]["k"]
+    content, old, evidence = _evidence_contents(root, cfg, git, staged)
+    if content is None:
+        return skip("k", severity, "evidence index is missing; see checks a and c")
+    where = display_path(evidence, root)
+    prefix = cfg["evidence"]["prefix"]
+    changed, added = changed_evidence(cfg, content, old)
+    findings = []
+    for line_no, number, line in changed:
+        if not EVIDENCE_KIND.search(line):
+            findings.append(finding("block", "evidence-kind-missing",
+                                    f"{prefix}{number} is not tagged [门结论]/[变更]/[根因] ([gate]/[change]/[root-cause])",
+                                    path=where, line=line_no,
+                                    fix="register only gate conclusions, production/field changes and failure root causes; put the rest in the commit message"))
+        if not DATE.search(line):
+            findings.append(finding("block", "evidence-date-missing", f"{prefix}{number} has no YYYY-MM-DD date",
+                                    path=where, line=line_no, fix="add the date the entry was registered"))
+        if REVIEW_WORD.search(line) and not ROUND.search(line):
+            findings.append(finding("block", "evidence-review-round-missing",
+                                    f"{prefix}{number} records a review without its round number",
+                                    path=where, line=line_no, fix="write 第N轮 / round N in the entry"))
+    if not git.is_work_tree():
+        return result("k", severity, findings, note="not a Git work tree; minor-batch and baseline rules skipped")
+    cache = {}
+    changes = git.changed(staged)
+    records = {path_key(norm_rel(item)) for item in (cfg["record"]["path"], cfg["decisions"]["path"])}
+    records.add(path_key(norm_rel(evidence.relative_to(root))))
+    work = [path for _, path, _ in changes
+            if path_key(path) not in records and not _matches_any(path, cfg["evidence"]["files"], cache)]
+    current_version, old_version = _baseline_values(root, cfg, git)
+    bumped = current_version is not None and old_version is not None and current_version != old_version
+    if bumped and cfg["baseline"]["path"]:
+        work = [path for path in work if path_key(path) != path_key(norm_rel(cfg["baseline"]["path"]))]
+    minor = bool(work) and all(_matches_any(path, cfg["evidence"]["minor_paths"], cache) for path in work)
+    if minor:
+        if added:
+            findings.append(finding("block", "minor-batch-evidence",
+                                    "this batch only touches UI/copy/style paths but adds evidence entries",
+                                    path=where, fix="drop the entries; describe the change in the commit message"))
+        if bumped:
+            findings.append(finding("block", "minor-batch-baseline",
+                                    f"this batch only touches UI/copy/style paths but bumps the baseline ({old_version} -> {current_version})",
+                                    fix="keep the baseline version; wording and style changes never bump it"))
+        new_files = [path for kind, path, _ in changes
+                     if (kind.startswith("A") or kind == "??") and _matches_any(path, cfg["evidence"]["files"], cache)]
+        for path in new_files:
+            findings.append(finding("block", "minor-batch-evidence-file",
+                                    "this batch only touches UI/copy/style paths but creates an evidence file",
+                                    path=path, fix="remove the new evidence file; the commit message is the record"))
+    elif bumped and not added:
+        decisions = root / norm_rel(cfg["decisions"]["path"])
+        blob = git.blob("HEAD", norm_rel(cfg["decisions"]["path"]))
+        new_decisions = _decision_numbers(read_text_file(decisions) if decisions.is_file() else "") - _decision_numbers(
+            None if blob is None else blob.decode("utf-8", "replace"))
+        if not new_decisions:
+            findings.append(finding("block", "baseline-bump-without-basis",
+                                    f"the baseline moved ({old_version} -> {current_version}) without a new evidence entry or decision",
+                                    fix="bump only for a gate conclusion, field change, root cause or a registered decision"))
+    return result("k", severity, findings)
+
+
+def check_daily_evidence(root: Path, cfg: dict, git: Git, staged: bool) -> dict:
+    severity = cfg["checks"]["l"]
+    content, old, evidence = _evidence_contents(root, cfg, git, staged)
+    if content is None:
+        return skip("l", severity, "evidence index is missing; see checks a and c")
+    limit = cfg["evidence"]["daily_limit"]
+    counts = {}
+    for _, _, line in parse_evidence_lines(content, cfg):
+        date = DATE.search(line)
+        if date:
+            counts[date.group(1)] = counts.get(date.group(1), 0) + 1
+    changed, _ = changed_evidence(cfg, content, old)
+    dates = {DATE.search(line).group(1) for _, _, line in changed if DATE.search(line)}
+    findings = [
+        finding("block", "evidence-daily-threshold",
+                f"{counts[date]} evidence entries are dated {date}; the threshold is {limit}",
+                path=display_path(evidence, root),
+                fix="check each entry is a gate conclusion, field change or root cause; fold the rest into commit messages")
+        for date in sorted(dates) if counts.get(date, 0) > limit
+    ]
+    return result("l", severity, findings, note=f"threshold {limit} entries per day")
+
+
+def check_review_rounds(root: Path, cfg: dict) -> dict:
+    severity = cfg["checks"]["m"]
+    text, record = _record_text(root, cfg)
+    if text is None:
+        return skip("m", severity, "record is missing or unreadable; see check a")
+    sections, order = _sections(text)
+    language = _state_language(order) or "zh"
+    where = display_path(record, root)
+    ledger = sections.get(REVIEW_HEADING[language])
+    if ledger is None:
+        return result("m", severity, [finding("block", "review-ledger-missing",
+                                              f"the state needs a '## {REVIEW_HEADING[language]}' section (write '- 无。' / '- None.' when empty)",
+                                              path=where)])
+    findings = []
+    for number, line in ledger:
+        found = ROUND.search(line) if re.match(r"^[-*+]\s", line) else None
+        if found is None:
+            continue
+        rounds = int(found.group(1) or found.group(2))
+        named = NAMED.search(line)
+        if rounds > 2 and (named is None or _is_empty(named.group(1))):
+            findings.append(finding("block", "review-round-cap",
+                                    f"review round {rounds} needs the owner to name it; stop here",
+                                    path=where, line=number,
+                                    fix="ask the owner; record 点名：<owner, source> / named by: <owner, source> before starting the round"))
+    return result("m", severity, findings)
+
+
+def parse_decisions(text: str):
+    entries = []
+    for number, line in _prose_lines(text):
+        heading = DECISION_HEADING.match(line)
+        if heading:
+            entries.append({"id": heading.group(1), "title": heading.group(2).strip(), "line": number, "fields": {}})
+            continue
+        field = FIELD.match(line)
+        if field and entries:
+            label = field.group(1).strip().lower()
+            for key, names in DECISION_FIELDS.items():
+                if label in names:
+                    entries[-1]["fields"][key] = field.group(2).strip()
+    return entries
+
+
+def check_decisions(root: Path, cfg: dict) -> dict:
+    severity = cfg["checks"]["n"]
+    path = root / norm_rel(cfg["decisions"]["path"])
+    defaults = default_config()["checks"]
+    relaxed = [key for key in "jklmno" if cfg["checks"][key] != defaults[key]]
+    if not path.is_file():
+        if relaxed:
+            return result("n", severity, [finding("block", "severity-change-without-decision",
+                                                  f"checks.{key} differs from the default but no decision register exists",
+                                                  fix="register a decision whose rule names checks." + key)
+                                          for key in relaxed])
+        return skip("n", severity, "no decision register yet; create it from assets/decisions.template.md at the first rule change")
+    try:
+        text = read_text_file(path)
+    except (OSError, UnicodeDecodeError):
+        return result("n", severity, [finding("block", "decisions-unreadable", "the decision register cannot be read",
+                                              path=display_path(path, root))])
+    where = display_path(path, root)
+    entries = parse_decisions(text)
+    known = [entry["id"] for entry in entries]
+    findings = []
+
+    def add(kind, message, line, fix=None):
+        findings.append(finding("block", kind, message, path=where, line=line, fix=fix))
+
+    for duplicate in sorted({item for item in known if known.count(item) > 1}):
+        add("decision-duplicate", f"{duplicate} is registered twice", None)
+    for entry in entries:
+        fields, ident, line = entry["fields"], entry["id"], entry["line"]
+        if _is_empty(entry["title"].strip("（）() ")):
+            add("decision-meaning-missing", f"{ident} heading has no meaning", line, f"write ## {ident}（meaning）")
+        for key in ("type", "rule", "relation", "basis"):
+            if _is_empty(fields.get(key, "")):
+                add("decision-field-missing", f"{ident} lacks '{DECISION_FIELDS[key][0]} / {DECISION_FIELDS[key][1]}'", line)
+        rule = fields.get("rule", "").lower()
+        for word in VAGUE_WORDS:
+            if word in rule:
+                add("decision-vague-word", f"{ident} rule uses the undecidable word '{word}'", line,
+                    "replace it with a threshold, a list or an observable event")
+        hard = re.search(r"硬约束|hard", fields.get("type", ""), re.I)
+        no_check = _is_empty(fields.get("check", ""))
+        if hard and no_check:
+            add("decision-check-missing", f"{ident} is a hard constraint without a mechanical check", line)
+        violations = re.search(r"\d+", fields.get("violations", ""))
+        if violations and int(violations.group(0)) >= 2 and no_check:
+            add("decision-escalation-required",
+                f"{ident} was violated {violations.group(0)} times and still has no check", line,
+                "upgrade it to a hard constraint with a mechanical check; adding more text is not allowed")
+        for ref in re.findall(r"\bD\d+\b", fields.get("relation", "")):
+            if ref not in known:
+                add("decision-unknown-reference", f"{ident} supersedes or supplements unknown {ref}", line)
+    for key in relaxed:
+        if not any(f"checks.{key}" in entry["fields"].get("rule", "") for entry in entries):
+            add("severity-change-without-decision", f"checks.{key} differs from the default without a decision naming it", None,
+                f"register a decision whose rule names checks.{key} and its reason")
+    for name in cfg["decisions"]["executors"]:
+        executor = root / norm_rel(name)
+        if not executor.is_file():
+            continue
+        try:
+            body = read_text_file(executor)
+        except (OSError, UnicodeDecodeError):
+            continue
+        for number, line in enumerate(body.splitlines(), 1):
+            for ref in re.findall(r"\bD\d+\b", line):
+                if ref not in known:
+                    findings.append(finding("block", "executor-unknown-decision",
+                                            f"{name} points at {ref}, which is not in the register",
+                                            path=name, line=number))
+    return result("n", severity, findings, note=f"{len(entries)} decisions registered")
+
+
+def check_branches(cfg: dict, git: Git) -> dict:
+    severity = cfg["checks"]["o"]
+    allowed = set(cfg["branches"]["allowed"])
+    names = (git.text("for-each-ref", "--format=%(refname:short)", "refs/heads/") or "").splitlines()
+    findings = [
+        finding("block", "new-branch", f"local branch '{name}' is not on the allowed main-line list",
+                fix="unless the owner asked for a branch: git worktree add --detach <path> <main>, then fast-forward main; "
+                    "if asked, register the decision and add the branch to branches.allowed")
+        for name in names if name and name not in allowed
+    ]
+    return result("o", severity, findings, note="allowed: " + ", ".join(sorted(allowed)))
+
+
+# ---------------------------------------------------------------------------
 # Hook installation (the only write this tool performs, and only on request)
 # ---------------------------------------------------------------------------
 
@@ -1521,6 +2002,15 @@ def run_checks(root: Path, cfg: dict, git: Git, mode: str, args):
     results.append(check_message(root, cfg, args.message_file))
     results.append(check_identity(root, cfg, git))
     results.append(skip("i", cfg["checks"]["i"], "readback runs only with --readback"))
+    results.append(check_state_format(root, cfg))
+    results.append(check_evidence_kinds(root, cfg, git, staged))
+    results.append(check_daily_evidence(root, cfg, git, staged))
+    results.append(check_review_rounds(root, cfg))
+    results.append(check_decisions(root, cfg))
+    if git.is_work_tree():
+        results.append(check_branches(cfg, git))
+    else:
+        results.append(skip("o", cfg["checks"]["o"], "not a Git work tree; branches unavailable"))
     return results
 
 

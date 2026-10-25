@@ -11,7 +11,7 @@ Use the sole sources already resolved by the overlay. Names below describe defau
 
 | Document | Keep | Update method and soft budget |
 |---|---|---|
-| `state.md` | Target assets/scope, active node, action authority, open gates, necessary limits, unknown outcomes/in-flight work, one next action and recovery | Replace current summaries; <=80 physical lines, preferably <=5 KiB; measure tokens separately |
+| `state.md` | Target assets/scope, active node, action authority, open gates, necessary limits, unknown outcomes/in-flight work, one next action and recovery | Replace current summaries; format and <=80 physical lines per [H3](hard-constraints.md#h3), preferably <=5 KiB; measure tokens separately |
 | `process.md` | Process index, historical checkpoints needed for continuation, latest compaction receipt entry | About 30 lines; replace the index and archive old detail/indexes |
 | Evidence summary | Verified results, object version/batch, scope, limits and exact original receipt entries | About 50 lines; replace outdated summaries, retain original receipts by batch |
 | Artifact README | Directory purpose, last registered batch, retention rules, batch manifests and recovery entries | About 30 lines; move old batch detail out instead of accumulating per-file history |
@@ -41,7 +41,7 @@ Keep stable record identifiers/explicit anchors; line numbers are locating aids 
 <a id="triggers"></a>
 ## When to compact
 
-Replace current fields on every state update. Add durable records only for new facts affecting scope, authority, gates, limits, recovery or future practice. Routine successful commands, repeated test narration and "no new findings" create no new history entries.
+Replace current fields on every state update. Add durable records only for new facts affecting scope, authority, gates, limits, recovery or future practice. Routine successful commands, repeated test narration and "no new findings" create no new history entries; evidence entries are only the three kinds in [H1](hard-constraints.md#h1).
 
 At node closure, handoff, project adoption, any over-budget candidate summary or duplicated fact, check whether the related documents need compaction. Process only materially changed files or actual historical burden. With no change, reuse the receipt without new timestamps, snapshots or maintenance logs. Total history may grow; the default reading set does not grow with batch count.
 

@@ -21,6 +21,7 @@ Keep active state in sole state, fixed observations in evidence, history in proc
 - Original history entry: `{{HISTORY_ENTRY_PATH}}` (existing archive entry or on-demand manifest; immutable originals, never expanded at startup)
 - Evidence entry: `{{EVIDENCE_ENTRY_PATH}}` (existing report/section or on-demand summary; fixed subject, version, result, limits and original receipts)
 - Lessons entry: `{{LESSONS_ENTRY_PATH}}` (reuse an existing file/section; read for the current task or recurrence condition, never duplicate)
+- Decision register: `{{DECISIONS_PATH}}` (default `.delivery/decisions.md`; the single source of D numbers for rule revisions; rule tables and executor files cite only the number)
 - Existing-state adapter: {{STATE_FIELD_MAPPING_WRITER_AUTHORITY_VERIFY_RECOVERY}} (node/authority/evidence/decision fields, writer and authority, verification and recovery; no additional active state)
 
 Define these paths here only; summaries and other sections refer to the field names. Path fields default to the project root (the worktree root for a repository); relative Markdown links resolve from their containing document.
@@ -138,7 +139,7 @@ Success on one surface cannot prove another is updated. Current blockers belong 
 - Deliverable paths: {{DELIVERABLE_PATHS}}
 - Development-only paths: {{DEV_ONLY_PATHS}}
 - Deliverable dependency policy: {{DELIVERABLE_DEPENDENCY_POLICY}}
-- Default branch / branch rule: {{DEFAULT_BRANCH}} / {{BRANCH_RULE}}
+- Default branch / branch rule: {{DEFAULT_BRANCH}} / {{BRANCH_RULE}} (default per hard constraint H6 (main-line work): parallel tasks use detached-HEAD worktrees, no new branches; allowed branches go in `branches.allowed`)
 - Commit rule: {{COMMIT_RULE}}
 - Author identity policy: {{AUTHOR_IDENTITY_POLICY}}
 - Secret scan: {{SECRET_SCAN_COMMAND_AND_SCOPE}}

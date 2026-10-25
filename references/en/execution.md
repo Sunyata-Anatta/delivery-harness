@@ -52,6 +52,7 @@ Local RED/GREEN evidence or a written plan never authorizes remote copying, serv
 - Before commit, read the actual staged file list; the commit message covers every staged file. Run secret, portability, and identity checks, and run the [mechanical preflight](gates.md#mechanical-preflight) (script described in [preflight.md](preflight.md)); block failures forbid staging and committing.
 - After creating, rewriting or introducing commits, verify actual results through [commit-object readback](gates.md#commit-object-readback) before dependent actions.
 - Separate deliverable and development-only paths. Judge dependencies at the delivery boundary. Caches and indexes remain rebuildable by default.
+- For parallel tasks, unless the owner explicitly asks for a branch, work on the main line in detached-HEAD worktrees and fast-forward, see [H6](hard-constraints.md#h6); a one-time mechanical formatting pass is its own commit per [formatting](formatting.md).
 
 ## tdd_nodes: execute each node with TDD
 
@@ -61,7 +62,7 @@ For every behavior: write the smallest test; observe expected RED; implement the
 
 Before completion run `IDENTIFY -> RUN -> READ -> VERIFY -> THEN`. Record command, exit code, test count, artifact or observation, and limitations. Unit tests cannot replace required real samples, devices, browsers, datasets, accounts, external services, production-like loads, or user acceptance.
 
-When independent review finds a Critical or Important issue, make it the active node, reproduce it, apply the smallest fix, and re-review. Do not end the turn at that finding unless a new decision, authority, or real-evidence blocker exists; then use the gates stop line and unblock condition.
+When independent review finds a Critical or Important issue, make it the active node, reproduce it, apply the smallest fix, and re-review (at most two rounds per change; a third needs the owner to name it, see [H2](hard-constraints.md#h2)). Do not end the turn at that finding unless a new decision, authority, or real-evidence blocker exists; then use the gates stop line and unblock condition.
 
 Any code, runtime-configuration, or delivery-artifact change after the last independent review invalidates that review. Before deployment, release, or completion, independently review the final artifact; tests, scans, self-review, and old-version live verification do not substitute.
 

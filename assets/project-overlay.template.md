@@ -23,6 +23,7 @@
 - 原始历史入口：`{{HISTORY_ENTRY_PATH}}`（既有归档入口或按需创建的历史清单；原文不可变，不在启动时展开）
 - 证据入口：`{{EVIDENCE_ENTRY_PATH}}`（既有报告/章节或按需摘要；固定对象、版本、结果、限制与原始回执）
 - 经验入口：`{{LESSONS_ENTRY_PATH}}`（复用既有文件或章节；仅按当前任务/复发条件读取，不另建副本）
+- 决策登记：`{{DECISIONS_PATH}}`（默认 `.delivery/decisions.md`；规则修订的 D 编号唯一来源，规则表与执行文件只引用编号）
 - 既有状态适配：{{STATE_FIELD_MAPPING_WRITER_AUTHORITY_VERIFY_RECOVERY}}（节点/授权/证据/待决断字段、写入方与权限、验证及恢复方法；不另建活动状态）
 
 上述路径只在此定义；摘要与其他章节引用字段名。路径字段默认相对项目根（仓库使用工作树根），Markdown 相对链接仍以所在文档为基准。
@@ -170,7 +171,7 @@ Resolver 把已验证经验变成条件路由。只在条件、能力、选择�
 - 仅开发路径：{{DEV_ONLY_PATHS}}（不随交付分发。可执行件与一次性产物留在这里）
 - 交付物依赖策略：{{DELIVERABLE_DEPENDENCY_POLICY}}
 - 默认分支：{{DEFAULT_BRANCH}}
-- 工作分支规则：{{BRANCH_RULE}}
+- 工作分支规则：{{BRANCH_RULE}}（默认按硬约束 H6（沿主线开发）：多任务用分离头指针的 worktree，不开新分支；允许的分支写入 `branches.allowed`）
 - 提交规则：{{COMMIT_RULE}}
 - 作者身份与邮箱策略：{{AUTHOR_IDENTITY_POLICY}}
 - 脱敏扫描：{{SECRET_SCAN_COMMAND_AND_SCOPE}}

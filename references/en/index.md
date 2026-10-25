@@ -18,6 +18,8 @@ Chinese rule files are normative. This English tree is an operational equivalent
 | Configure agent roles or delegation | [agent-config.md](agent-config.md) |
 | Use connectors, CLIs, accounts, or services | [integrations.md](integrations.md) |
 | Use GitHub | [github.md](github.md) |
+| Register evidence, review, write state or authority, revise rules, branch or worktree | [hard-constraints.md](hard-constraints.md) |
+| Format code, scan source-layout tests, replay formatting on another machine | [formatting.md](formatting.md) |
 | Initialize the project state layout | [delivery-skeleton.template.md](../../assets/en/delivery-skeleton.template.md) |
 
 If an English rule conflicts with its Chinese counterpart, follow Chinese, record the mismatch as a defect, and update both language surfaces in the same change.

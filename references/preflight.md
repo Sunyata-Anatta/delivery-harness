@@ -5,7 +5,7 @@
 ## 用途与边界
 
 - 只读运行：不修改记录、不创建替代记录、不写项目文件；唯一写操作是显式请求的可选 `--install-hook`。
-- 覆盖九项检查，严重级别可配为 block 或 warn；失败输出修复建议，由执行者修复后重跑。
+- 覆盖十五项检查：a–i 守记录与提交，j–o 是[硬约束](hard-constraints.md) H1–H6 的机械检查；严重级别可配为 block 或 warn；失败输出修复建议，由执行者修复后重跑。
 - 不联网；秘密扫描只报告“文件+类型”，绝不回显匹配值；不读取证据槽之外的敏感来源。
 - 退出码可被 CI 消费，`--json` 是稳定的机器接口。
 - 不替代：独立审阅、真实证据门、提交对象回读的人工判断、专用秘密扫描器与历史覆盖检查。
@@ -47,7 +47,14 @@
 | `limits.record_max_lines` / `record_max_line_length` | `80` / `0` | 记录行数与单行字符上限；行长 0 表示关闭 |
 | `secrets.patterns` / `exclude` / `max_bytes` | 高置信内置模式 | 秘密扫描；只报文件+类型 |
 | `message.banned_links` / `banned_trailers` | 内置规则 | 候选消息中禁用的链接与 trailer 正则 |
-| `checks.a` … `checks.i` | `block` | 每项检查的严重级别，可取 `block` 或 `warn` |
+| `evidence.daily_limit` | `5` | 检查 l：同一日期的证据条目上限 |
+| `evidence.minor_paths` | 样式表、`**/locales/**`、`**/i18n/**` | 检查 k：只改这些路径的批次视为界面、文案或样式微调 |
+| `evidence.files` | `[".delivery/artifacts/**"]` | 检查 k：视为证据文件的路径 |
+| `state.id_pattern` | `\b[A-Z]{1,2}\d+[a-z]?\b` | 检查 j：需要写含义的编号形态 |
+| `state.banned_tokens` | `→`、`=>`、`->`、`TBD`、`w/`、`&&` | 检查 j：状态正文禁用的速记（代码片段除外） |
+| `decisions.path` / `executors` | `.delivery/decisions.md` / `AGENTS.md`、`CLAUDE.md` | 检查 n：决策登记与需核对引用的执行文件 |
+| `branches.allowed` | `main`、`master` | 检查 o：允许存在的本地分支 |
+| `checks.a` … `checks.o` | `block`（`l` 为 `warn`） | 每项检查的严重级别，可取 `block` 或 `warn`；调整须有决策登记 |
 | `readback.ref` | `HEAD` | 检查 i 要回读的提交 |
 | `hook.python` | 安装时的解释器 | 提交 hook 使用的 Python 命令 |
 
@@ -78,11 +85,11 @@
 {"record": {"path": ".delivery/state.md"}, "checks": {"d": "warn"}}
 ```
 
-证据行约定：行首允许列表符号或方括号，随后是“前缀+数字”，行内必须有一个 Markdown 链接；链接按“证据索引所在目录、项目根”的顺序解析，目标必须存在。编号在新增行内严格递增，且大于基线中的最大编号。示意：
+证据行约定：行首允许列表符号或方括号，随后是“前缀+数字”和空格，行内必须有一个 Markdown 链接、一个类别标签（`[门结论]`、`[变更]`、`[根因]` 或英文 `[gate]`、`[change]`、`[root-cause]`）和登记日期 `YYYY-MM-DD`，复审条目再写 `第 N 轮`；链接按“证据索引所在目录、项目根”的顺序解析，目标必须存在。编号在新增行内严格递增，且大于基线中的最大编号。示意：
 
 ```text
-- E12 | [batch run](artifacts/batch/run.log) | 说明
-E13: [receipt](.delivery/artifacts/2026-10-21-preflight/README.md)
+- E12 [门结论] 2026-10-21 批量运行通过；[batch run](artifacts/batch/run.log)。
+- E13 [根因] 2026-10-21 复审第 2 轮确认缓存未失效；[receipt](.delivery/artifacts/2026-10-21-preflight/README.md)。
 ```
 
 豁免文件用于“本批确实不该改记录”的例外；每行一个 glob 和理由，理由不能为空：
@@ -104,6 +111,12 @@ E13: [receipt](.delivery/artifacts/2026-10-21-preflight/README.md)
 | g | `--message-file` 的候选提交消息 | 无会话/分享/聊天链接，无 `Claude-*` 类 trailer | block 失败；只报类型与行号，不回显链接 |
 | h | `git var GIT_AUTHOR_IDENT`，配置 `check_committer` 时另查提交者身份 | name 精确、email 大小写不敏感一致 | block 失败；未配置身份策略时 skip 并告警，不构成身份门通过 |
 | i | `--readback` 读取 `readback.ref` 提交的 diff 与记录 blob | 提交含代码变更时记录路径必须在提交 diff 中真实变更 | block 失败；untracked 记录无法回读时 skip 并写明局限 |
+| j | [H3](hard-constraints.md#h3)、[H4](hard-constraints.md#h4)：读状态文件 | 三句话段、完整句子、无速记、编号带含义；授权段每条有「适用」，并有「不在该授权内」 | block 失败；未填写的模板占位符按空值处理 |
+| k | [H1](hard-constraints.md#h1)：相对 `HEAD` 的新增或改动证据行与本批改动 | 每行有类别标签与日期，复审行有轮次；纯微调批次不加条目、不升基线、不建证据文件；基线改版须有新条目或新决策 | block 失败 |
+| l | [H1](hard-constraints.md#h1)：按日期统计证据条目 | 本批涉及的日期都不超过 `evidence.daily_limit` | 默认 warn，作为逐条复核提示 |
+| m | [H2](hard-constraints.md#h2)：状态的「复审轮次」段 | 段落存在；轮次大于 2 的行写明负责人点名 | block 失败并提示停下 |
+| n | [H5](hard-constraints.md#h5)：决策登记与执行文件 | 字段齐全、无不可判定词、硬约束有检查、第二次违反已升级、引用的编号存在 | block 失败；登记文件不存在时 skip |
+| o | [H6](hard-constraints.md#h6)：本地分支 | 全部在 `branches.allowed` 中 | block 失败 |
 
 ## 退出码与 --json
 
@@ -113,7 +126,7 @@ E13: [receipt](.delivery/artifacts/2026-10-21-preflight/README.md)
 | `1` | FAIL：至少一项 block 级失败 | 等同对应门失败：不得暂存、提交、推送或宣告完成 |
 | `2` | 用法或配置错误 | 修复命令、配置或 Git 环境后重跑；不得用猜测配置绕过 |
 
-`--json` 输出单个对象，字段固定：`schema`、`tool`、`tool_version`、`mode`、`root`、`config_source`、`status`（`pass`/`fail`/`error`）、`summary`（blocked/warned/skipped/passed）、`checks`（按 a–i 排列，含 `severity`、`status`、`note`、`findings`）、`notes`。`findings` 只含 `level`、`type`、`message`、`path`、`line`、`fix`，不包含任何被扫描到的值。用法或配置错误时同样输出 JSON，`status` 为 `error`，退出码 2。
+`--json` 输出单个对象，字段固定：`schema`、`tool`、`tool_version`、`mode`、`root`、`config_source`、`status`（`pass`/`fail`/`error`）、`summary`（blocked/warned/skipped/passed）、`checks`（按 a–o 排列，含 `severity`、`status`、`note`、`findings`）、`notes`。`findings` 只含 `level`、`type`、`message`、`path`、`line`、`fix`，不包含任何被扫描到的值。用法或配置错误时同样输出 JSON，`status` 为 `error`，退出码 2。
 
 ```json
 {

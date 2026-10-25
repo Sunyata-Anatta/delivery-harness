@@ -5,7 +5,7 @@ This page defines the mechanical checks for delivery records and commits: record
 ## Purpose and boundaries
 
 - Read-only: it does not modify records, create substitute records, or write project files. The only write is the explicitly requested optional `--install-hook`.
-- Nine checks with severity configurable as block or warn. Failures print repair suggestions; the executor fixes and re-runs.
+- Fifteen checks: a-i guard records and commits, j-o are the mechanical checks of the [hard constraints](hard-constraints.md) H1-H6; severity configurable as block or warn. Failures print repair suggestions; the executor fixes and re-runs.
 - No network access. Secret scanning reports only file and type, never the matched value, and does not read sensitive sources outside the evidence slot.
 - Exit codes are CI-consumable; `--json` is the stable machine interface.
 - Not a substitute for independent review, real-evidence gates, human commit-object readback, a dedicated secret scanner, or historical coverage checks.
@@ -47,7 +47,14 @@ Discovery order: read `<root>/.delivery/preflight.json` first; when absent, read
 | `limits.record_max_lines` / `record_max_line_length` | `80` / `0` | Record line and single-line character limits; 0 disables the line-length limit |
 | `secrets.patterns` / `exclude` / `max_bytes` | high-signal built-ins | Secret scan; reports file and type only |
 | `message.banned_links` / `banned_trailers` | built-in rules | Patterns banned from the candidate message |
-| `checks.a` ... `checks.i` | `block` | Severity per check, `block` or `warn` |
+| `evidence.daily_limit` | `5` | Check l: entries allowed per date |
+| `evidence.minor_paths` | style sheets, `**/locales/**`, `**/i18n/**` | Check k: a batch touching only these paths is a UI, copy or style tweak |
+| `evidence.files` | `[".delivery/artifacts/**"]` | Check k: paths that count as evidence files |
+| `state.id_pattern` | `\b[A-Z]{1,2}\d+[a-z]?\b` | Check j: identifier shape that needs a meaning |
+| `state.banned_tokens` | `→`, `=>`, `->`, `TBD`, `w/`, `&&` | Check j: shorthand banned from state prose (code spans excepted) |
+| `decisions.path` / `executors` | `.delivery/decisions.md` / `AGENTS.md`, `CLAUDE.md` | Check n: the decision register and executor files whose references are checked |
+| `branches.allowed` | `main`, `master` | Check o: local branches allowed to exist |
+| `checks.a` ... `checks.o` | `block` (`l` is `warn`) | Severity per check, `block` or `warn`; changes need a registered decision |
 | `readback.ref` | `HEAD` | Commit inspected by check i |
 | `hook.python` | interpreter at install time | Python command used by the commit hook |
 
@@ -78,11 +85,11 @@ The same configuration may live as an overlay fenced block (during adoption, or 
 {"record": {"path": ".delivery/state.md"}, "checks": {"d": "warn"}}
 ```
 
-Evidence line convention: start with an optional list marker or bracket, then the prefix plus a number, and the line must contain one Markdown link. Links resolve against the evidence index directory first and the project root second; the target must exist. Added numbers increase strictly and are greater than the largest baseline number. Example:
+Evidence line convention: start with an optional list marker or bracket, then the prefix plus a number and a space, and the line must contain one Markdown link, one kind tag (`[gate]`, `[change]`, `[root-cause]`, or the equivalent Chinese tags from the Chinese page) and its registration date `YYYY-MM-DD`; review entries also state `round N`. Links resolve against the evidence index directory first and the project root second; the target must exist. Added numbers increase strictly and are greater than the largest baseline number. Example:
 
 ```text
-- E12 | [batch run](artifacts/batch/run.log) | note
-E13: [receipt](.delivery/artifacts/2026-10-21-preflight/README.md)
+- E12 [gate] 2026-10-21 batch run passed; [batch run](artifacts/batch/run.log).
+- E13 [root-cause] 2026-10-21 review round 2 confirmed the stale cache; [receipt](.delivery/artifacts/2026-10-21-preflight/README.md).
 ```
 
 The exemptions file records exceptions where the record legitimately should not change in this batch; one glob and one non-empty reason per line:
@@ -104,6 +111,12 @@ The exemptions file records exceptions where the record legitimately should not 
 | g | The candidate commit message from `--message-file` | No session/share/chat link and no `Claude-*`-style trailer | Block failure; reports type and line only, never the link |
 | h | `git var GIT_AUTHOR_IDENT`; the committer identity too when `check_committer` is set | Name exact, email equal case-insensitively | Block failure; when no identity policy is configured the check skips with a warning and the identity gate is not passed |
 | i | `--readback` reads the diff of `readback.ref` and the record blob | When the commit changes code paths, the record path must really change in that commit diff | Block failure; an untracked record skips with the documented limit |
+| j | [H3](hard-constraints.md#h3), [H4](hard-constraints.md#h4): reads the state file | Three-sentence section, complete sentences, no shorthand, identifiers with meanings; every authorization has "Applies to" and a "Not covered" line exists | Block failure; unfilled template placeholders count as empty |
+| k | [H1](hard-constraints.md#h1): evidence lines added or edited relative to `HEAD`, and the batch changes | Every line has a kind tag and date, review lines a round; a tweak-only batch adds no entry, bumps no baseline and creates no evidence file; a baseline bump needs a new entry or decision | Block failure |
+| l | [H1](hard-constraints.md#h1): evidence entries per date | No date touched by the batch exceeds `evidence.daily_limit` | Warn by default, as a prompt to review each entry |
+| m | [H2](hard-constraints.md#h2): the state's "Review rounds" section | The section exists; any line above round 2 names the owner | Block failure with a stop prompt |
+| n | [H5](hard-constraints.md#h5): decision register and executor files | Complete fields, no undecidable words, hard constraints have checks, second violations upgraded, cited IDs exist | Block failure; skip when the register does not exist |
+| o | [H6](hard-constraints.md#h6): local branches | All listed in `branches.allowed` | Block failure |
 
 ## Exit codes and --json
 
@@ -113,7 +126,7 @@ The exemptions file records exceptions where the record legitimately should not 
 | `1` | FAIL: at least one block-level failure | Equal to gate failure: do not stage, commit, push, or claim completion |
 | `2` | Usage or configuration error | Fix command, configuration, or Git environment and re-run; never guess a configuration to bypass |
 
-`--json` emits one object with fixed fields: `schema`, `tool`, `tool_version`, `mode`, `root`, `config_source`, `status` (`pass`/`fail`/`error`), `summary` (blocked/warned/skipped/passed), `checks` (ordered a-i, each with `severity`, `status`, `note`, `findings`), and `notes`. `findings` contains only `level`, `type`, `message`, `path`, `line`, `fix` and never any scanned value. Usage and configuration errors also emit JSON with `status` set to `error` and exit code 2.
+`--json` emits one object with fixed fields: `schema`, `tool`, `tool_version`, `mode`, `root`, `config_source`, `status` (`pass`/`fail`/`error`), `summary` (blocked/warned/skipped/passed), `checks` (ordered a-o, each with `severity`, `status`, `note`, `findings`), and `notes`. `findings` contains only `level`, `type`, `message`, `path`, `line`, `fix` and never any scanned value. Usage and configuration errors also emit JSON with `status` set to `error` and exit code 2.
 
 ```json
 {

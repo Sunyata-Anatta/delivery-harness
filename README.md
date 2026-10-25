@@ -2,7 +2,7 @@
 
 [中文](README.md) | [English](README.en.md)
 
-当前版本：**2026.10.21.2**。使用日期版本，规范值随 [SKILL.md](SKILL.md) 分发；此前载荷未声明数字版本。
+当前版本：**2026.10.25.1**。使用日期版本，规范值随 [SKILL.md](SKILL.md) 分发；此前载荷未声明数字版本。
 
 `delivery-harness` 是面向多阶段交付的 Agent Skill：在已有授权内持续推进，以当前项目状态、真实证据和明确门控决定下一步。专业 Skill、MCP 和 CLI 负责具体工作，Harness 负责目标、授权、状态与验证的一致性。
 
@@ -84,6 +84,12 @@ references/    单语言核心、动作规则与运行时说明
 需要预注入时，将 [AGENTS.md 启动块](assets/AGENTS.block.template.md)、[CLAUDE.md 启动块](assets/CLAUDE.block.template.md) 或 [其他入口块](assets/restricted-runtime-entry.block.template.md) 写入实际生效的原生指令面；保留其他用户规则，只替换同名标记块。安装目录存在、隐式调用元数据和完整启动合同是不同条件。
 
 没有预注入时，显式冷调用允许先读 Skill 和核心，再输出回执，再用业务工具；该结果不能计为“回执先于所有工具”的预注入通过。不同运行时的路径、信任、优先级和卸载方式见 [运行时合同](references/runtime-installation.md)。
+
+## 硬约束与格式化
+
+过程规则以[硬约束](references/hard-constraints.md) H1–H6 落地，每条配一个[机械预检](references/preflight.md)检查（j–o），失败即停：证据只登记门结论、变更、根因并按日计数；同一改动复审最多 2 轮，第 3 轮须负责人点名；状态文件以「三句话」开头、写完整句子、编号带含义、不超过 80 行；授权写明适用范围，新任务不继承；没有检查的规则第二次被违反就升级为带检查的硬约束；除非明确要求，多任务用分离头指针的 worktree 沿主线开发，不开新分支。规则修订登记在[决策模板](assets/decisions.template.md)的 D 编号下，规则表只引用编号。
+
+[格式化流程](references/formatting.md)给出固定版本的 npx 调用、单独的格式化提交、测试标记差异扫描、[行长守卫模板](assets/line-length-guard.test.template.mjs)、回归失败分类与跨机器 tree 哈希核对；`tests/test_hard_constraints.py` 用示例仓库演示每项检查先失败、修正后通过。
 
 ## 验证、更新与边界
 

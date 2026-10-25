@@ -13,5 +13,6 @@ Boundary: pending probe
 【Capability Signal Assessment】Current triggers or none, with reason.
 For Chinese use 【启动回执】, 规则：, 版本控制：, 节点：, 边界：, 【能力信号评估】. Fill known facts; leave unknowns pending.
 Read installed delivery-harness/SKILL.md and the selected-language core first; receive and understand results before business tools. Never batch them together. Then follow the core to inspect project rules, overlay and unique state (default .delivery/state.md); report verified facts read-only. Reread unreadable rules; unverified facts cannot support completion. Load only current-action references; authority and evidence gates always apply.
+Hard constraints H1-H6 live in delivery-harness/references/hard-constraints.md; run preflight before the first git add, every commit and any completion claim, and stop on failure.
 <!-- delivery-harness:end -->
 ```

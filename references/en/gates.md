@@ -37,17 +37,18 @@ Present evidence, options, trade-offs, recommendation, and one explicit question
 
 Request the smallest authority possible and state action, target, persistence, external effect, and rollback. Never bypass denied authority.
 
+<a id="authorization-reuse"></a>
 ## Reuse authorization within the same node
 
 Do not re-ask for the same explicitly approved action class inside one active node when target, action class, data class, cost range, persistence, and external effect are unchanged.
 
-Never extend one approval to a new data class or cost range. A new data class, new or broader cost, different external recipient, changed persistence or broader authority requires new approval. At a new node, recheck existing authority; approval of the full plan remains valid for covered actions. Ambiguous authority means not authorized.
+Never extend one approval to a new data class or cost range. A new data class, new or broader cost, different external recipient, changed persistence or broader authority requires new approval. At a new node, recheck existing authority; approval of the full plan remains valid for covered actions. Ambiguous authority means not authorized. Every authorization states the rounds or tasks it applies to, and a new task never inherits an older one; see [H4](hard-constraints.md#h4).
 
 ## Evidence receipt, conditional authority, and side effects
 
 Trigger: a user screenshot, original source, human decision, or external result arrives. Action: record a minimal evidence receipt in the sole active state resolved from the overlay (default `.delivery/state.md`) before analysis, design, or side effects. Method: record `received_at`, `source_ref` (or `needs-source` when it cannot be preserved), scope, direct observations, limits, and open questions; copy the original into an evidence slot only when authorized. Criterion: later claims trace to a source and distinguish fact from inference. Failure: mark `needs-source`; do not present inference as confirmed fact. Evidence: the receipt and any authorized evidence-slot reference.
 
-Register new evidence minimally first. Once its full receipt is in the sole evidence source, state keeps only conclusions, limits and exact entries still affecting the current action, under [document lifecycle](context-lifecycle.md).
+Register new evidence minimally first; evidence entries are only gate conclusions, production or field changes and failure root causes, see [H1](hard-constraints.md#h1). Once its full receipt is in the sole evidence source, state keeps only conclusions, limits and exact entries still affecting the current action, under [document lifecycle](context-lifecycle.md).
 
 Reusing older user or external evidence in a new session or active node also triggers this gate. When its old receipt lacks `source_ref` or `needs-source`, backfill it before using the evidence to support implementation, deployment, or an external write.
 
@@ -64,6 +65,7 @@ A preliminary experiment is not completion, even when deployed. Record its purpo
 
 Do not mark the stage complete. Record available evidence, missing evidence, exhausted safe work, and the exact unblock condition.
 
+<a id="stop-reason"></a>
 ## Write one visible stop line
 
 Every stopping response contains exactly one reason from this closed list:
@@ -136,7 +138,7 @@ Trigger: before the first `git add` for a delivery change. Action: confirm that 
 
 Trigger: before the first `git add` of this delivery change; before any completion, handoff, or release claim; on every commit once the optional commit hook is installed (`--staged --message-file`).
 
-Action: at the project root run the [mechanical preflight](preflight.md) (`python -B -X utf8 <skill>/references/preflight.py --root . --json`; add `--staged` before commit, `--message-file` for the candidate message, and `--readback` after commit) and check record availability, record-code batching, evidence links and numbers, baseline, record size, secrets, candidate message, and identity against the project configuration.
+Action: at the project root run the [mechanical preflight](preflight.md) (`python -B -X utf8 <skill>/references/preflight.py --root . --json`; add `--staged` before commit, `--message-file` for the candidate message, and `--readback` after commit) and check record availability, record-code batching, evidence links and numbers, baseline, record size, secrets, candidate message, and identity against the project configuration, plus the [hard constraints](hard-constraints.md) H1-H6 (checks j-o).
 
 Criterion: exit code 0 with no block-level failure. Register every warn and skip; skips such as a missing identity policy or a record outside version control do not pass their gates.
 
@@ -196,11 +198,12 @@ When a secret is found:
 
 Public usernames, public repository addresses, and documentation examples are not secrets. Whether to anonymize account identifiers depends on the publication boundary. Reports record file, commit, secret type, and disposition, never the value.
 
+<a id="review-failure-recovery"></a>
 ## Independent-review recovery gate
 
 Trigger: independent review reports a Critical or Important finding. Action: make it the sole active node, reproduce it, apply the smallest fix, and repeat independent review; continue to block the deployment, external write, import, activation, or release protected by the failed gate. Method: record the finding, affected scope, reproduction command, fix, and re-review evidence; before a long verification or re-review, confirm execution runway, or first record a resumable handoff (active finding/evidence, completed verification, frozen side effects, single resume action, unblock condition). Criterion: the finding is reproduced and fixed, with relevant tests and re-review passing. Failure: pause only for a new decision, authority, or missing real evidence, and write the visible stop line plus the unblock condition; exhaustion is not completion. Evidence: the review report and reproduction, fix, and re-review records.
 
-An unresolved Critical or Important finding cannot be the final activity of an active node or a completed session; the finding alone is not a reason to pause.
+An unresolved Critical or Important finding cannot be the final activity of an active node or a completed session; the finding alone is not a reason to pause. One change gets at most two re-review rounds; a third needs the owner to name it, see [H2](hard-constraints.md#h2). When findings remain after two rounds, the stop line is "waiting for user decision".
 
 ## Final-review freshness gate
 

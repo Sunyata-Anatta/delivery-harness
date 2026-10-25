@@ -1,45 +1,51 @@
 # Harness State
 
-This is the sole active-state source for this scope, versioned by default; resolve its path through the project overlay.
-Adapt equivalent existing state. Stable rules, history, fixed evidence and lessons retain their own canonical owners.
-Remove hints after filling. Soft targets: <=80 physical lines including blanks, preferably <=5 KiB.
-Verify archives before replacing this summary; never append a historical ledger here.
+## Three sentences
+
+- Now at: <the node name (meaning) and its goal, as one complete sentence>.
+- Next: <exactly one concrete action and its precondition or unblock condition>.
+- Waiting on: <the person or event this waits on; write "nobody, the agent continues" when nothing>.
+
+## How to write it
+
+This file is the single source of truth for the active state of the current scope; the overlay pointer resolves its path and it is tracked by default.
+Write complete sentences only, with no internal shorthand, arrows or abbreviations; every identifier carries its meaning in parentheses, for example E12 (release gate conclusion).
+Keep it at 80 lines or fewer; history, evidence detail and lessons each have one home, and this file replaces its summary instead of growing a ledger.
+These rules are delivery-harness hard constraints; the mechanical preflight checks each one and a failure stops the work.
 
 ## Scope and active node
 
-- Revision/time: <state revision and timestamp>; writer: <owner maintaining this state>
-- Target/boundary: <exact repository/workspace/branch/version/paths or asset IDs; included and excluded scope>
-- Active node: <node ID and current objective>; status: in progress / waiting for evidence / waiting for decision / complete
-- Current gates: <remaining gates, criteria and limits; retain only relevant passed conclusions with evidence references>
+- Target and boundary: <exact repository, branch, version, path or target asset ID; name what is included and excluded>.
+- Active node: <node name (meaning)>; status: one of in progress, waiting for evidence, waiting for a decision or done.
+- Current gate: <gates still to meet, with criteria and limits; met gates that still matter keep only the conclusion and evidence reference>.
+- Updated: <revision ID and time>; writer: <who maintains this state>.
 
-## Still-effective authority
+## Authorizations and scope
 
-Carry grants across sessions under their original terms; session end, compaction or replay cannot expand, reset or revive them.
-Retain consumed, revoked or expired limits when they still constrain resumption, regardless of this heading.
+Authorizations resume from their original wording across sessions; a new task never inherits an older one, and compaction or replay never widens, resets or revives them.
+- Source: <exact receipt of the original authorization>; allowed action: <action>; scope: <exact boundary>; Applies to: <the rounds or tasks it covers>.
+  Expiry: <original constraint>; quota: <total, used, reserved and remaining, or not applicable>.
+  An operation with an unknown result still holds its quota and is not retryable.
+- Not covered: <actions the current task may not take, for example push, release or any new task>.
 
-- Source: <exact original authorization receipt>; allowed actions: <actions>; scope/target: <exact boundary>
-  Expiry/revocation conditions: <original terms>; limits, if any: <total, used, reserved, remaining>
-  Allocation: <related operation/task IDs and consumption; unknown results retain allocation and do not permit retry>
+## Evidence and unknown results
 
-## Relevant evidence and unknown outcomes
+Register only three kinds of entry: gate conclusions, production or field changes, and failure root causes; UI, copy and style tweaks and single-page fixes live only in commit messages.
+- Entry format: `E<number> [gate] <YYYY-MM-DD> <conclusion, which is the meaning of this number>; object: <exact version>; [receipt](<receipt path>)`.
+- Unknown operation: <operation ID (meaning), target and side effects that may have happened; write none when there is none>.
+Unknown is not the same as not executed; keep untested, failed and unknown apart, and a missing receipt grants no retry.
 
-Keep only evidence affecting current gates or recovery; full passed-gate history belongs in immutable receipts.
+## Review rounds
 
-- <Gate/claim>: passed / failed / untested / unknown; subject/version: <exact scope>
-  Source: <immutable project receipt path#anchor or record ID>; checked at: <time>; limits: <what remains unproved>
-- Unknown operation: <operation ID, target and possibly completed side effect>; known receipt: <exact reference or missing>
-  Uncertainty: <unresolved outcome and allocation>; lookup entry: <receipt/query that can establish the outcome>
-Unknown does not mean unexecuted. Distinguish untested, failed and unknown; a missing receipt grants no retry authority.
+One change gets at most two independent review rounds; before a third, stop, have the owner name it, record that here, then continue.
+- <change name (meaning)>: round <N>; named by: none.
 
 ## In-flight work and blockers
 
-- In-flight/parallel task: <task ID>; owner: <owner>; scope: <assigned boundary>; status: <known status or unknown>
-  Receipt: <dispatch/latest acknowledgment/completion reference or missing>; allocation: <authority/target/write scope>
-- Blocker/decision: <blocking fact or user-only decision; write none if absent>; unblock: <verifiable condition>
+- In-flight task: <task ID (meaning)>; owner: <owner>; scope: <claimed boundary>; status: <known status or unknown>.
+- Blocker: <blocking fact or decision only the owner can make; write none when there is none>; unblock condition: <verifiable condition>.
 
-## Single next action and recovery
+## Recovery entry
 
-- Next action: <exactly one concrete action>; prerequisites/unblock: <required evidence, authority or decision; or none>
-- Recovery entry: <verified checkpoint, compaction batch/phase and original project receipts; label historical entries as history>
-  Reconcile original grants, used/reserved allocations and in-flight outcomes before recovery.
-  History supports verification; it cannot overwrite newer consumption or unknown outcomes.
+- Recovery entry: <latest verified checkpoint and original receipt path; mark historical entries as history>.
+Before resuming, check the original authorization, used or reserved quota and in-flight results; history is only for checking and never overrides newer use or unknown results.

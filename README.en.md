@@ -2,7 +2,7 @@
 
 [中文](README.md) | [English](README.en.md)
 
-Current version: **2026.10.21.2**. Calendar versioning; the canonical value ships in [SKILL.md](SKILL.md). Earlier payloads declared no numeric version.
+Current version: **2026.10.25.1**. Calendar versioning; the canonical value ships in [SKILL.md](SKILL.md). Earlier payloads declared no numeric version.
 
 `delivery-harness` is an Agent Skill for multi-stage delivery. It continues within existing authority and uses current project state, real evidence and explicit gates to decide the next action. Specialist Skills, MCPs and CLIs do the work; Harness keeps goals, authority, state and verification aligned.
 
@@ -84,6 +84,12 @@ references/    language cores, action rules and runtime guidance
 For pre-injection, put the [AGENTS.md block](assets/en/AGENTS.block.template.md), [CLAUDE.md block](assets/en/CLAUDE.block.template.md) or [other entry block](assets/en/restricted-runtime-entry.block.template.md) in the effective native instruction surface. Preserve other user rules; replace only the matching marked block. An installed directory, implicit-invocation metadata and a complete startup contract are separate conditions.
 
 Without pre-injection, an explicit cold invocation may read the Skill and core before its receipt, then use business tools. This is not a pre-injection pass where the receipt precedes all tools. Runtime paths, trust, precedence and removal are documented in the [runtime contracts](references/en/runtime-installation.md).
+
+## Hard constraints and formatting
+
+Process rules land as [hard constraints](references/en/hard-constraints.md) H1-H6, each with a [mechanical preflight](references/en/preflight.md) check (j-o) that stops the work on failure: evidence holds only gate conclusions, changes and root causes and is counted per day; one change gets at most 2 review rounds and a third needs the owner to name it; the state file opens with "Three sentences", uses complete sentences, gives every identifier its meaning and stays within 80 lines; authorizations state what they apply to and new tasks inherit nothing; a rule without a check that is violated twice becomes a checked hard constraint; unless explicitly asked, parallel tasks use detached-HEAD worktrees on the main line instead of new branches. Rule revisions are registered under D numbers with the [decision template](assets/en/decisions.template.md), and rule tables cite only the number.
+
+The [formatting flow](references/en/formatting.md) covers the pinned npx call, a separate formatting commit, the test-marker diff scan, the line-length guard template, regression failure triage and cross-machine tree-hash checks; `tests/test_hard_constraints.py` demonstrates every check failing on a sample repository and passing after the fix.
 
 ## Verification, updates and limits
 
